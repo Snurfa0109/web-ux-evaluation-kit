@@ -28,6 +28,8 @@ export default function UatPage() {
   const [externalUrl, setExternalUrl] = useState('')
   const [loading, setLoading] = useState(true)
 
+  const [taskStartTime, setTaskStartTime] = useState<number>(Date.now())
+
   useEffect(() => {
     fetch('/api/admin/phases')
       .then(r => r.json())
@@ -38,17 +40,24 @@ export default function UatPage() {
           setExternalUrl(p.externalUrl || '')
         }
         setLoading(false)
+        setTaskStartTime(Date.now())
       })
   }, [phaseId])
 
+  useEffect(() => {
+    setTaskStartTime(Date.now())
+  }, [currentTaskIdx])
+
   const submitTask = async (taskId: number, status: string, notes: string) => {
+    const timeOnTaskSeconds = Math.max(1, Math.round((Date.now() - taskStartTime) / 1000))
     const res = await fetch('/api/uat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ participantCode: code, phaseId: parseInt(phaseId), taskId, status, notes }),
+      body: JSON.stringify({ participantCode: code, phaseId: parseInt(phaseId), taskId, status, notes, timeOnTaskSeconds }),
     })
     if (!res.ok) throw new Error('Gagal menyimpan hasil task')
   }
+
 
   const handleTaskSubmit = async () => {
     const current = tasks[currentTaskIdx]

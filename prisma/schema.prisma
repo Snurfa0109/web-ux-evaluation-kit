@@ -162,17 +162,19 @@ model UeqResponse {
 }
 
 model UatTaskResponse {
-  id            Int      @id @default(autoincrement())
-  participantId Int
-  phaseId       Int
-  taskId        Int
-  status        String
-  notes         String?  @db.Text
-  completedAt   DateTime @default(now())
+  id                Int      @id @default(autoincrement())
+  participantId     Int
+  phaseId           Int
+  taskId            Int
+  status            String
+  notes             String?  @db.Text
+  timeOnTaskSeconds Int?
+  completedAt       DateTime @default(now())
 
   participant Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
   phase       StudyPhase  @relation(fields: [phaseId], references: [id], onDelete: Cascade)
   task        PhaseTask   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
 
   @@unique([participantId, phaseId, taskId])
   @@map("uat_task_responses")

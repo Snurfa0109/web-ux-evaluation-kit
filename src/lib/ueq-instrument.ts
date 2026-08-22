@@ -95,12 +95,32 @@ export function calculateUeqScores(responses: number[]): {
 }
 
 export function getUeqInterpretation(score: number): string {
-  if (score > 0.8) return 'Excellent'
-  if (score > 0.5) return 'Good'
-  if (score >= -0.5) return 'Neutral'
-  if (score >= -0.8) return 'Bad'
-  return 'Awful'
+  if (score > 0.8) return 'Positive'
+  if (score >= -0.8) return 'Neutral'
+  return 'Negative'
 }
+
+export type UeqBenchmarkCategory = 'Excellent' | 'Good' | 'Above Average' | 'Below Average' | 'Bad'
+
+export function getUeqBenchmark(dimension: UeqDimension, score: number): { label: UeqBenchmarkCategory; color: string; badge: string } {
+  const CUTOFFS: Record<UeqDimension, [number, number, number, number]> = {
+    attractiveness: [1.75, 1.40, 1.00, 0.60],
+    perspicuity:    [1.90, 1.60, 1.20, 0.80],
+    efficiency:     [1.78, 1.45, 1.05, 0.65],
+    dependability:  [1.65, 1.35, 1.10, 0.80],
+    stimulation:    [1.55, 1.25, 0.90, 0.50],
+    novelty:        [1.40, 1.05, 0.70, 0.30],
+  }
+
+  const [exp, good, above, below] = CUTOFFS[dimension] || [1.7, 1.4, 1.0, 0.6]
+
+  if (score >= exp)   return { label: 'Excellent',     color: '#16a34a', badge: 'badge-success' }
+  if (score >= good)  return { label: 'Good',          color: '#2563eb', badge: 'badge-accent' }
+  if (score >= above) return { label: 'Above Average', color: '#0284c7', badge: 'badge-neutral' }
+  if (score >= below) return { label: 'Below Average', color: '#d97706', badge: 'badge-warning' }
+  return                     { label: 'Bad',           color: '#dc2626', badge: 'badge-danger' }
+}
+
 
 export const UEQ_FEEDBACK_ITEMS = [
   {

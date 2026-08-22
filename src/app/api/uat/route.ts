@@ -5,12 +5,14 @@ import { prisma } from '@/lib/prisma'
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { participantCode, phaseId, taskId, status, notes } = body
+    const { participantCode, phaseId, taskId, status, notes, timeOnTaskSeconds } = body
 
     const participant = await prisma.participant.findUnique({
       where: { participantCode: participantCode.toUpperCase() },
     })
     if (!participant) return NextResponse.json({ error: 'Participant tidak ditemukan' }, { status: 404 })
+
+    const duration = timeOnTaskSeconds ? parseInt(timeOnTaskSeconds) : null
 
     await prisma.uatTaskResponse.upsert({
       where: {
@@ -20,15 +22,17 @@ export async function POST(request: Request) {
           taskId: parseInt(taskId),
         },
       },
-      update: { status, notes: notes || null, completedAt: new Date() },
+      update: { status, notes: notes || null, timeOnTaskSeconds: duration, completedAt: new Date() },
       create: {
         participantId: participant.id,
         phaseId: parseInt(phaseId),
         taskId: parseInt(taskId),
         status,
         notes: notes || null,
+        timeOnTaskSeconds: duration,
       },
     })
+
 
     return NextResponse.json({ success: true })
   } catch (error) {
