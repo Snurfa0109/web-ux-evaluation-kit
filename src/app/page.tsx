@@ -23,12 +23,12 @@ export default function LandingPage() {
       <header style={{ borderBottom: '1px solid #e2e8f0', background: 'rgba(255, 255, 255, 0.85)', backdropFilter: 'blur(12px)', position: 'sticky', top: 0, zIndex: 50 }}>
         <div className="container" style={{ height: 68, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', boxShadow: '0 2px 8px rgba(15,23,42,0.15)' }}>
-              <IconShield size={18} />
-            </div>
+            <img src="/evalux.png" alt="Evalux Logo" style={{ width: 38, height: 38, objectFit: 'contain', borderRadius: 8 }} />
             <div>
-              <div style={{ fontSize: '0.9375rem', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.01em' }}>Portal Evaluasi UX</div>
-              <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>Disnakertrans Kabupaten Serang</div>
+              <div style={{ fontSize: '1rem', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                Evalux <span style={{ fontSize: '0.6875rem', fontWeight: 700, padding: '0.1rem 0.4rem', borderRadius: '4px', background: '#eff6ff', color: '#2563eb', border: '1px solid #bfdbfe', letterSpacing: '0.02em' }}>UX RESEARCH</span>
+              </div>
+              <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>Platform Evaluasi Pengalaman Pengguna</div>
             </div>
           </div>
 
@@ -68,7 +68,7 @@ export default function LandingPage() {
             {/* Title Hierarchy */}
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
               <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#2563eb', display: 'block', marginBottom: '0.5rem' }}>
-                Penelitian Evaluasi Kebergunaan & UX Digital
+                Evaluasi Kebergunaan & Pengalaman Pengguna
               </span>
               <h1 style={{ fontSize: '2.125rem', fontWeight: 800, color: '#0f172a', lineHeight: 1.3, marginBottom: '1rem', letterSpacing: '-0.02em' }}>
                 Evaluasi & Redesign Layanan Informasi Disnakertrans Kab. Serang
@@ -240,7 +240,7 @@ export default function LandingPage() {
       {/* Footer */}
       <footer style={{ borderTop: '1px solid #e2e8f0', background: '#f8fafc', padding: '2rem 0', textAlign: 'center', fontSize: '0.8125rem', color: '#64748b' }}>
         <div className="container">
-          <p>© 2026 Platform Riset Evaluasi UX — Siti Nurfadiyah (Disnakertrans Kabupaten Serang)</p>
+          <p>© 2026 Evalux — Platform Evaluasi UX. Penelitian Disnakertrans Kabupaten Serang.</p>
         </div>
       </footer>
     </div>

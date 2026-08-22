@@ -80,10 +80,8 @@ export default function PesertaPage() {
       <header style={{ borderBottom: '1px solid var(--slate-200)', background: 'var(--white)', padding: '0.875rem 0' }}>
         <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <div style={{ width: 28, height: 28, borderRadius: 'var(--radius-md)', background: 'var(--slate-900)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--white)' }}>
-              <IconShield size={16} />
-            </div>
-            <span style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--slate-900)' }}>Portal Evaluasi UX</span>
+            <img src="/evalux.png" alt="Evalux Logo" style={{ width: 28, height: 28, objectFit: 'contain', borderRadius: 6 }} />
+            <span style={{ fontSize: '0.875rem', fontWeight: 800, color: 'var(--slate-900)' }}>Evalux</span>
           </div>
           <Link href="/" style={{ fontSize: '0.8125rem', color: 'var(--slate-500)' }}>
             Keluar

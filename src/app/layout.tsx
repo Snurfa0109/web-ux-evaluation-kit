@@ -2,15 +2,21 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Platform Evaluasi UX — Disnakertrans Kabupaten Serang',
-  description: 'Platform penelitian evaluasi pengalaman pengguna website Dinas Tenaga Kerja dan Transmigrasi Kabupaten Serang. Evaluasi dilakukan dalam 3 tahap: SUS, UEQ, dan UAT.',
-  keywords: 'evaluasi UX, Disnakertrans Serang, SUS, UEQ, UAT, penelitian usability',
+  title: 'Evalux — Platform Evaluasi UX',
+  description: 'Platform evaluasi dan pengujian pengalaman pengguna (UX) berbasis metode terstandar SUS, UEQ, dan UAT.',
+  keywords: 'Evalux, evaluasi UX, usability testing, SUS, UEQ, UAT, penelitian UX',
+  icons: {
+    icon: '/evalux.png',
+    shortcut: '/evalux.png',
+    apple: '/evalux.png',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="id" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
+        <link rel="icon" href="/evalux.png" type="image/png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
