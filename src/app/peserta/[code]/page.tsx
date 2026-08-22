@@ -80,8 +80,7 @@ export default function PesertaPage() {
       <header style={{ borderBottom: '1px solid var(--slate-200)', background: 'var(--white)', padding: '0.875rem 0' }}>
         <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <img src="/evalux.png" alt="Evalux Logo" style={{ width: 28, height: 28, objectFit: 'contain', borderRadius: 6 }} />
-            <span style={{ fontSize: '0.875rem', fontWeight: 800, color: 'var(--slate-900)' }}>Evalux</span>
+            <img src="/evalux.png" alt="Evalux Logo" style={{ height: 28, width: 'auto', objectFit: 'contain' }} />
           </div>
           <Link href="/" style={{ fontSize: '0.8125rem', color: 'var(--slate-500)' }}>
             Keluar

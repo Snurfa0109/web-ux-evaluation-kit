@@ -82,10 +82,9 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
         {/* Logo */}
         <div className="sidebar-logo">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-            <img src="/evalux.png" alt="Evalux Logo" style={{ width: 28, height: 28, objectFit: 'contain', borderRadius: 6 }} />
-            <div>
-              <div className="logo-title">Evalux Admin</div>
-              <div className="logo-subtitle">Research Panel</div>
+            <img src="/evalux.png" alt="Evalux Logo" style={{ height: 28, width: 'auto', objectFit: 'contain' }} />
+            <div style={{ borderLeft: '1px solid var(--slate-700)', paddingLeft: '0.5rem' }}>
+              <div className="logo-title" style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--slate-400)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>ADMIN</div>
             </div>
           </div>
         </div>

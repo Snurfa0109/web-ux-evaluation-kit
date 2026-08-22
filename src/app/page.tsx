@@ -25,12 +25,12 @@ export default function LandingPage() {
       <header style={{ borderBottom: '1px solid #e2e8f0', background: 'rgba(255, 255, 255, 0.85)', backdropFilter: 'blur(12px)', position: 'sticky', top: 0, zIndex: 50 }}>
         <div className="container" style={{ height: 68, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
-            <img src="/evalux.png" alt="Evalux Logo" style={{ width: 38, height: 38, objectFit: 'contain', borderRadius: 8 }} />
-            <div>
-              <div style={{ fontSize: '1rem', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
-                Evalux <span style={{ fontSize: '0.6875rem', fontWeight: 700, padding: '0.1rem 0.4rem', borderRadius: '4px', background: '#eff6ff', color: '#2563eb', border: '1px solid #bfdbfe', letterSpacing: '0.02em' }}>UX RESEARCH</span>
+            <img src="/evalux.png" alt="Evalux Logo" style={{ height: 36, width: 'auto', objectFit: 'contain' }} />
+            <div style={{ borderLeft: '1px solid #cbd5e1', paddingLeft: '0.75rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                <span style={{ fontSize: '0.6875rem', fontWeight: 700, padding: '0.1rem 0.4rem', borderRadius: '4px', background: '#eff6ff', color: '#2563eb', border: '1px solid #bfdbfe', letterSpacing: '0.02em' }}>UX RESEARCH</span>
               </div>
-              <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>Platform Evaluasi Pengalaman Pengguna</div>
+              <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500, marginTop: '2px' }}>Platform Evaluasi Pengalaman Pengguna</div>
             </div>
           </div>
 
