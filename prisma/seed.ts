@@ -20,17 +20,17 @@ async function main() {
   })
 
   // Admin user
-  const hashedPassword = await bcrypt.hash('Admin123!', 12)
+  const hashedPassword = await bcrypt.hash('Akuadminnyaguys', 12)
   await prisma.adminUser.upsert({
-    where: { email: 'admin@disnakertrans-research.id' },
-    update: {},
+    where: { email: 'sitinurfadiyah74@gmail.com' },
+    update: { password: hashedPassword, name: 'Siti Nurfadiyah' },
     create: {
-      email: 'admin@disnakertrans-research.id',
+      email: 'sitinurfadiyah74@gmail.com',
       password: hashedPassword,
-      name: 'Administrator',
+      name: 'Siti Nurfadiyah',
     },
   })
-  console.log('✅ Admin user created')
+  console.log('✅ Admin user created: sitinurfadiyah74@gmail.com')
 
   // Phase 1 — SUS
   const phase1 = await prisma.studyPhase.upsert({
