@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -29,9 +29,9 @@ model Participant {
   whatsappNumber              String?
   createdAt                   DateTime @default(now())
 
-  susResponses     SusResponse[]
-  ueqResponses     UeqResponse[]
-  uatTaskResponses UatTaskResponse[]
+  susResponses       SusResponse[]
+  ueqResponses       UeqResponse[]
+  uatTaskResponses   UatTaskResponse[]
   uatOverallFeedback UatOverallFeedback[]
 
   @@map("participants")
@@ -51,26 +51,26 @@ model StudyPhase {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  tasks            PhaseTask[]
-  susResponses     SusResponse[]
-  ueqResponses     UeqResponse[]
-  uatTaskResponses UatTaskResponse[]
+  tasks              PhaseTask[]
+  susResponses       SusResponse[]
+  ueqResponses       UeqResponse[]
+  uatTaskResponses   UatTaskResponse[]
   uatOverallFeedback UatOverallFeedback[]
 
   @@map("study_phases")
 }
 
 model PhaseTask {
-  id                Int      @id @default(autoincrement())
-  phaseId           Int
-  taskCode          String
-  feature           String?
-  title             String
-  description       String
-  expectedResult    String?
-  acceptanceCriteria String?
-  order             Int      @default(0)
-  createdAt         DateTime @default(now())
+  id                 Int      @id @default(autoincrement())
+  phaseId            Int
+  taskCode           String
+  feature            String?
+  title              String
+  description        String   @db.Text
+  expectedResult     String?  @db.Text
+  acceptanceCriteria String?  @db.Text
+  order              Int      @default(0)
+  createdAt          DateTime @default(now())
 
   phase            StudyPhase        @relation(fields: [phaseId], references: [id], onDelete: Cascade)
   uatTaskResponses UatTaskResponse[]
@@ -94,17 +94,17 @@ model SusResponse {
   q10           Int
   susScore      Float
   // Feedback kualitatif
-  fb1           String?  // Fitur paling mudah
-  fb2           String?  // Fitur sulit/membingungkan
-  fb3           String?  // Informasi sulit ditemukan
-  fb4           String?  // Saran fitur/informasi
-  fb5           String?  // Saran umum
+  fb1           String?  @db.Text // Fitur paling mudah
+  fb2           String?  @db.Text // Fitur sulit/membingungkan
+  fb3           String?  @db.Text // Informasi sulit ditemukan
+  fb4           String?  @db.Text // Saran fitur/informasi
+  fb5           String?  @db.Text // Saran umum
   fb6           String?  // Bersedia lanjutan (Ya/Tidak)
   fb6Phone      String?  // Nomor WhatsApp/HP untuk partisipasi lanjutan
   completedAt   DateTime @default(now())
 
-  participant Participant @relation(fields: [participantId], references: [id])
-  phase       StudyPhase  @relation(fields: [phaseId], references: [id])
+  participant Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  phase       StudyPhase  @relation(fields: [phaseId], references: [id], onDelete: Cascade)
 
   @@unique([participantId, phaseId])
   @@map("sus_responses")
@@ -147,15 +147,15 @@ model UeqResponse {
   stimulation    Float
   novelty        Float
   // Feedback kualitatif
-  fb1           String?  // Bagian visual disukai
-  fb2           String?  // Bagian membingungkan/kurang nyaman
-  fb3           String?  // Saran perbaikan prototype
+  fb1           String?  @db.Text // Bagian visual disukai
+  fb2           String?  @db.Text // Bagian membingungkan/kurang nyaman
+  fb3           String?  @db.Text // Saran perbaikan prototype
   fb4           String?  // Bersedia UAT (Ya/Tidak)
   fb4Phone      String?  // Nomor WhatsApp/HP
   completedAt    DateTime @default(now())
 
-  participant Participant @relation(fields: [participantId], references: [id])
-  phase       StudyPhase  @relation(fields: [phaseId], references: [id])
+  participant Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  phase       StudyPhase  @relation(fields: [phaseId], references: [id], onDelete: Cascade)
 
   @@unique([participantId, phaseId])
   @@map("ueq_responses")
@@ -167,12 +167,12 @@ model UatTaskResponse {
   phaseId       Int
   taskId        Int
   status        String
-  notes         String?
+  notes         String?  @db.Text
   completedAt   DateTime @default(now())
 
-  participant Participant @relation(fields: [participantId], references: [id])
-  phase       StudyPhase  @relation(fields: [phaseId], references: [id])
-  task        PhaseTask   @relation(fields: [taskId], references: [id])
+  participant Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  phase       StudyPhase  @relation(fields: [phaseId], references: [id], onDelete: Cascade)
+  task        PhaseTask   @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
   @@unique([participantId, phaseId, taskId])
   @@map("uat_task_responses")
@@ -189,14 +189,15 @@ model UatOverallFeedback {
   rating5       Int?
   meanRating    Float
   // Feedback kualitatif
-  fb1           String?  // Kesesuaian fungsi & layanan
-  fb2           String?  // Kendala / bug ditemukan
-  fb3           String?  // Saran & kritik penerapan final
+  fb1           String?  @db.Text // Kesesuaian fungsi & layanan
+  fb2           String?  @db.Text // Kendala / bug ditemukan
+  fb3           String?  @db.Text // Saran & kritik penerapan final
   completedAt   DateTime @default(now())
 
-  participant Participant @relation(fields: [participantId], references: [id])
-  phase       StudyPhase  @relation(fields: [phaseId], references: [id])
+  participant Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  phase       StudyPhase  @relation(fields: [phaseId], references: [id], onDelete: Cascade)
 
   @@unique([participantId, phaseId])
   @@map("uat_overall_feedback")
 }
+
