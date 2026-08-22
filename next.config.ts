@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  generateBuildId: async () => {
+    return `evalux-${Date.now()}`
+  },
 };
 
 export default nextConfig;
