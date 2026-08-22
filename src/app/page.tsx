@@ -1,5 +1,7 @@
 'use client'
 
+// Evalux UX Research Suite - Updated 2026
+
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { IconArrowRight, IconLock, IconShield, IconClipboard, IconBarChart, IconLayers, IconCheck } from '@/components/icons'
