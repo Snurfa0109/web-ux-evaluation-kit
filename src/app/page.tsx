@@ -1,69 +1,132 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
 
-export default function Home() {
+import Link from 'next/link'
+import { IconArrowRight, IconLock, IconShield, IconClipboard, IconBarChart, IconLayers, IconCheck } from '@/components/icons'
+
+export default function LandingPage() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.tsx</code> file.
-          </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--white)' }}>
+      {/* Header / Navbar */}
+      <header style={{ borderBottom: '1px solid var(--slate-200)', background: 'var(--white)', position: 'sticky', top: 0, zIndex: 40 }}>
+        <div className="container" style={{ height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ width: 32, height: 32, borderRadius: 'var(--radius-md)', background: 'var(--slate-900)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--white)' }}>
+              <IconShield size={18} />
+            </div>
+            <div>
+              <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--slate-900)' }}>Portal Evaluasi UX</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--slate-500)' }}>Disnakertrans Kab. Serang</div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <Link href="/daftar" className="btn btn-secondary btn-sm">
+              Daftar
+            </Link>
+            <Link href="/masuk" className="btn btn-primary btn-sm" id="btn-login-header">
+              Masuk
+            </Link>
+          </div>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+      </header>
+
+      {/* Hero Section */}
+      <main style={{ flex: 1 }}>
+        <section style={{ padding: '4.5rem 0 3.5rem', borderBottom: '1px solid var(--slate-100)', background: 'radial-gradient(ellipse at top, var(--slate-50), var(--white))' }}>
+          <div className="container" style={{ maxWidth: 800, textAlign: 'center' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.3rem 0.75rem', background: 'var(--slate-100)', borderRadius: 'var(--radius-full)', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-700)', marginBottom: '1.5rem' }}>
+              <span>Penelitian Evaluasi Pengalaman Pengguna</span>
+            </div>
+
+            <h1 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--slate-900)', lineHeight: 1.2, marginBottom: '1.25rem' }}>
+              Evaluasi & Pengembangan Layanan Digital Disnakertrans
+            </h1>
+
+            <p style={{ fontSize: '1.0625rem', color: 'var(--slate-600)', maxWidth: 640, margin: '0 auto 2rem', lineHeight: 1.7 }}>
+              Bantu kami menguji dan mengevaluasi efektivitas layanan ketenagakerjaan digital Kabupaten Serang melalui 3 tahapan pengujian.
+            </p>
+
+            <div style={{ display: 'flex', gap: '0.875rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Link href="/daftar" className="btn btn-primary btn-lg" id="btn-mulai-evaluasi">
+                Mulai Partisipasi <IconArrowRight size={16} />
+              </Link>
+              <Link href="/masuk" className="btn btn-secondary btn-lg" id="btn-punya-code">
+                Saya Sudah Memiliki Kode
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* 3 Phases Overview */}
+        <section style={{ padding: '4rem 0', background: 'var(--slate-50)' }}>
+          <div className="container">
+            <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+              <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Tahapan Evaluasi</h2>
+              <p style={{ color: 'var(--slate-500)' }}>Pengujian dilakukan bertahap menggunakan instrumen standar tervalidasi</p>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
+              <div className="card card-hover" style={{ padding: '1.75rem' }}>
+                <div style={{ width: 36, height: 36, borderRadius: 'var(--radius-md)', background: 'var(--slate-100)', color: 'var(--slate-800)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem', fontWeight: 700, fontSize: '0.875rem' }}>
+                  01
+                </div>
+                <div style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--accent)', marginBottom: '0.375rem' }}>
+                  Website Existing
+                </div>
+                <h3 style={{ fontSize: '1.125rem', marginBottom: '0.5rem' }}>System Usability Scale (SUS)</h3>
+                <p style={{ fontSize: '0.875rem', color: 'var(--slate-600)', lineHeight: 1.6 }}>
+                  Evaluasi tingkat kebergunaan (*usability*) pada website Disnakertrans yang saat ini beroperasi menggunakan 10 item pernyataan standar.
+                </p>
+              </div>
+
+              <div className="card card-hover" style={{ padding: '1.75rem' }}>
+                <div style={{ width: 36, height: 36, borderRadius: 'var(--radius-md)', background: 'var(--slate-100)', color: 'var(--slate-800)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem', fontWeight: 700, fontSize: '0.875rem' }}>
+                  02
+                </div>
+                <div style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--accent)', marginBottom: '0.375rem' }}>
+                  Prototype Redesign
+                </div>
+                <h3 style={{ fontSize: '1.125rem', marginBottom: '0.5rem' }}>User Experience Questionnaire (UEQ)</h3>
+                <p style={{ fontSize: '0.875rem', color: 'var(--slate-600)', lineHeight: 1.6 }}>
+                  Pengujian rancangan desain baru mencakup 6 dimensi pengalaman pengguna (*Daya Tarik, Kejelasan, Efisiensi, Ketepatan, Stimulasi, dan Kebaruan*).
+                </p>
+              </div>
+
+              <div className="card card-hover" style={{ padding: '1.75rem' }}>
+                <div style={{ width: 36, height: 36, borderRadius: 'var(--radius-md)', background: 'var(--slate-100)', color: 'var(--slate-800)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem', fontWeight: 700, fontSize: '0.875rem' }}>
+                  03
+                </div>
+                <div style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--accent)', marginBottom: '0.375rem' }}>
+                  Website Final
+                </div>
+                <h3 style={{ fontSize: '1.125rem', marginBottom: '0.5rem' }}>User Acceptance Testing (UAT)</h3>
+                <p style={{ fontSize: '0.875rem', color: 'var(--slate-600)', lineHeight: 1.6 }}>
+                  Pengujian fungsionalitas dan penerimaan sistem pada implementasi akhir website berbasis skenario tugas terstruktur.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Note */}
+        <section style={{ padding: '2.5rem 0', background: 'var(--white)', borderTop: '1px solid var(--slate-200)' }}>
+          <div className="content-container">
+            <div className="alert alert-info">
+              <IconLock size={18} style={{ flexShrink: 0, marginTop: 2 }} />
+              <div>
+                <strong>Informasi Partisipasi:</strong> Anda cukup mendaftar satu kali untuk mendapatkan <em>Participant Code</em> unik. Kode tersebut digunakan untuk mengakses seluruh tahapan penelitian sesuai jadwal yang ditentukan.
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
+
+      {/* Footer */}
+      <footer style={{ borderTop: '1px solid var(--slate-200)', background: 'var(--slate-50)', padding: '1.75rem 0', textAlign: 'center', fontSize: '0.8125rem', color: 'var(--slate-500)' }}>
+        <div className="container">
+          <p>© 2026 Platform Penelitian Evaluasi UX — Disnakertrans Kabupaten Serang</p>
+        </div>
+      </footer>
     </div>
-  );
+  )
 }
