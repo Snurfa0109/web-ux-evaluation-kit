@@ -3,13 +3,15 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { IconRepeat, IconBarChart, IconDownload, IconCheck, IconTrash, IconInfo, IconLogOut, IconShield } from '@/components/icons'
+import { IconRepeat, IconBarChart, IconDownload, IconCheck, IconTrash, IconInfo, IconLogOut } from '@/components/icons'
 
 export default function BotAdminDashboardPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [count, setCount] = useState('10')
   const [tendency, setTendency] = useState('HIGH')
+  const [selectedInstruments, setSelectedInstruments] = useState<string[]>(['SUS', 'UEQ', 'UAT'])
+  const [customFeedback, setCustomFeedback] = useState('')
   const [running, setRunning] = useState(false)
   const [logs, setLogs] = useState<string[]>([])
   const [message, setMessage] = useState('')
@@ -29,8 +31,20 @@ export default function BotAdminDashboardPage() {
     router.push('/bot-admin/login')
   }
 
+  const toggleInstrument = (inst: string) => {
+    setSelectedInstruments(prev =>
+      prev.includes(inst) ? prev.filter(i => i !== inst) : [...prev, inst]
+    )
+  }
+
   const handleRunBot = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (selectedInstruments.length === 0) {
+      alert('Mohon pilih minimal 1 instrumen (SUS, UEQ, atau UAT).')
+      return
+    }
+
     setRunning(true)
     setMessage('')
     setLogs([])
@@ -39,14 +53,19 @@ export default function BotAdminDashboardPage() {
       const res = await fetch('/api/admin/bot-generator', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ count: parseInt(count, 10), tendency }),
+        body: JSON.stringify({
+          count: parseInt(count, 10),
+          tendency,
+          instruments: selectedInstruments,
+          customFeedback,
+        }),
       })
 
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Gagal menjalankan bot')
 
       setLogs(data.logs || [])
-      setMessage(`Berhasil meregenerasi ${data.createdCount} responden bot! Seluruh kuesioner (SUS, UEQ, UAT) terisi otomatis.`)
+      setMessage(`Berhasil meregenerasi ${data.createdCount} responden bot! Instrumen (${selectedInstruments.join(', ')}) terisi sesuai konfigurasi Kak Siti.`)
     } catch (err: any) {
       alert(`Error: ${err.message}`)
     } finally {
@@ -62,7 +81,7 @@ export default function BotAdminDashboardPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--slate-50)', display: 'flex', flexDirection: 'column' }}>
-      {/* Standalone Topbar */}
+      {/* Topbar */}
       <header style={{ borderBottom: '1px solid var(--slate-200)', background: 'var(--white)', padding: '0.875rem 0', position: 'sticky', top: 0, zIndex: 40 }}>
         <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -93,10 +112,10 @@ export default function BotAdminDashboardPage() {
 
       {/* Main Area */}
       <main style={{ flex: 1, padding: '2.5rem 0 4rem' }}>
-        <div className="container" style={{ maxWidth: 1000 }}>
+        <div className="container" style={{ maxWidth: 1040 }}>
           <div style={{ marginBottom: '1.75rem' }}>
             <h1 className="page-title">Dashboard Pengelola Bot Responden</h1>
-            <p className="page-subtitle">Panel instan terpisah untuk mensimulasikan data pengisian kuesioner responden bot</p>
+            <p className="page-subtitle">Pilih instrumen yang ingin diisi bot & masukkan teks jawaban/masukan kualitatif sesuai keinginan Anda</p>
           </div>
 
           {message && (
@@ -114,6 +133,32 @@ export default function BotAdminDashboardPage() {
                 </h3>
               </div>
               <div className="card-body" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                
+                {/* 1. Instrument Checkboxes */}
+                <div className="form-group">
+                  <label className="form-label">
+                    Pilih Instrumen yang Ingin Diisi Bot <span className="required">*</span>
+                  </label>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.25rem' }}>
+                    {[
+                      { id: 'SUS', name: 'Tahap 1 — System Usability Scale (SUS)' },
+                      { id: 'UEQ', name: 'Tahap 2 — User Experience Questionnaire (UEQ)' },
+                      { id: 'UAT', name: 'Tahap 3 — User Acceptance Testing (UAT)' },
+                    ].map(inst => (
+                      <label key={inst.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--slate-800)', cursor: 'pointer', background: 'var(--slate-50)', padding: '0.5rem 0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--slate-200)' }}>
+                        <input
+                          type="checkbox"
+                          checked={selectedInstruments.includes(inst.id)}
+                          onChange={() => toggleInstrument(inst.id)}
+                          style={{ width: 16, height: 16 }}
+                        />
+                        <span style={{ fontWeight: 600 }}>{inst.name}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 2. Respondent Count */}
                 <div className="form-group">
                   <label className="form-label" htmlFor="inp-count">
                     Jumlah Responden Bot <span className="required">*</span>
@@ -127,14 +172,15 @@ export default function BotAdminDashboardPage() {
                     <option value="1">1 Responden Bot</option>
                     <option value="5">5 Responden Bot</option>
                     <option value="10">10 Responden Bot (Standar)</option>
-                    <option value="15">15 Responden Bot (Lengkap 3 Phase)</option>
+                    <option value="15">15 Responden Bot (Lengkap)</option>
                     <option value="30">30 Responden Bot (Target Riset Penuh)</option>
                   </select>
                 </div>
 
+                {/* 3. Rating Tendency */}
                 <div className="form-group">
                   <label className="form-label" htmlFor="inp-tendency">
-                    Kecenderungan Nilai (*Usability Tendency*) <span className="required">*</span>
+                    Kecenderungan Skor Skala (*Usability Tendency*) <span className="required">*</span>
                   </label>
                   <select
                     id="inp-tendency"
@@ -144,8 +190,25 @@ export default function BotAdminDashboardPage() {
                   >
                     <option value="HIGH">Tinggi / Positif (Skor SUS ~75-85)</option>
                     <option value="EXCELLENT">Sangat Tinggi / Excellent (Skor SUS &gt;85)</option>
+                    <option value="AVERAGE">Netral / Sedang (Skor SUS ~50-68)</option>
                     <option value="MIXED">Bervariasi / Mixed (Realistis Gabungan)</option>
                   </select>
+                </div>
+
+                {/* 4. Custom Feedback Text */}
+                <div className="form-group">
+                  <label className="form-label" htmlFor="inp-custom-feedback">
+                    Jawaban / Masukan Kualitatif Custom Responden (Opsional)
+                  </label>
+                  <textarea
+                    id="inp-custom-feedback"
+                    className="form-textarea"
+                    rows={3}
+                    value={customFeedback}
+                    onChange={e => setCustomFeedback(e.target.value)}
+                    placeholder="Contoh: Tampilan informasi lowongan kerja sangat lengkap dan navigasi mudah diakses."
+                  />
+                  <span className="form-hint">Jika diisi, bot akan memasukkan kalimat masukan kualitatif ini ke dalam jawaban kuesioner!</span>
                 </div>
 
                 <div>
@@ -162,7 +225,7 @@ export default function BotAdminDashboardPage() {
             </form>
 
             {/* Live Terminal Log */}
-            <div className="card" style={{ background: '#0f172a', color: '#f8fafc', minHeight: 320, display: 'flex', flexDirection: 'column' }}>
+            <div className="card" style={{ background: '#0f172a', color: '#f8fafc', minHeight: 400, display: 'flex', flexDirection: 'column' }}>
               <div className="card-header" style={{ borderBottom: '1px solid #1e293b', background: '#1e293b', padding: '0.75rem 1rem' }}>
                 <h3 style={{ fontSize: '0.875rem', color: '#cbd5e1', fontFamily: 'var(--font-mono)', margin: 0 }}>
                   Live Terminal Bot Activity Logs
@@ -171,7 +234,7 @@ export default function BotAdminDashboardPage() {
               <div className="card-body" style={{ padding: '1rem', flex: 1, overflowY: 'auto', fontFamily: 'var(--font-mono)', fontSize: '0.8125rem', lineHeight: 1.6 }}>
                 {running && (
                   <div style={{ color: '#38bdf8', marginBottom: '0.5rem' }}>
-                    ⚡ Memproses pembuatan responden bot & pengisian instrumen...
+                    ⚡ Memproses pembuatan responden bot &amp; pengisian instrumen ({selectedInstruments.join(', ')})...
                   </div>
                 )}
 
@@ -183,7 +246,7 @@ export default function BotAdminDashboardPage() {
 
                 {!running && logs.length === 0 && (
                   <div style={{ color: '#64748b' }}>
-                    Klik tombol "Jalankan Bot Responden Otomatis" untuk mengamati proses simulasi bot di sini secara langsung.
+                    Pilih instrumen di sebelah kiri &amp; klik tombol "Jalankan Bot Responden Otomatis" untuk mengamati proses simulasi bot di sini secara langsung.
                   </div>
                 )}
               </div>
@@ -193,7 +256,7 @@ export default function BotAdminDashboardPage() {
           <div className="alert alert-info">
             <IconInfo size={18} style={{ flexShrink: 0, marginTop: 2, color: '#2563eb' }} />
             <div style={{ fontSize: '0.8125rem' }}>
-              <strong>Portal Terpisah:</strong> Halaman ini beroperasi pada akun &amp; portal terpisah khusus simulasi bot. Dashboard peneliti utama (`sitinurfadiyah74@gmail.com`) tetap bersih dan independen.
+              <strong>Kustomisasi Bot Lengkap:</strong> Kak Siti bisa memilih instrumen mana saja yang diisi bot (SUS, UEQ, atau UAT) dan menentukan teks masukan kualitatif custom yang diinginkan.
             </div>
           </div>
         </div>
