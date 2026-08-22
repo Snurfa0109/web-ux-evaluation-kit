@@ -17,6 +17,7 @@ export default function BotAdminDashboardPage() {
   const [running, setRunning] = useState(false)
   const [logs, setLogs] = useState<string[]>([])
   const [message, setMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
     fetch('/api/bot-admin/login')
@@ -43,12 +44,13 @@ export default function BotAdminDashboardPage() {
     e.preventDefault()
 
     if (selectedInstruments.length === 0) {
-      alert('Mohon pilih minimal 1 instrumen (SUS, UEQ, atau UAT).')
+      setErrorMessage('Mohon pilih minimal 1 instrumen (SUS, UEQ, atau UAT).')
       return
     }
 
     setRunning(true)
     setMessage('')
+    setErrorMessage('')
     setLogs([])
 
     try {
@@ -66,12 +68,14 @@ export default function BotAdminDashboardPage() {
       })
 
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Gagal menjalankan bot')
+      if (!res.ok) {
+        throw new Error(data.error || 'Gagal menjalankan bot. Pastikan server dev sudah di-restart (npm run dev).')
+      }
 
       setLogs(data.logs || [])
       setMessage(`Berhasil meregenerasi ${data.createdCount} responden bot! Durasi pengerjaan (Time-on-Task) diset secara manusiawi (${timeMode === 'CUSTOM' ? `${customSeconds}d` : timeMode}).`)
     } catch (err: any) {
-      alert(`Error: ${err.message}`)
+      setErrorMessage(err.message || 'Gagal menjalankan simulator bot.')
     } finally {
       setRunning(false)
     }
@@ -125,6 +129,16 @@ export default function BotAdminDashboardPage() {
           {message && (
             <div className="alert alert-success" style={{ marginBottom: '1.5rem' }}>
               {message}
+            </div>
+          )}
+
+          {errorMessage && (
+            <div className="alert alert-danger" style={{ marginBottom: '1.5rem' }}>
+              <strong>Koneksi Database Membutuhkan Restart Server:</strong><br />
+              {errorMessage}<br />
+              <span style={{ fontSize: '0.8125rem', display: 'block', marginTop: '0.375rem' }}>
+                💡 <strong>Solusi:</strong> Pada terminal tempat <code>npm run dev</code> berjalan, tekan <code>Ctrl + C</code> lalu jalankan <code>npm run dev</code> kembali agar file <code>.env</code> baru terbaca.
+              </span>
             </div>
           )}
 
