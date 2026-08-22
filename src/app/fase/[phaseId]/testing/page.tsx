@@ -173,7 +173,7 @@ export default function TestingPage() {
                   gap: '0.375rem',
                 }}
               >
-                📋 Daftar Tugas ({phase.tasks.length})
+                Daftar Tugas ({phase.tasks.length})
               </button>
               <button
                 type="button"
@@ -194,7 +194,7 @@ export default function TestingPage() {
                   gap: '0.375rem',
                 }}
               >
-                📝 Kuesioner {phase.instrument} {susAnsweredCount > 0 ? `(${susAnsweredCount}/10)` : ''}
+                Kuesioner {phase.instrument} {susAnsweredCount > 0 ? `(${susAnsweredCount}/10)` : ''}
               </button>
             </div>
 

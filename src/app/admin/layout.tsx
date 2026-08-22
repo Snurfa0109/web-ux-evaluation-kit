@@ -146,7 +146,7 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
             className="mobile-menu-btn"
             id="btn-toggle-sidebar"
           >
-            ☰
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
           </button>
 
           <div style={{ fontSize: '0.8125rem', color: 'var(--slate-500)' }}>

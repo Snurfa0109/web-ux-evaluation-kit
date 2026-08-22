@@ -49,7 +49,9 @@ function SelesaiContent() {
         {instrument === 'UAT' && (
           <div className="card" style={{ marginBottom: '1.25rem', background: '#fefce8', borderColor: '#fef08a', textAlign: 'center' }}>
             <div className="card-body" style={{ padding: '1.5rem 1.25rem' }}>
-              <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🎁</div>
+              <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#fef08a', color: '#854d0e', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
+                <IconCheck size={24} />
+              </div>
               <h3 style={{ fontSize: '1.125rem', color: '#854d0e', marginBottom: '0.375rem' }}>
                 Klaim Hadiah / Insentif Evaluasi
               </h3>
@@ -63,7 +65,7 @@ function SelesaiContent() {
                 style={{ background: '#ca8a04', borderColor: '#ca8a04', color: '#ffffff', fontWeight: 700 }}
                 id="btn-klaim-hadiah"
               >
-                🎁 Klaim Hadiah / Insentif Responden
+                Klaim Hadiah / Insentif Responden
               </a>
             </div>
           </div>

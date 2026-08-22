@@ -113,12 +113,12 @@ export default function AdminDashboard() {
                 onClick={() => {
                   const url = `${window.location.origin}/daftar`
                   navigator.clipboard.writeText(url)
-                  alert('✅ Link Pendaftaran berhasil disalin ke clipboard:\n' + url)
+                  alert('Link Pendaftaran berhasil disalin ke clipboard:\n' + url)
                 }}
                 className="btn btn-sm"
                 style={{ background: 'var(--white)', color: 'var(--slate-900)', fontWeight: 700 }}
               >
-                📋 Salin Link Pendaftaran
+                Salin Link Pendaftaran
               </button>
               <button
                 type="button"
@@ -130,7 +130,7 @@ export default function AdminDashboard() {
                 className="btn btn-sm"
                 style={{ background: '#25D366', color: 'var(--white)', fontWeight: 700, border: 'none' }}
               >
-                💬 Bagikan via WhatsApp
+                Bagikan via WhatsApp
               </button>
             </div>
           </div>

@@ -35,7 +35,7 @@ export default function PengaturanPage() {
         body: JSON.stringify(settings),
       })
       if (!res.ok) throw new Error('Gagal menyimpan pengaturan')
-      setMessage('✅ Pengaturan Judul Penelitian & Teks Pembuka Halaman Depan berhasil diperbarui!')
+      setMessage('Pengaturan Judul Penelitian & Teks Pembuka Halaman Depan berhasil diperbarui!')
     } catch (err: any) {
       alert(`Error: ${err.message}`)
     } finally {
@@ -55,7 +55,7 @@ export default function PengaturanPage() {
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Gagal mereset data')
-      setMessage('✅ Berhasil: Seluruh data uji coba responden telah dibersihkan. Sistem siap untuk Go-Live!')
+      setMessage('Berhasil: Seluruh data uji coba responden telah dibersihkan. Sistem siap untuk Go-Live!')
       setShowResetModal(false)
       setConfirmInput('')
     } catch (err: any) {

@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { IconCheck, IconLock, IconArrowRight, IconUser, IconShield } from '@/components/icons'
+import { IconCheck, IconLock, IconArrowRight, IconUser, IconShield, IconInfo } from '@/components/icons'
+
 
 interface PhaseData {
   id: number
@@ -125,7 +126,9 @@ export default function PesertaPage() {
             <div className="card" style={{ marginBottom: '1.5rem', background: '#f0fdf4', borderColor: '#bbf7d0' }}>
               <div className="card-body" style={{ padding: '1.25rem 1.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.875rem' }}>
-                  <div style={{ fontSize: '1.5rem' }}>📢</div>
+                  <div style={{ color: '#166534', flexShrink: 0, marginTop: 2 }}>
+                    <IconInfo size={20} />
+                  </div>
                   <div>
                     <h3 style={{ fontSize: '1rem', color: '#166534', marginBottom: '0.25rem' }}>
                       Undangan Pengujian Lanjutan

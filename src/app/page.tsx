@@ -84,8 +84,8 @@ export default function LandingPage() {
             {/* Personal Letter / Welcome Greeting Card */}
             <div className="card" style={{ padding: '1.75rem 2rem', background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 'var(--radius-xl)', boxShadow: '0 10px 25px -5px rgba(15, 23, 42, 0.05)', marginBottom: '2.25rem', textAlign: 'left', borderLeft: '4px solid #2563eb' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-                <div style={{ width: 38, height: 38, borderRadius: '50%', background: '#eff6ff', border: '1.5px solid #bfdbfe', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem' }}>
-                  👋
+                <div style={{ width: 38, height: 38, borderRadius: '50%', background: '#eff6ff', border: '1.5px solid #bfdbfe', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2563eb' }}>
+                  <IconShield size={20} />
                 </div>
                 <div>
                   <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', margin: 0 }}>Surat Permohonan Partisipasi Responden</h3>
@@ -99,16 +99,20 @@ export default function LandingPage() {
 
               <div style={{ display: 'flex', gap: '1rem', marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9', flexWrap: 'wrap' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.75rem', fontWeight: 600, color: '#1e293b', background: '#f8fafc', padding: '0.35rem 0.625rem', borderRadius: 'var(--radius-sm)' }}>
-                  <span>⏱️ Estimasi Waktu: 5–10 Menit</span>
+                  <IconLock size={14} style={{ color: '#64748b' }} />
+                  <span>Estimasi Waktu: 5–10 Menit</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.75rem', fontWeight: 600, color: '#166534', background: '#f0fdf4', padding: '0.35rem 0.625rem', borderRadius: 'var(--radius-sm)' }}>
-                  <span>🔒 Data Dijamin Anonim & Rahasia</span>
+                  <IconCheck size={14} style={{ color: '#166534' }} />
+                  <span>Data Dijamin Anonim & Rahasia</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.75rem', fontWeight: 600, color: '#1e40af', background: '#eff6ff', padding: '0.35rem 0.625rem', borderRadius: 'var(--radius-sm)' }}>
-                  <span>🏆 3 Tahapan Pengujian Mandiri</span>
+                  <IconLayers size={14} style={{ color: '#1e40af' }} />
+                  <span>3 Tahapan Pengujian Mandiri</span>
                 </div>
               </div>
             </div>
+
 
             {/* Call to Action Buttons */}
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>

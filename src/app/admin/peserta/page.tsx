@@ -180,7 +180,7 @@ export default function PesertaAdminPage() {
                           style={{ background: '#25D366', color: '#fff', border: 'none', padding: '0.25rem 0.5rem', fontSize: '0.75rem', fontWeight: 600 }}
                           title="Kirim pesan undangan WhatsApp"
                         >
-                          💬 Kirim WA
+                          Kirim WA
                         </a>
                       )}
                       <Link href={`/admin/peserta/${p.id}`} className="btn btn-secondary btn-sm" style={{ padding: '0.25rem 0.5rem' }}>

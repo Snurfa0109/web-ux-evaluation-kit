@@ -205,7 +205,7 @@ export default function UeqPage() {
                   {item.id === 'fb4' && feedback['fb4'] === 'Ya' && (
                     <div style={{ marginTop: '1rem', padding: '1rem', background: '#f0fdf4', borderRadius: '0.5rem', border: '1px solid #bbf7d0' }}>
                       <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#166534', marginBottom: '0.375rem' }}>
-                        📱 Nomor WhatsApp / HP (Aktif) <span style={{ color: 'var(--danger)' }}>*</span>
+                        Nomor WhatsApp / HP (Aktif) <span style={{ color: 'var(--danger)' }}>*</span>
                       </label>
                       <p style={{ fontSize: '0.75rem', color: '#15803d', margin: '0 0 0.5rem 0' }}>
                         Nomor ini digunakan untuk menghubungi Anda saat tahap pengujian akhir (UAT) siap dilaksanakan.
