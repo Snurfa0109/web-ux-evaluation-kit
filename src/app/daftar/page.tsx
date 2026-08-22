@@ -16,9 +16,10 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false)
 
   const [settings, setSettings] = useState<any>({
-    researchTitle: 'PENGEMBANGAN SISTEM INFORMASI LAYANAN DINAS TENAGA KERJA DAN TRANSMIGRASI KABUPATEN SERANG BERBASIS WEB DENGAN PENDEKATAN USER CENTERED DESIGN (UCD)',
+    researchTitle: 'Pengembangan Sistem Informasi Layanan Dinas Tenaga Kerja dan Transmigrasi Kabupaten Serang Berbasis Web dengan Pendekatan User Centered Design (UCD)',
     researcherName: 'Siti Nurfadiyah',
   })
+
 
   useEffect(() => {
     fetch('/api/settings')

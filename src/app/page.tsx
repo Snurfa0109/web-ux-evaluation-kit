@@ -6,9 +6,9 @@ import { IconArrowRight, IconLock, IconShield, IconClipboard, IconBarChart, Icon
 
 export default function LandingPage() {
   const [settings, setSettings] = useState<any>({
-    researchTitle: 'PENGEMBANGAN SISTEM INFORMASI LAYANAN DINAS TENAGA KERJA DAN TRANSMIGRASI KABUPATEN SERANG BERBASIS WEB DENGAN PENDEKATAN USER CENTERED DESIGN (UCD)',
+    researchTitle: 'Pengembangan Sistem Informasi Layanan Dinas Tenaga Kerja dan Transmigrasi Kabupaten Serang Berbasis Web dengan Pendekatan User Centered Design (UCD)',
     researcherName: 'Siti Nurfadiyah',
-    welcomeGreeting: 'Halo, Bapak/Ibu/Rekan-rekan sekalian!\n\nPerkenalkan, saya Siti Nurfadiyah. Saat ini saya sedang melakukan penelitian mengenai "PENGEMBANGAN SISTEM INFORMASI LAYANAN DINAS TENAGA KERJA DAN TRANSMIGRASI KABUPATEN SERANG BERBASIS WEB DENGAN PENDEKATAN USER CENTERED DESIGN (UCD)".\n\nMohon kesediaan dan bantuan Bapak/Ibu/Rekan-rekan sekalian untuk berpartisipasi dalam pengujian serta memberikan penilaian jujur pada kuesioner evaluasi ini. Masukan dan bantuan Anda sangat berharga bagi peningkatan kualitas pelayanan publik digital. Terima kasih banyak atas waktu dan bantuannya!',
+    welcomeGreeting: 'Halo, Bapak/Ibu/Rekan-rekan sekalian!\n\nPerkenalkan, saya Siti Nurfadiyah. Saat ini saya sedang melakukan penelitian mengenai "Pengembangan Sistem Informasi Layanan Dinas Tenaga Kerja dan Transmigrasi Kabupaten Serang Berbasis Web dengan Pendekatan User Centered Design (UCD)".\n\nMohon kesediaan dan bantuan Bapak/Ibu/Rekan-rekan sekalian untuk berpartisipasi dalam pengujian serta memberikan penilaian jujur pada kuesioner evaluasi ini. Masukan dan bantuan Anda sangat berharga bagi peningkatan kualitas pelayanan publik digital. Terima kasih banyak atas waktu dan bantuannya!',
   })
 
   useEffect(() => {
@@ -174,7 +174,7 @@ export default function LandingPage() {
                   System Usability Scale (SUS)
                 </h3>
                 <p style={{ fontSize: '0.875rem', color: '#64748b', lineHeight: 1.6, margin: 0 }}>
-                  Penilaian kebergunaan (*usability*) pada website Disnakertrans yang saat ini beroperasi menggunakan 10 butir standar baku.
+                  Penilaian kebergunaan (usability) pada website Disnakertrans yang saat ini beroperasi menggunakan 10 butir standar baku.
                 </p>
               </div>
 
@@ -193,7 +193,7 @@ export default function LandingPage() {
                   User Experience Questionnaire (UEQ)
                 </h3>
                 <p style={{ fontSize: '0.875rem', color: '#64748b', lineHeight: 1.6, margin: 0 }}>
-                  Pengujian rancangan visual & interaksi baru mencakup 6 dimensi (*Daya Tarik, Kejelasan, Efisiensi, Ketepatan, Stimulasi, & Kebaruan*).
+                  Pengujian rancangan visual & interaksi baru mencakup 6 dimensi (Daya Tarik, Kejelasan, Efisiensi, Ketepatan, Stimulasi, & Kebaruan).
                 </p>
               </div>
 
@@ -212,12 +212,13 @@ export default function LandingPage() {
                   User Acceptance Testing (UAT)
                 </h3>
                 <p style={{ fontSize: '0.875rem', color: '#64748b', lineHeight: 1.6, margin: 0 }}>
-                  Pengujian penerimaan sistem akhir berbasis skenario tugas nyata (*task success rate & time-on-task*).
+                  Pengujian penerimaan sistem akhir berbasis skenario tugas nyata (task success rate & time-on-task).
                 </p>
               </div>
             </div>
           </div>
         </section>
+
 
         {/* Informational Banner */}
         <section style={{ padding: '2.5rem 0', background: '#ffffff', borderTop: '1px solid #e2e8f0' }}>
