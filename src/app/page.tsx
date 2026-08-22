@@ -23,10 +23,10 @@ export default function LandingPage() {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#fafafa' }}>
       {/* Header / Navbar */}
       <header style={{ borderBottom: '1px solid #e2e8f0', background: 'rgba(255, 255, 255, 0.85)', backdropFilter: 'blur(12px)', position: 'sticky', top: 0, zIndex: 50 }}>
-        <div className="container" style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <img src="/evalux.png" alt="Evalux Logo" style={{ height: 50, width: 'auto', objectFit: 'contain' }} />
-            <div style={{ borderLeft: '1.5px solid #cbd5e1', paddingLeft: '0.875rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div className="container" style={{ height: 68, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', flexShrink: 0 }}>
+            <img src="/evalux.png" alt="Evalux Logo" className="header-logo-img" />
+            <div className="header-brand-info">
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
                 <span style={{ fontSize: '0.6875rem', fontWeight: 700, padding: '0.1rem 0.4rem', borderRadius: '4px', background: '#eff6ff', color: '#2563eb', border: '1px solid #bfdbfe', letterSpacing: '0.02em' }}>UX RESEARCH</span>
               </div>
@@ -34,11 +34,11 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <Link href="/masuk" className="btn btn-secondary btn-sm" id="btn-login-header" style={{ borderRadius: 'var(--radius-full)', padding: '0.45rem 1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
+            <Link href="/masuk" className="btn btn-secondary btn-sm" id="btn-login-header" style={{ borderRadius: 'var(--radius-full)', padding: '0.45rem 0.875rem', fontSize: '0.8125rem' }}>
               Masuk dengan Kode
             </Link>
-            <Link href="/daftar" className="btn btn-primary btn-sm" style={{ borderRadius: 'var(--radius-full)', padding: '0.45rem 1.125rem' }}>
+            <Link href="/daftar" className="btn btn-primary btn-sm" style={{ borderRadius: 'var(--radius-full)', padding: '0.45rem 1rem', fontSize: '0.8125rem' }}>
               Daftar Responden
             </Link>
           </div>

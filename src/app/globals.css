@@ -832,3 +832,28 @@ tbody tr:hover {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Responsive Header Branding */
+.header-brand-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-left: 1.5px solid #cbd5e1;
+  padding-left: 0.875rem;
+}
+
+.header-logo-img {
+  height: 46px;
+  width: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .header-brand-info {
+    display: none !important;
+  }
+  .header-logo-img {
+    height: 32px !important;
+  }
+}
+
+
