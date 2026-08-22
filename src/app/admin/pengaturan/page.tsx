@@ -1,13 +1,47 @@
 'use client'
 
-import { useState } from 'react'
-import { IconSettings, IconShield, IconInfo, IconTrash, IconX } from '@/components/icons'
+import { useEffect, useState } from 'react'
+import { IconSettings, IconShield, IconInfo, IconTrash, IconX, IconEdit } from '@/components/icons'
 
 export default function PengaturanPage() {
   const [showResetModal, setShowResetModal] = useState(false)
   const [confirmInput, setConfirmInput] = useState('')
   const [resetting, setResetting] = useState(false)
   const [message, setMessage] = useState('')
+
+  // System Settings state
+  const [settings, setSettings] = useState({
+    researchTitle: '',
+    researcherName: '',
+    welcomeGreeting: '',
+    appDescription: '',
+  })
+  const [savingSettings, setSavingSettings] = useState(false)
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(r => r.json())
+      .then(setSettings)
+  }, [])
+
+  const handleSaveSettings = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSavingSettings(true)
+    setMessage('')
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings),
+      })
+      if (!res.ok) throw new Error('Gagal menyimpan pengaturan')
+      setMessage('✅ Pengaturan Judul Penelitian & Teks Pembuka Halaman Depan berhasil diperbarui!')
+    } catch (err: any) {
+      alert(`Error: ${err.message}`)
+    } finally {
+      setSavingSettings(false)
+    }
+  }
 
   const handleResetData = async () => {
     if (confirmInput !== 'RESET') return
@@ -35,7 +69,7 @@ export default function PengaturanPage() {
     <div className="admin-content fade-in">
       <div style={{ marginBottom: '1.75rem' }}>
         <h1 className="page-title">Pengaturan Penelitian</h1>
-        <p className="page-subtitle">Konfigurasi metodologi penelitian dan spesifikasi instrumen evaluasi</p>
+        <p className="page-subtitle">Konfigurasi metodologi penelitian, identitas peneliti, dan teks halaman depan</p>
       </div>
 
       {message && (
@@ -44,6 +78,74 @@ export default function PengaturanPage() {
         </div>
       )}
 
+      {/* Dynamic Front-Page Settings Card */}
+      <form onSubmit={handleSaveSettings} className="card" style={{ marginBottom: '1.5rem' }}>
+        <div className="card-header">
+          <h3 style={{ fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <IconEdit size={16} /> Pengaturan Teks Halaman Depan & Identitas Peneliti
+          </h3>
+        </div>
+        <div className="card-body" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <div className="form-group">
+            <label className="form-label" htmlFor="inp-research-title">
+              Judul Penelitian / Skripsi <span className="required">*</span>
+            </label>
+            <textarea
+              id="inp-research-title"
+              className="form-textarea"
+              rows={2}
+              value={settings.researchTitle}
+              onChange={e => setSettings(prev => ({ ...prev, researchTitle: e.target.value }))}
+              placeholder="Contoh: PENGEMBANGAN SISTEM INFORMASI LAYANAN..."
+              required
+              style={{ minHeight: 60, fontWeight: 600 }}
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label" htmlFor="inp-researcher-name">
+              Nama Peneliti <span className="required">*</span>
+            </label>
+            <input
+              id="inp-researcher-name"
+              type="text"
+              className="form-input"
+              value={settings.researcherName}
+              onChange={e => setSettings(prev => ({ ...prev, researcherName: e.target.value }))}
+              placeholder="Contoh: Siti Nurfadiyah"
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label" htmlFor="inp-welcome-greeting">
+              Teks Pembuka & Permohonan Bantuan Responden <span className="required">*</span>
+            </label>
+            <textarea
+              id="inp-welcome-greeting"
+              className="form-textarea"
+              rows={4}
+              value={settings.welcomeGreeting}
+              onChange={e => setSettings(prev => ({ ...prev, welcomeGreeting: e.target.value }))}
+              placeholder="Tuliskan kalimat permohonan bantuan kepada responden..."
+              required
+            />
+            <span className="form-hint">Kalimat ini akan tampil di bagian depan (Hero Section) saat responden membuka website/pendaftaran.</span>
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              disabled={savingSettings}
+              className="btn btn-primary btn-sm"
+              style={{ padding: '0.625rem 1.25rem' }}
+            >
+              {savingSettings ? 'Menyimpan Perubahan...' : 'Simpan Pengaturan Halaman Depan'}
+            </button>
+          </div>
+        </div>
+      </form>
+
       {/* Overview Card */}
       <div className="card" style={{ marginBottom: '1.5rem' }}>
         <div className="card-header">
@@ -51,10 +153,10 @@ export default function PengaturanPage() {
         </div>
         <div className="card-body" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           {[
-            { label: 'Judul Penelitian', value: 'Evaluasi Pengalaman Pengguna Website Disnakertrans Kabupaten Serang' },
+            { label: 'Judul Penelitian', value: settings.researchTitle || 'PENGEMBANGAN SISTEM INFORMASI...' },
+            { label: 'Nama Peneliti', value: settings.researcherName || 'Siti Nurfadiyah' },
             { label: 'Target Partisipan', value: '30 Responden Utama (Longitudinal)' },
             { label: 'Strategi Responden', value: 'Same Participants (Peserta yang sama mengikuti 3 tahap)' },
-            { label: 'Fallback Dropout', value: 'Izinkan Responden Baru (jika terjadi dropout)' },
           ].map(row => (
             <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.375rem 0', borderBottom: '1px solid var(--slate-100)', fontSize: '0.875rem', gap: '1rem' }}>
               <span style={{ color: 'var(--slate-500)' }}>{row.label}</span>
@@ -63,6 +165,7 @@ export default function PengaturanPage() {
           ))}
         </div>
       </div>
+
 
       {/* Instruments Specification */}
       <div className="card" style={{ marginBottom: '1.5rem' }}>

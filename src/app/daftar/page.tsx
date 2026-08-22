@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { IconArrowRight, IconShield, IconArrowLeft } from '@/components/icons'
@@ -13,6 +14,17 @@ export default function RegisterPage() {
   })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  const [settings, setSettings] = useState<any>({
+    researchTitle: 'PENGEMBANGAN SISTEM INFORMASI LAYANAN DINAS TENAGA KERJA DAN TRANSMIGRASI KABUPATEN SERANG BERBASIS WEB DENGAN PENDEKATAN USER CENTERED DESIGN (UCD)',
+    researcherName: 'Siti Nurfadiyah',
+  })
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(r => r.json())
+      .then(setSettings)
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -60,17 +72,25 @@ export default function RegisterPage() {
           <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--slate-600)' }}>
             <IconArrowLeft size={16} /> Beranda
           </Link>
-          <span style={{ fontSize: '0.8125rem', color: 'var(--slate-500)' }}>Pendaftaran Responden</span>
+          <span style={{ fontSize: '0.8125rem', color: 'var(--slate-500)' }}>Peneliti: <strong>{settings.researcherName || 'Siti Nurfadiyah'}</strong></span>
         </div>
       </header>
 
       {/* Form Area */}
-      <main style={{ flex: 1, padding: '3rem 0 4rem' }}>
+      <main style={{ flex: 1, padding: '2.5rem 0 4rem' }}>
         <div className="content-container">
-          <div style={{ marginBottom: '2rem' }}>
-            <h1 style={{ fontSize: '1.625rem', marginBottom: '0.375rem' }}>Data Responden</h1>
-            <p>Isi data profil singkat berikut sebelum memulai evaluasi sistem.</p>
+          <div style={{ marginBottom: '1.75rem' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Form Registrasi Responden
+            </span>
+            <h1 style={{ fontSize: '1.375rem', fontWeight: 800, marginTop: '0.25rem', marginBottom: '0.5rem', lineHeight: 1.3 }}>
+              {settings.researchTitle}
+            </h1>
+            <p style={{ fontSize: '0.875rem', color: 'var(--slate-600)', margin: 0 }}>
+              Silakan isi data diri profil singkat di bawah ini sebelum memulai pengujian.
+            </p>
           </div>
+
 
           <div className="card">
             <form onSubmit={handleSubmit} className="card-body" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>

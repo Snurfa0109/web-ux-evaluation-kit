@@ -1,9 +1,22 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { IconArrowRight, IconLock, IconShield, IconClipboard, IconBarChart, IconLayers, IconCheck } from '@/components/icons'
 
 export default function LandingPage() {
+  const [settings, setSettings] = useState<any>({
+    researchTitle: 'PENGEMBANGAN SISTEM INFORMASI LAYANAN DINAS TENAGA KERJA DAN TRANSMIGRASI KABUPATEN SERANG BERBASIS WEB DENGAN PENDEKATAN USER CENTERED DESIGN (UCD)',
+    researcherName: 'Siti Nurfadiyah',
+    welcomeGreeting: 'Halo, Bapak/Ibu/Rekan-rekan sekalian!\n\nPerkenalkan, saya Siti Nurfadiyah. Saat ini saya sedang melakukan penelitian mengenai "PENGEMBANGAN SISTEM INFORMASI LAYANAN DINAS TENAGA KERJA DAN TRANSMIGRASI KABUPATEN SERANG BERBASIS WEB DENGAN PENDEKATAN USER CENTERED DESIGN (UCD)".\n\nMohon kesediaan dan bantuan Bapak/Ibu/Rekan-rekan sekalian untuk berpartisipasi dalam pengujian serta memberikan penilaian jujur pada kuesioner evaluasi ini. Masukan dan bantuan Anda sangat berharga bagi peningkatan kualitas pelayanan publik digital. Terima kasih banyak atas waktu dan bantuannya!',
+  })
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(r => r.json())
+      .then(setSettings)
+  }, [])
+
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--white)' }}>
       {/* Header / Navbar */}
@@ -32,23 +45,26 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <main style={{ flex: 1 }}>
-        <section style={{ padding: '4.5rem 0 3.5rem', borderBottom: '1px solid var(--slate-100)', background: 'radial-gradient(ellipse at top, var(--slate-50), var(--white))' }}>
-          <div className="container" style={{ maxWidth: 800, textAlign: 'center' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.3rem 0.75rem', background: 'var(--slate-100)', borderRadius: 'var(--radius-full)', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-700)', marginBottom: '1.5rem' }}>
-              <span>Penelitian Evaluasi Pengalaman Pengguna</span>
+        <section style={{ padding: '3.5rem 0 3.5rem', borderBottom: '1px solid var(--slate-100)', background: 'radial-gradient(ellipse at top, var(--slate-50), var(--white))' }}>
+          <div className="container" style={{ maxWidth: 840, textAlign: 'center' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.35rem 0.875rem', background: 'var(--slate-100)', borderRadius: 'var(--radius-full)', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--slate-700)', marginBottom: '1.25rem' }}>
+              <span>Peneliti: <strong>{settings.researcherName || 'Siti Nurfadiyah'}</strong></span>
             </div>
 
-            <h1 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--slate-900)', lineHeight: 1.2, marginBottom: '1.25rem' }}>
-              Evaluasi & Pengembangan Layanan Digital Disnakertrans
+            <h1 style={{ fontSize: '1.625rem', fontWeight: 800, color: 'var(--slate-900)', lineHeight: 1.35, marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '-0.01em' }}>
+              {settings.researchTitle}
             </h1>
 
-            <p style={{ fontSize: '1.0625rem', color: 'var(--slate-600)', maxWidth: 640, margin: '0 auto 2rem', lineHeight: 1.7 }}>
-              Bantu kami menguji dan mengevaluasi efektivitas layanan ketenagakerjaan digital Kabupaten Serang melalui 3 tahapan pengujian.
-            </p>
+            {/* Welcome Greeting Banner */}
+            <div className="card" style={{ textAlign: 'left', padding: '1.25rem 1.5rem', background: 'var(--white)', border: '1px solid var(--slate-200)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)', marginBottom: '2rem' }}>
+              <div style={{ fontSize: '0.875rem', color: 'var(--slate-700)', lineHeight: 1.7, whiteSpace: 'pre-line' }}>
+                {settings.welcomeGreeting}
+              </div>
+            </div>
 
             <div style={{ display: 'flex', gap: '0.875rem', justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link href="/daftar" className="btn btn-primary btn-lg" id="btn-mulai-evaluasi">
-                Mulai Partisipasi <IconArrowRight size={16} />
+                Mulai Partisipasi & Pengisian <IconArrowRight size={16} />
               </Link>
               <Link href="/masuk" className="btn btn-secondary btn-lg" id="btn-punya-code">
                 Saya Sudah Memiliki Kode
@@ -56,6 +72,7 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+
 
         {/* 3 Phases Overview */}
         <section style={{ padding: '4rem 0', background: 'var(--slate-50)' }}>
