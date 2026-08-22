@@ -1,0 +1,35 @@
+[
+  {
+    "name": "Siti Rahmawati",
+    "age": 24,
+    "gender": "Perempuan",
+    "occupation": "Pencari Kerja",
+    "whatsappNumber": "081234567890",
+    "governmentWebsiteExperience": true,
+    "disnakertransExperience": false,
+    "susScoreTendency": "HIGH",
+    "feedbackText": "Tampilan informasi lowongan kerja sangat jelas dan mudah dipahami."
+  },
+  {
+    "name": "Budi Santoso",
+    "age": 28,
+    "gender": "Laki-laki",
+    "occupation": "Pegawai Swasta",
+    "whatsappNumber": "081234567891",
+    "governmentWebsiteExperience": true,
+    "disnakertransExperience": true,
+    "susScoreTendency": "MEDIUM",
+    "feedbackText": "Kecepatan muat halaman baik, navigasi mudah."
+  },
+  {
+    "name": "Ahmad Fauzi",
+    "age": 22,
+    "gender": "Laki-laki",
+    "occupation": "Mahasiswa",
+    "whatsappNumber": "081234567892",
+    "governmentWebsiteExperience": false,
+    "disnakertransExperience": false,
+    "susScoreTendency": "HIGH",
+    "feedbackText": "Tampilan modern dan ramah digunakan di smartphone."
+  }
+]

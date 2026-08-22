@@ -34,6 +34,7 @@ const NAV_ITEMS = [
   { section: 'Analisis' },
   { href: '/admin/analitik', icon: IconBarChart, label: 'Analitik' },
   { href: '/admin/longitudinal', icon: IconRepeat, label: 'Longitudinal' },
+  { href: '/admin/simulator', icon: IconRepeat, label: 'Simulator Bot' },
   { section: 'Sistem' },
   { href: '/admin/ekspor', icon: IconDownload, label: 'Ekspor Excel' },
   { href: '/admin/pengaturan', icon: IconSettings, label: 'Pengaturan' },
