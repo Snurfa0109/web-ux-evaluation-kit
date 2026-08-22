@@ -13,21 +13,81 @@ function getRandomInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
+async function ensureDefaultPhases() {
+  let phase1 = await prisma.studyPhase.findFirst({ where: { instrument: 'SUS' }, include: { tasks: true } })
+  if (!phase1) {
+    phase1 = await prisma.studyPhase.create({
+      data: {
+        phaseNumber: 1,
+        phaseName: 'Existing Website — SUS',
+        instrument: 'SUS',
+        status: 'ACTIVE',
+        externalUrl: 'https://disnakertrans.serangkab.go.id/',
+        tasks: {
+          create: [
+            { taskCode: 'T1-01', title: 'Pencarian Lowongan', description: 'Temukan informasi lowongan kerja pada website.', order: 1 },
+            { taskCode: 'T1-02', title: 'Pencarian Pelatihan', description: 'Temukan informasi program pelatihan kerja.', order: 2 },
+          ],
+        },
+      },
+      include: { tasks: true },
+    })
+  }
+
+  let phase2 = await prisma.studyPhase.findFirst({ where: { instrument: 'UEQ' }, include: { tasks: true } })
+  if (!phase2) {
+    phase2 = await prisma.studyPhase.create({
+      data: {
+        phaseNumber: 2,
+        phaseName: 'Prototype Redesign — UEQ',
+        instrument: 'UEQ',
+        status: 'ACTIVE',
+        externalUrl: 'https://disnakertrans.serangkab.go.id/',
+        tasks: {
+          create: [
+            { taskCode: 'T2-01', title: 'Uji Prototype Visual', description: 'Coba navigasi prototype desain baru.', order: 1 },
+          ],
+        },
+      },
+      include: { tasks: true },
+    })
+  }
+
+  let phase3 = await prisma.studyPhase.findFirst({ where: { instrument: 'UAT' }, include: { tasks: true } })
+  if (!phase3) {
+    phase3 = await prisma.studyPhase.create({
+      data: {
+        phaseNumber: 3,
+        phaseName: 'Final Website — UAT',
+        instrument: 'UAT',
+        status: 'ACTIVE',
+        externalUrl: 'https://disnakertrans.serangkab.go.id/',
+        tasks: {
+          create: [
+            { taskCode: 'TC-001', title: 'Pengujian Skenario Utama', description: 'Buka layanan publik dan lakukan pengujian.', order: 1 },
+          ],
+        },
+      },
+      include: { tasks: true },
+    })
+  }
+
+  return { phase1, phase2, phase3 }
+}
+
 // POST /api/admin/bot-generator
 export async function POST(request: Request) {
   try {
     const body = await request.json()
     const count = parseInt(body.count || '5', 10)
-    const tendency = body.tendency || 'HIGH' // HIGH | MIXED | EXCELLENT | AVERAGE
+    const tendency = body.tendency || 'HIGH'
     const targetInstruments: string[] = body.instruments || ['SUS', 'UEQ', 'UAT']
     const customFeedback: string = (body.customFeedback || '').trim()
-    const timeMode: string = body.timeMode || 'REALISTIC' // REALISTIC | FAST | SLOW | CUSTOM
+    const timeMode: string = body.timeMode || 'REALISTIC'
     const customSeconds = parseInt(body.customSeconds || '90', 10)
 
-    const phases = await prisma.studyPhase.findMany({ orderBy: { phaseNumber: 'asc' }, include: { tasks: true } })
-    const phase1 = phases.find(p => p.instrument === 'SUS')
-    const phase2 = phases.find(p => p.instrument === 'UEQ')
-    const phase3 = phases.find(p => p.instrument === 'UAT')
+    // Ensure default study phases exist in DB
+    const { phase1, phase2, phase3 } = await ensureDefaultPhases()
 
     const logs: string[] = []
     let createdCount = 0
@@ -65,12 +125,12 @@ export async function POST(request: Request) {
 
       const filledInstruments: string[] = []
 
-      // Calculate realistic human completion duration in seconds per task
+      // Calculate completion duration in seconds
       let durationSeconds = 60
       if (timeMode === 'FAST') durationSeconds = getRandomInt(20, 45)
       else if (timeMode === 'SLOW') durationSeconds = getRandomInt(120, 240)
       else if (timeMode === 'CUSTOM') durationSeconds = customSeconds
-      else durationSeconds = getRandomInt(45, 135) // REALISTIC natural human range
+      else durationSeconds = getRandomInt(45, 135)
 
       // 1. SUS Response
       if (targetInstruments.includes('SUS') && phase1) {
@@ -163,7 +223,7 @@ export async function POST(request: Request) {
             fb3: customFeedback || 'Sistem sangat memuaskan.',
           },
         })
-        filledInstruments.push(`UAT (${durationSeconds}d/task)`)
+        filledInstruments.push(`UAT (${durationSeconds}s/task)`)
       }
 
       createdCount++
@@ -176,6 +236,7 @@ export async function POST(request: Request) {
       logs,
     })
   } catch (err: any) {
-    return NextResponse.json({ error: err.message || 'Gagal menjalankan simulator bot' }, { status: 500 })
+    console.error('Bot Generator Error:', err)
+    return NextResponse.json({ error: err.message || 'Koneksi database MySQL lokal belum siap. Mohon pastikan MySQL/XAMPP aktif.' }, { status: 500 })
   }
 }
