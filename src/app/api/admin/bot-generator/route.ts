@@ -21,6 +21,8 @@ export async function POST(request: Request) {
     const tendency = body.tendency || 'HIGH' // HIGH | MIXED | EXCELLENT | AVERAGE
     const targetInstruments: string[] = body.instruments || ['SUS', 'UEQ', 'UAT']
     const customFeedback: string = (body.customFeedback || '').trim()
+    const timeMode: string = body.timeMode || 'REALISTIC' // REALISTIC | FAST | SLOW | CUSTOM
+    const customSeconds = parseInt(body.customSeconds || '90', 10)
 
     const phases = await prisma.studyPhase.findMany({ orderBy: { phaseNumber: 'asc' }, include: { tasks: true } })
     const phase1 = phases.find(p => p.instrument === 'SUS')
@@ -62,6 +64,13 @@ export async function POST(request: Request) {
       })
 
       const filledInstruments: string[] = []
+
+      // Calculate realistic human completion duration in seconds per task
+      let durationSeconds = 60
+      if (timeMode === 'FAST') durationSeconds = getRandomInt(20, 45)
+      else if (timeMode === 'SLOW') durationSeconds = getRandomInt(120, 240)
+      else if (timeMode === 'CUSTOM') durationSeconds = customSeconds
+      else durationSeconds = getRandomInt(45, 135) // REALISTIC natural human range
 
       // 1. SUS Response
       if (targetInstruments.includes('SUS') && phase1) {
@@ -126,9 +135,10 @@ export async function POST(request: Request) {
         filledInstruments.push('UEQ')
       }
 
-      // 3. UAT Response
+      // 3. UAT Response with Humanized Time-on-Task
       if (targetInstruments.includes('UAT') && phase3) {
         for (const t of phase3.tasks) {
+          const taskTime = durationSeconds + getRandomInt(-10, 15)
           await prisma.uatTaskResponse.create({
             data: {
               participantId: participant.id,
@@ -136,7 +146,7 @@ export async function POST(request: Request) {
               taskId: t.id,
               status: 'PASS',
               notes: 'Tugas pengujian berhasil dilaksanakan dengan lancar.',
-              timeOnTaskSeconds: getRandomInt(25, 60),
+              timeOnTaskSeconds: Math.max(15, taskTime),
             },
           })
         }
@@ -153,11 +163,11 @@ export async function POST(request: Request) {
             fb3: customFeedback || 'Sistem sangat memuaskan.',
           },
         })
-        filledInstruments.push('UAT')
+        filledInstruments.push(`UAT (${durationSeconds}d/task)`)
       }
 
       createdCount++
-      logs.push(`✅ [${code}] ${name} (${gender}, ${age}thn) — Terisi: ${filledInstruments.join(', ')}`)
+      logs.push(`✅ [${code}] ${name} (${gender}, ${age}thn) — Terisi: ${filledInstruments.join(', ')} [Durasi: ~${durationSeconds}s]`)
     }
 
     return NextResponse.json({

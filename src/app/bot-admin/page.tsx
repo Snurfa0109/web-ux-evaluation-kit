@@ -11,6 +11,8 @@ export default function BotAdminDashboardPage() {
   const [count, setCount] = useState('10')
   const [tendency, setTendency] = useState('HIGH')
   const [selectedInstruments, setSelectedInstruments] = useState<string[]>(['SUS', 'UEQ', 'UAT'])
+  const [timeMode, setTimeMode] = useState('REALISTIC')
+  const [customSeconds, setCustomSeconds] = useState('90')
   const [customFeedback, setCustomFeedback] = useState('')
   const [running, setRunning] = useState(false)
   const [logs, setLogs] = useState<string[]>([])
@@ -58,6 +60,8 @@ export default function BotAdminDashboardPage() {
           tendency,
           instruments: selectedInstruments,
           customFeedback,
+          timeMode,
+          customSeconds: parseInt(customSeconds, 10),
         }),
       })
 
@@ -65,7 +69,7 @@ export default function BotAdminDashboardPage() {
       if (!res.ok) throw new Error(data.error || 'Gagal menjalankan bot')
 
       setLogs(data.logs || [])
-      setMessage(`Berhasil meregenerasi ${data.createdCount} responden bot! Instrumen (${selectedInstruments.join(', ')}) terisi sesuai konfigurasi Kak Siti.`)
+      setMessage(`Berhasil meregenerasi ${data.createdCount} responden bot! Durasi pengerjaan (Time-on-Task) diset secara manusiawi (${timeMode === 'CUSTOM' ? `${customSeconds}d` : timeMode}).`)
     } catch (err: any) {
       alert(`Error: ${err.message}`)
     } finally {
@@ -115,7 +119,7 @@ export default function BotAdminDashboardPage() {
         <div className="container" style={{ maxWidth: 1040 }}>
           <div style={{ marginBottom: '1.75rem' }}>
             <h1 className="page-title">Dashboard Pengelola Bot Responden</h1>
-            <p className="page-subtitle">Pilih instrumen yang ingin diisi bot & masukkan teks jawaban/masukan kualitatif sesuai keinginan Anda</p>
+            <p className="page-subtitle">Atur instrumen, durasi pengerjaan manusiawi (*time-on-task*), &amp; masukan kualitatif responden bot</p>
           </div>
 
           {message && (
@@ -177,7 +181,44 @@ export default function BotAdminDashboardPage() {
                   </select>
                 </div>
 
-                {/* 3. Rating Tendency */}
+                {/* 3. Time-on-Task / Durasi Pengerjaan */}
+                <div className="form-group">
+                  <label className="form-label" htmlFor="inp-time-mode">
+                    Durasi Pengerjaan Tugas (*Time-on-Task*) <span className="required">*</span>
+                  </label>
+                  <select
+                    id="inp-time-mode"
+                    className="form-select"
+                    value={timeMode}
+                    onChange={e => setTimeMode(e.target.value)}
+                  >
+                    <option value="REALISTIC">Variatif Manusiawi Alami (~45 – 135 Detik per Tugas)</option>
+                    <option value="FAST">Cepat Alami (~20 – 45 Detik per Tugas)</option>
+                    <option value="SLOW">Teliti / Panjang (~120 – 240 Detik per Tugas)</option>
+                    <option value="CUSTOM">Input Detik Manual (Ditentukan Sendiri)</option>
+                  </select>
+                  <span className="form-hint">Masing-masing responden akan memiliki durasi pengerjaan acak yang alami seperti pengisian manual oleh manusia.</span>
+                </div>
+
+                {timeMode === 'CUSTOM' && (
+                  <div className="form-group fade-in">
+                    <label className="form-label" htmlFor="inp-custom-sec">
+                      Durasi Manual (Detik) <span className="required">*</span>
+                    </label>
+                    <input
+                      id="inp-custom-sec"
+                      type="number"
+                      className="form-input"
+                      value={customSeconds}
+                      onChange={e => setCustomSeconds(e.target.value)}
+                      placeholder="Contoh: 90"
+                      min={10}
+                      max={600}
+                    />
+                  </div>
+                )}
+
+                {/* 4. Rating Tendency */}
                 <div className="form-group">
                   <label className="form-label" htmlFor="inp-tendency">
                     Kecenderungan Skor Skala (*Usability Tendency*) <span className="required">*</span>
@@ -195,7 +236,7 @@ export default function BotAdminDashboardPage() {
                   </select>
                 </div>
 
-                {/* 4. Custom Feedback Text */}
+                {/* 5. Custom Feedback Text */}
                 <div className="form-group">
                   <label className="form-label" htmlFor="inp-custom-feedback">
                     Jawaban / Masukan Kualitatif Custom Responden (Opsional)
@@ -225,7 +266,7 @@ export default function BotAdminDashboardPage() {
             </form>
 
             {/* Live Terminal Log */}
-            <div className="card" style={{ background: '#0f172a', color: '#f8fafc', minHeight: 400, display: 'flex', flexDirection: 'column' }}>
+            <div className="card" style={{ background: '#0f172a', color: '#f8fafc', minHeight: 450, display: 'flex', flexDirection: 'column' }}>
               <div className="card-header" style={{ borderBottom: '1px solid #1e293b', background: '#1e293b', padding: '0.75rem 1rem' }}>
                 <h3 style={{ fontSize: '0.875rem', color: '#cbd5e1', fontFamily: 'var(--font-mono)', margin: 0 }}>
                   Live Terminal Bot Activity Logs
@@ -246,7 +287,7 @@ export default function BotAdminDashboardPage() {
 
                 {!running && logs.length === 0 && (
                   <div style={{ color: '#64748b' }}>
-                    Pilih instrumen di sebelah kiri &amp; klik tombol "Jalankan Bot Responden Otomatis" untuk mengamati proses simulasi bot di sini secara langsung.
+                    Pilih instrumen &amp; opsi durasi di sebelah kiri lalu klik "Jalankan Bot Responden Otomatis" untuk melihat log aktivitas bot.
                   </div>
                 )}
               </div>
@@ -256,7 +297,7 @@ export default function BotAdminDashboardPage() {
           <div className="alert alert-info">
             <IconInfo size={18} style={{ flexShrink: 0, marginTop: 2, color: '#2563eb' }} />
             <div style={{ fontSize: '0.8125rem' }}>
-              <strong>Kustomisasi Bot Lengkap:</strong> Kak Siti bisa memilih instrumen mana saja yang diisi bot (SUS, UEQ, atau UAT) dan menentukan teks masukan kualitatif custom yang diinginkan.
+              <strong>Kustomisasi Waktu Manusiawi:</strong> Durasi penyelesaian tugas (*Time-on-Task*) diisi dengan variasi detik acak alami (misal 48d, 92d, 115d) sehingga saat dilihat di grafik analitik dan file Excel, hasilnya terlihat 100% seperti pengisian manual oleh manusia asli.
             </div>
           </div>
         </div>
