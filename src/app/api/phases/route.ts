@@ -21,10 +21,10 @@ export async function GET() {
           instructions: 'Silakan gunakan website seperti Anda sedang mencari informasi layanan ketenagakerjaan. Selesaikan seluruh tugas yang diberikan sebelum mengisi kuesioner SUS.',
           tasks: {
             create: [
-              { taskCode: 'T1-01', title: 'Temukan Informasi Lowongan Pekerjaan', description: 'Temukan informasi lowongan pekerjaan yang tersedia pada website.', order: 1 },
-              { taskCode: 'T1-02', title: 'Temukan Informasi Pelatihan Kerja', description: 'Temukan informasi mengenai pelatihan kerja yang diselenggarakan.', order: 2 },
-              { taskCode: 'T1-03', title: 'Temukan Informasi Layanan AK.1', description: 'Temukan informasi mengenai layanan AK.1 (Kartu Kuning).', order: 3 },
-              { taskCode: 'T1-04', title: 'Temukan Informasi Kontak', description: 'Temukan informasi kontak Disnakertrans Kabupaten Serang.', order: 4 },
+              { taskCode: 'T1-01', title: 'Mencari Lowongan Kerja Terbaru', description: 'Bayangkan Anda sedang mencari pekerjaan di wilayah Serang. Jelajahi beranda website untuk menemukan informasi lowongan kerja yang tersedia.', order: 1 },
+              { taskCode: 'T1-02', title: 'Mencari Info & Jadwal Pelatihan Kerja (BLK)', description: 'Bayangkan Anda ingin mengikuti pelatihan keterampilan gratis di Disnakertrans. Cari informasi mengenai program pelatihan atau jadwal pendaftarannya pada website.', order: 2 },
+              { taskCode: 'T1-03', title: 'Mencari Syarat Pembuatan Kartu Kuning (AK-1)', description: 'Bayangkan Anda ingin membuat Kartu Kuning (AK-1) sebagai syarat melamar kerja. Cari informasi dokumen persyaratan atau langkah pengajuannya.', order: 3 },
+              { taskCode: 'T1-04', title: 'Mencari Alamat Kantor & Nomor Kontak Resmi', description: 'Bayangkan Anda perlu datang langsung atau menghubungi pihak kantor Disnakertrans. Cari informasi nomor telepon, email, atau alamat kantor resminya.', order: 4 },
             ],
           },
         },
@@ -41,9 +41,9 @@ export async function GET() {
           instructions: 'Silakan gunakan prototype redesign website Disnakertrans. Selesaikan seluruh tugas yang diberikan sebelum mengisi kuesioner UEQ.',
           tasks: {
             create: [
-              { taskCode: 'T2-01', title: 'Cari Lowongan Pekerjaan', description: 'Cari lowongan pekerjaan yang sesuai dengan profil Anda.', order: 1 },
-              { taskCode: 'T2-02', title: 'Temukan Informasi Program Pelatihan', description: 'Temukan informasi program pelatihan yang tersedia.', order: 2 },
-              { taskCode: 'T2-03', title: 'Temukan Informasi Layanan AK.1', description: 'Temukan informasi mengenai layanan AK.1 (Kartu Kuning).', order: 3 },
+              { taskCode: 'T2-01', title: 'Eksplorasi Beranda & Fitur Utama Redesign', description: 'Jelajahi tampilan baru beranda prototype. Perhatikan kemudahan membaca informasi, tombol menu shortcut, dan tata letaknya.', order: 1 },
+              { taskCode: 'T2-02', title: 'Uji Fitur Pencarian Lowongan & Filter', description: 'Cobalah fitur pencarian lowongan kerja baru. Rasakan bagaimana kemudahan memfilter lowongan berdasarkan lokasi atau bidang pekerjaan.', order: 2 },
+              { taskCode: 'T2-03', title: 'Cek Panduan Kartu Kuning (AK-1) & Pelatihan', description: 'Buka menu layanan Kartu Kuning (AK-1) atau Program Pelatihan pada rancangan desain baru, lalu amati kejelasan poin-poin persyaratannya.', order: 3 },
             ],
           },
         },
@@ -60,10 +60,10 @@ export async function GET() {
           instructions: 'Silakan lakukan setiap tugas berikut pada website final Disnakertrans Kabupaten Serang yang telah diimplementasikan.',
           tasks: {
             create: [
-              { taskCode: 'TC-001', feature: 'Pencarian Lowongan', title: 'Cari Lowongan Berdasarkan Lokasi', description: 'Cari lowongan pekerjaan berdasarkan lokasi yang Anda inginkan.', expectedResult: 'Sistem menampilkan lowongan sesuai lokasi yang dipilih.', acceptanceCriteria: 'User dapat menemukan hasil lowongan yang relevan dengan lokasi.', order: 1 },
-              { taskCode: 'TC-002', feature: 'Pendaftaran Akun', title: 'Registrasi Pencari Kerja', description: 'Lakukan pendaftaran akun pencari kerja baru dengan data yang valid.', expectedResult: 'Sistem menyimpan data dan menampilkan konfirmasi pendaftaran berhasil.', acceptanceCriteria: 'Akun berhasil terdaftar dan user menerima konfirmasi.', order: 2 },
-              { taskCode: 'TC-003', feature: 'Pengajuan Kartu Kuning (AK.1)', title: 'Pengajuan Layanan AK.1', description: 'Isi formulir pengajuan Kartu Kuning (AK.1) secara online.', expectedResult: 'Formulir berhasil terkirim dan status pengajuan masuk ke antrean.', acceptanceCriteria: 'Sistem menghasilkan nomor resi / bukti pengajuan AK.1.', order: 3 },
-              { taskCode: 'TC-004', feature: 'Pendaftaran Pelatihan', title: 'Daftar Program Pelatihan Kerja', description: 'Pilih salah satu program pelatihan kerja yang buka pendaftaran lalu selesaikan alur mendaftar.', expectedResult: 'Status pendaftaran pelatihan tercatat pada profil peserta.', acceptanceCriteria: 'User terdaftar pada kelas pelatihan yang dipilih.', order: 4 },
+              { taskCode: 'TC-001', feature: 'Pencarian Lowongan', title: 'Simulasi Pencarian Loker Berdasarkan Lokasi', description: 'Gunakan fitur pencarian atau filter untuk menemukan lowongan pekerjaan yang sesuai dengan lokasi Anda.', expectedResult: 'Sistem menampilkan hasil pencarian lowongan yang relevan secara cepat.', acceptanceCriteria: 'User dapat memfilter dan melihat daftar lowongan pekerjaan.', order: 1 },
+              { taskCode: 'TC-002', feature: 'Detail Lowongan & Cara Melamar', title: 'Periksa Informasi Detail & Syarat Lowongan', description: 'Buka salah satu lowongan pekerjaan dan pastikan kualifikasi serta alur pendaftaran terbaca dengan jelas.', expectedResult: 'Sistem menampilkan deskripsi lengkap lowongan beserta instruksi melamar.', acceptanceCriteria: 'Informasi lowongan dapat dibaca dengan jelas tanpa membingungkan.', order: 2 },
+              { taskCode: 'TC-003', feature: 'Layanan Kartu Kuning (AK-1)', title: 'Simulasi Pendaftaran Layanan Kartu Kuning (AK-1)', description: 'Jelajahi alur pendaftaran Kartu Kuning (AK-1) online dan periksa kemudahan pengisian data persyaratannya.', expectedResult: 'User memahami syarat dan alur pengajuan Kartu Kuning secara digital.', acceptanceCriteria: 'Syarat Kartu Kuning disajikan dalam poin-poin yang mudah dipahami.', order: 3 },
+              { taskCode: 'TC-004', feature: 'Layanan Pengaduan & Pelatihan Kerja', title: 'Akses Layanan Pengaduan Online & Pendaftaran Pelatihan', description: 'Cobalah mengakses halaman Pengaduan Masyarakat atau Pendaftaran Pelatihan Kerja BLK.', expectedResult: 'Sistem menyediakan formulir pengaduan yang jelas dan jadwal pelatihan yang pasti.', acceptanceCriteria: 'User dapat menemukan info pelatihan dan form pengaduan tanpa kendala.', order: 4 },
             ],
           },
         },
