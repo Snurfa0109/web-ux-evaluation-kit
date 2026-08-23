@@ -28,13 +28,38 @@ const PHASE_STATUS_MAP: Record<string, { label: string; badge: string }> = {
 export default function AdminDashboard() {
   const [data, setData] = useState<AnalyticsData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [baseUrl, setBaseUrl] = useState('')
+  const [copied, setCopied] = useState(false)
 
   useEffect(() => {
     fetch('/api/admin/analytics')
       .then(r => r.json())
       .then(setData)
       .finally(() => setLoading(false))
+
+    if (typeof window !== 'undefined') {
+      setBaseUrl(window.location.origin)
+    }
   }, [])
+
+  const registrationUrl = baseUrl ? `${baseUrl}/daftar` : '/daftar'
+
+  const handleCopy = () => {
+    if (typeof window !== 'undefined') {
+      const url = `${window.location.origin}/daftar`
+      navigator.clipboard.writeText(url)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2500)
+    }
+  }
+
+  const handleShareWA = () => {
+    if (typeof window !== 'undefined') {
+      const url = `${window.location.origin}/daftar`
+      const text = `Halo, perkenalkan saya Siti Nurfadiyah, mahasiswa Jurusan Informatika dari Universitas Sultan Ageng Tirtayasa.\n\nMohon bantuan dan kesediaan Bapak/Ibu/Rekan-rekan sekalian untuk berpartisipasi dalam pengujian dan evaluasi pelayanan digital website Disnakertrans Kabupaten Serang melalui link resmi berikut:\n\n${url}\n\nMasukan dan jawaban dari Anda sangat berharga untuk pengembangan website ini. Terima kasih banyak atas waktu dan bantuannya! 🙏`
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank')
+    }
+  }
 
   if (loading) return (
     <div className="admin-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 360 }}>
@@ -104,29 +129,30 @@ export default function AdminDashboard() {
             <h3 style={{ fontSize: '1.125rem', color: 'var(--white)', marginBottom: '0.375rem' }}>
               Sebarkan Link atau QR Code Pengujian
             </h3>
-            <p style={{ fontSize: '0.84375rem', color: 'var(--slate-300)', marginBottom: '1rem', lineHeight: 1.5 }}>
-              Responden cukup men-scan QR Code di samping menggunakan smartphone atau mengklik link pendaftaran untuk langsung mengisi data diri dan memulai pengujian.
+            <p style={{ fontSize: '0.84375rem', color: 'var(--slate-300)', marginBottom: '0.75rem', lineHeight: 1.5 }}>
+              Responden cukup men-scan QR Code di samping menggunakan smartphone atau mengklik link pendaftaran untuk mengisi data diri dan memulai pengujian.
             </p>
+
+            {/* Display active share URL */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255, 255, 255, 0.08)', padding: '0.4rem 0.75rem', borderRadius: 'var(--radius-sm)', marginBottom: '1rem', fontSize: '0.8125rem', border: '1px solid rgba(255,255,255,0.12)' }}>
+              <span style={{ color: 'var(--slate-400)', userSelect: 'none' }}>URL:</span>
+              <code style={{ color: '#93c5fd', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, fontFamily: 'monospace' }}>
+                {baseUrl ? `${baseUrl}/daftar` : 'Memuat URL...'}
+              </code>
+            </div>
+
             <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
               <button
                 type="button"
-                onClick={() => {
-                  const url = `${window.location.origin}/daftar`
-                  navigator.clipboard.writeText(url)
-                  alert('Link Pendaftaran berhasil disalin ke clipboard:\n' + url)
-                }}
+                onClick={handleCopy}
                 className="btn btn-sm"
-                style={{ background: 'var(--white)', color: 'var(--slate-900)', fontWeight: 700 }}
+                style={{ background: copied ? '#22c55e' : 'var(--white)', color: copied ? 'var(--white)' : 'var(--slate-900)', fontWeight: 700, transition: 'all 0.2s ease' }}
               >
-                Salin Link Pendaftaran
+                {copied ? '✓ Link Tersalin!' : 'Salin Link Pendaftaran'}
               </button>
               <button
                 type="button"
-                onClick={() => {
-                  const url = `${window.location.origin}/daftar`
-                  const text = `Halo! Mohon kesediaan Anda untuk berpartisipasi dalam evaluasi pelayanan digital website Disnakertrans Kabupaten Serang melalui link resmi berikut:\n\n${url}\n\nTerima kasih atas bantuan dan masukan Anda!`
-                  window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank')
-                }}
+                onClick={handleShareWA}
                 className="btn btn-sm"
                 style={{ background: '#25D366', color: 'var(--white)', fontWeight: 700, border: 'none' }}
               >
@@ -136,9 +162,9 @@ export default function AdminDashboard() {
           </div>
           <div style={{ background: 'var(--white)', padding: '0.625rem', borderRadius: 'var(--radius-md)', textAlign: 'center', flexShrink: 0 }}>
             <img
-              src={`https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(typeof window !== 'undefined' ? `${window.location.origin}/daftar` : 'https://disnakertrans.serangkab.go.id')}`}
+              src={`https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(baseUrl ? `${baseUrl}/daftar` : 'https://disnakertrans.serangkab.go.id')}`}
               alt="QR Code Pendaftaran"
-              style={{ width: 130, height: 130, display: 'block' }}
+              style={{ width: 130, height: 130, display: 'block', borderRadius: 4 }}
             />
             <span style={{ fontSize: '0.6875rem', color: 'var(--slate-600)', fontWeight: 600, marginTop: '0.25rem', display: 'block' }}>Scan untuk Daftar</span>
           </div>
