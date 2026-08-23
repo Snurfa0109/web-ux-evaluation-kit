@@ -42,6 +42,16 @@ export default function TestingPage() {
       })
   }, [phaseId])
 
+  useEffect(() => {
+    if (phase?.externalUrl) {
+      // Auto-dismiss loading spinner overlay after 3.5 seconds on mobile if browser blocks iframe onload events
+      const timer = setTimeout(() => {
+        setIframeLoaded(true)
+      }, 3500)
+      return () => clearTimeout(timer)
+    }
+  }, [phase])
+
   const getQuestionnaireUrl = () => {
     if (!phase) return '#'
     const map: Record<string, string> = { SUS: 'sus', UEQ: 'ueq', UAT: 'uat' }
@@ -373,28 +383,58 @@ export default function TestingPage() {
         )}
 
         {/* Iframe Viewport */}
-        <div style={{ flex: 1, position: 'relative', background: 'var(--slate-100)' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', background: 'var(--slate-100)', minWidth: 0 }}>
           {phase.externalUrl ? (
             <>
-              {!iframeError ? (
-                <iframe
-                  src={phase.externalUrl}
-                  style={{ width: '100%', height: '100%', border: 'none' }}
-                  title={`${phase.phaseName} Workspace`}
-                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-                  onLoad={() => setIframeLoaded(true)}
-                  onError={() => setIframeError(true)}
-                  id="testing-iframe"
-                />
-              ) : (
-                <IframeFallback url={phase.externalUrl} />
-              )}
-              {!iframeLoaded && !iframeError && (
-                <div style={{ position: 'absolute', inset: 0, background: 'var(--slate-50)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.75rem' }}>
-                  <div className="loading-spinner" style={{ width: 28, height: 28, color: 'var(--slate-700)' }}></div>
-                  <p style={{ fontSize: '0.875rem', color: 'var(--slate-500)' }}>Memuat tampilan website/prototype...</p>
-                </div>
-              )}
+              {/* Mobile-friendly notification banner */}
+              <div style={{ background: '#eff6ff', borderBottom: '1px solid #bfdbfe', padding: '0.4rem 0.875rem', fontSize: '0.78125rem', color: '#1e40af', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.375rem', zIndex: 15 }}>
+                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '70%' }}>
+                  🌐 Target: <strong>{phase.externalUrl}</strong>
+                </span>
+                <a
+                  href={phase.externalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-xs"
+                  style={{ background: '#2563eb', color: '#fff', border: 'none', fontWeight: 600, padding: '0.2rem 0.5rem', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}
+                >
+                  Buka di Tab Baru <IconExternalLink size={12} />
+                </a>
+              </div>
+
+              <div style={{ flex: 1, position: 'relative' }}>
+                {!iframeError ? (
+                  <iframe
+                    src={phase.externalUrl}
+                    style={{ width: '100%', height: '100%', border: 'none' }}
+                    title={`${phase.phaseName} Workspace`}
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+                    onLoad={() => setIframeLoaded(true)}
+                    onError={() => setIframeError(true)}
+                    id="testing-iframe"
+                  />
+                ) : (
+                  <IframeFallback url={phase.externalUrl} />
+                )}
+                {!iframeLoaded && !iframeError && (
+                  <div style={{ position: 'absolute', inset: 0, background: 'var(--slate-50)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', padding: '1.5rem', textAlign: 'center', zIndex: 10 }}>
+                    <div className="loading-spinner" style={{ width: 32, height: 32, color: 'var(--slate-700)' }}></div>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--slate-800)', fontWeight: 600, margin: 0 }}>Memuat tampilan website/prototype...</p>
+                    <p style={{ fontSize: '0.75rem', color: 'var(--slate-500)', maxWidth: 360, margin: 0, lineHeight: 1.4 }}>
+                      Jika halaman di HP tidak muncul dalam beberapa detik, silakan klik tombol di bawah untuk membukanya di tab terpisah.
+                    </p>
+                    <a
+                      href={phase.externalUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-sm btn-primary"
+                      style={{ marginTop: '0.25rem' }}
+                    >
+                      <IconExternalLink size={14} /> Buka Website di Tab Baru
+                    </a>
+                  </div>
+                )}
+              </div>
             </>
           ) : (
             <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
