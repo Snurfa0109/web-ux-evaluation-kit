@@ -74,20 +74,37 @@ export default function InstruksiPage() {
             <p style={{ margin: 0 }}>Harap baca panduan dan daftar tugas sebelum mencoba sistem.</p>
           </div>
 
-          {/* General instructions */}
-          <div className="card" style={{ marginBottom: '1.25rem' }}>
-            <div className="card-header">
-              <h3 style={{ fontSize: '1rem' }}>Petunjuk Pelaksanaan</h3>
-            </div>
-            <div className="card-body">
-              <p style={{ color: 'var(--slate-700)', lineHeight: 1.7, margin: 0 }}>
-                {phase.instructions || 'Silakan coba fitur yang tersedia dan selesaikan skenario tugas yang ditentukan.'}
-              </p>
+          {/* Step-by-Step Guide for Laypeople */}
+          <div className="card" style={{ marginBottom: '1.5rem', background: 'linear-gradient(to right, #0f172a, #1e293b)', color: 'var(--white)' }}>
+            <div className="card-body" style={{ padding: '1.5rem' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#60a5fa', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
+                📍 Alur Pengujian Responden
+              </div>
+              <h3 style={{ fontSize: '1.25rem', color: 'var(--white)', marginBottom: '1rem' }}>
+                Bagaimana Cara Mengikuti Pengujian Ini?
+              </h3>
 
-              <div className="alert alert-info" style={{ marginTop: '1.25rem' }}>
-                <IconInfo size={18} style={{ flexShrink: 0, marginTop: 2 }} />
-                <div>
-                  Setelah mencoba sistem dan menyelesaikan tugas-tugas di bawah, Anda akan diarahkan untuk mengisi kuesioner evaluasi <strong>{phase.instrument}</strong>.
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+                {/* Step 1 */}
+                <div style={{ background: 'rgba(255, 255, 255, 0.08)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255, 255, 255, 0.15)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                    <span style={{ background: '#2563eb', color: '#fff', width: 26, height: 26, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.8125rem' }}>1</span>
+                    <strong style={{ fontSize: '0.9375rem', color: '#93c5fd' }}>Uji Coba Website Target</strong>
+                  </div>
+                  <p style={{ fontSize: '0.8125rem', color: 'var(--slate-300)', margin: 0, lineHeight: 1.5 }}>
+                    Pertama, Anda akan membuka website target <strong>Disnakertrans</strong>. Coba lakukan 4 skenario tugas sehari-hari (Mencari Loker, Pelatihan BLK, Kartu Kuning AK-1, & Kontak).
+                  </p>
+                </div>
+
+                {/* Step 2 */}
+                <div style={{ background: 'rgba(255, 255, 255, 0.08)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255, 255, 255, 0.15)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                    <span style={{ background: '#10b981', color: '#fff', width: 26, height: 26, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.8125rem' }}>2</span>
+                    <strong style={{ fontSize: '0.9375rem', color: '#a7f3d0' }}>Isi Kuesioner {phase.instrument}</strong>
+                  </div>
+                  <p style={{ fontSize: '0.8125rem', color: 'var(--slate-300)', margin: 0, lineHeight: 1.5 }}>
+                    Setelah selesai mencoba website target, klik tombol <strong>"Isi Kuesioner {phase.instrument}"</strong> untuk memberikan penilaian dan masukan jujur Anda.
+                  </p>
                 </div>
               </div>
             </div>
@@ -97,8 +114,13 @@ export default function InstruksiPage() {
           {phase.tasks.length > 0 && (
             <div className="card" style={{ marginBottom: '1.5rem' }}>
               <div className="card-header">
-                <h3 style={{ fontSize: '1rem' }}>Skenario Tugas</h3>
-                <span className="badge badge-neutral">{phase.tasks.length} Tugas</span>
+                <div>
+                  <h3 style={{ fontSize: '1rem' }}>Skenario Tugas Pengujian</h3>
+                  <p style={{ fontSize: '0.8125rem', color: 'var(--slate-500)', margin: '0.25rem 0 0 0' }}>
+                    Cobalah bayangkan posisi Anda dalam setiap situasi di bawah ini saat membuka website:
+                  </p>
+                </div>
+                <span className="badge badge-neutral" style={{ flexShrink: 0 }}>{phase.tasks.length} Tugas</span>
               </div>
               <div className="card-body" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {phase.tasks.map((task, idx) => (
@@ -107,7 +129,7 @@ export default function InstruksiPage() {
                       {idx + 1}
                     </div>
                     <div>
-                      <div style={{ fontWeight: 600, fontSize: '0.9375rem', color: 'var(--slate-900)', marginBottom: '0.25rem' }}>{task.title}</div>
+                      <div style={{ fontWeight: 700, fontSize: '0.9375rem', color: 'var(--slate-900)', marginBottom: '0.25rem' }}>{task.title}</div>
                       <div style={{ fontSize: '0.875rem', color: 'var(--slate-600)', lineHeight: 1.5 }}>{task.description}</div>
                     </div>
                   </div>
@@ -122,9 +144,9 @@ export default function InstruksiPage() {
               href={`/fase/${phaseId}/testing?code=${code}`}
               className="btn btn-primary btn-lg"
               id="btn-mulai-testing"
-              style={{ flex: 1 }}
+              style={{ flex: 1, padding: '0.875rem 1.25rem', fontWeight: 700, fontSize: '1rem' }}
             >
-              Mulai Uji Coba Sistem <IconArrowRight size={16} />
+              🚀 Buka Website Target & Mulai Pengujian <IconArrowRight size={18} />
             </Link>
           </div>
         </div>

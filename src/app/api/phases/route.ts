@@ -68,12 +68,27 @@ export async function GET() {
           },
         },
       })
+    }
 
-      phases = await prisma.studyPhase.findMany({
-        orderBy: { phaseNumber: 'asc' },
-        include: { tasks: { orderBy: { order: 'asc' } } },
+    // Auto-update existing tasks to friendly scenario-based descriptions if database contains old text
+    const friendlyPhase1Tasks = [
+      { taskCode: 'T1-01', title: 'Mencari Lowongan Kerja Terbaru', description: 'Bayangkan Anda sedang mencari pekerjaan di wilayah Serang. Jelajahi beranda website untuk menemukan informasi lowongan kerja yang tersedia.' },
+      { taskCode: 'T1-02', title: 'Mencari Info & Jadwal Pelatihan Kerja (BLK)', description: 'Bayangkan Anda ingin mengikuti pelatihan keterampilan gratis di Disnakertrans. Cari informasi mengenai program pelatihan atau jadwal pendaftarannya pada website.' },
+      { taskCode: 'T1-03', title: 'Mencari Syarat Pembuatan Kartu Kuning (AK-1)', description: 'Bayangkan Anda ingin membuat Kartu Kuning (AK-1) sebagai syarat melamar kerja. Cari informasi dokumen persyaratan atau langkah pengajuannya.' },
+      { taskCode: 'T1-04', title: 'Mencari Alamat Kantor & Nomor Kontak Resmi', description: 'Bayangkan Anda perlu datang langsung atau menghubungi pihak kantor Disnakertrans. Cari informasi nomor telepon, email, atau alamat kantor resminya.' },
+    ]
+
+    for (const t of friendlyPhase1Tasks) {
+      await prisma.phaseTask.updateMany({
+        where: { taskCode: t.taskCode },
+        data: { title: t.title, description: t.description },
       })
     }
+
+    phases = await prisma.studyPhase.findMany({
+      orderBy: { phaseNumber: 'asc' },
+      include: { tasks: { orderBy: { order: 'asc' } } },
+    })
 
     return NextResponse.json(phases)
   } catch (error: any) {
