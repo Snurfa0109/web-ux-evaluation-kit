@@ -27,6 +27,7 @@ const STATUS_CONFIG: Record<string, { label: string; badge: string }> = {
 export default function FaseManagementPage() {
   const [phases, setPhases] = useState<Phase[]>([])
   const [selectedPhase, setSelectedPhase] = useState<Phase | null>(null)
+  const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState(false)
   const [editForm, setEditForm] = useState<Partial<Phase>>({})
   const [saving, setSaving] = useState(false)
@@ -38,17 +39,23 @@ export default function FaseManagementPage() {
   const [showPreviewModal, setShowPreviewModal] = useState(false)
 
   const fetchPhases = () => {
+    setLoading(true)
     fetch('/api/admin/phases')
       .then(r => r.json())
-      .then((data: Phase[]) => {
-        setPhases(data)
-        if (selectedPhase) {
-          const updated = data.find(p => p.id === selectedPhase.id)
-          if (updated) setSelectedPhase(updated)
-        } else if (data.length > 0) {
-          setSelectedPhase(data[0])
+      .then((data: any) => {
+        if (Array.isArray(data)) {
+          setPhases(data)
+          if (selectedPhase) {
+            const updated = data.find(p => p.id === selectedPhase.id)
+            if (updated) setSelectedPhase(updated)
+            else if (data.length > 0) setSelectedPhase(data[0])
+          } else if (data.length > 0) {
+            setSelectedPhase(data[0])
+          }
         }
       })
+      .catch(err => console.error('Fetch phases error:', err))
+      .finally(() => setLoading(false))
   }
 
   useEffect(() => { fetchPhases() }, [])
@@ -108,6 +115,12 @@ export default function FaseManagementPage() {
     setEditingTaskId(null)
     fetchPhases()
   }
+
+  if (loading) return (
+    <div className="admin-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 360 }}>
+      <div className="loading-spinner" style={{ width: 32, height: 32, color: 'var(--slate-700)' }}></div>
+    </div>
+  )
 
   return (
     <div className="admin-content fade-in">
