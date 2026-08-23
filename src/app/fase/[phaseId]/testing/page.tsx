@@ -26,11 +26,24 @@ export default function TestingPage() {
   const [activeTab, setActiveTab] = useState<'tasks' | 'questionnaire'>('tasks')
   const [iframeLoaded, setIframeLoaded] = useState(false)
 
+  // Mobile responsiveness states
+  const [isMobile, setIsMobile] = useState(false)
+  const [mobileMode, setMobileMode] = useState<'panel' | 'website'>('panel')
+
   // State for Embedded SUS Questionnaire
   const [susResponses, setSusResponses] = useState<(number | null)[]>(Array(10).fill(null))
   const [susFeedback, setSusFeedback] = useState<Record<string, string>>({})
   const [submittingSus, setSubmittingSus] = useState(false)
   const [susError, setSusError] = useState('')
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   useEffect(() => {
     fetch('/api/admin/phases')
@@ -104,64 +117,155 @@ export default function TestingPage() {
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'var(--white)' }}>
       {/* Testing Header */}
-      <header style={{ height: 56, background: 'var(--slate-900)', color: 'var(--white)', padding: '0 1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, zIndex: 30 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <div style={{ fontSize: '0.8125rem', fontWeight: 700, padding: '0.2rem 0.5rem', borderRadius: 'var(--radius-sm)', background: 'rgba(255,255,255,0.15)' }}>
+      <header style={{
+        background: 'var(--slate-900)',
+        color: 'var(--white)',
+        padding: isMobile ? '0.5rem 0.75rem' : '0 1.25rem',
+        display: 'flex',
+        flexDirection: isMobile ? 'column' : 'row',
+        alignItems: isMobile ? 'stretch' : 'center',
+        justifyContent: 'space-between',
+        gap: isMobile ? '0.5rem' : '0.75rem',
+        flexShrink: 0,
+        zIndex: 30
+      }}>
+        {/* Header Title */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', overflow: 'hidden' }}>
+          <div style={{ fontSize: '0.75rem', fontWeight: 700, padding: '0.15rem 0.4rem', borderRadius: 'var(--radius-sm)', background: 'rgba(255,255,255,0.15)', flexShrink: 0 }}>
             Tahap 0{phase.phaseNumber}
           </div>
-          <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--white)' }}>{phase.phaseName}</span>
+          <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--white)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {phase.phaseName}
+          </span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-          <button
-            onClick={() => setShowTasks(!showTasks)}
-            className="btn btn-sm btn-secondary"
-            id="btn-toggle-tasks"
-            style={{ fontSize: '0.8125rem' }}
-          >
-            <IconClipboard size={14} />
-            <span>{showTasks ? 'Tutup Panel Samping' : 'Buka Panel Samping'}</span>
-          </button>
-
-          {phase.externalUrl && (
-            <a
-              href={phase.externalUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-sm btn-secondary"
-              title="Buka di tab baru"
-            >
-              <IconExternalLink size={14} />
-              <span>Buka di Tab Baru</span>
-            </a>
-          )}
-
-          {activeTab !== 'questionnaire' ? (
+        {/* Controls Bar */}
+        {!isMobile ? (
+          /* Desktop Header Controls */
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
             <button
-              onClick={() => { setShowTasks(true); setActiveTab('questionnaire') }}
-              className="btn btn-sm btn-accent"
-              id="btn-selesai-testing"
-            >
-              <span>Isi Kuesioner {phase.instrument} (Di Samping)</span>
-              <IconArrowRight size={14} />
-            </button>
-          ) : (
-            <Link
-              href={getQuestionnaireUrl()}
+              onClick={() => setShowTasks(!showTasks)}
               className="btn btn-sm btn-secondary"
-              title="Layar Penuh"
+              id="btn-toggle-tasks"
+              style={{ fontSize: '0.8125rem' }}
             >
-              <span>Mode Layar Penuh ↗</span>
-            </Link>
-          )}
-        </div>
+              <IconClipboard size={14} />
+              <span>{showTasks ? 'Tutup Panel Samping' : 'Buka Panel Samping'}</span>
+            </button>
+
+            {phase.externalUrl && (
+              <a
+                href={phase.externalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-sm btn-secondary"
+                title="Buka di tab baru"
+              >
+                <IconExternalLink size={14} />
+                <span>Buka di Tab Baru</span>
+              </a>
+            )}
+
+            {activeTab !== 'questionnaire' ? (
+              <button
+                onClick={() => { setShowTasks(true); setActiveTab('questionnaire') }}
+                className="btn btn-sm btn-accent"
+                id="btn-selesai-testing"
+              >
+                <span>Isi Kuesioner {phase.instrument}</span>
+                <IconArrowRight size={14} />
+              </button>
+            ) : (
+              <Link
+                href={getQuestionnaireUrl()}
+                className="btn btn-sm btn-secondary"
+                title="Layar Penuh"
+              >
+                <span>Mode Layar Penuh ↗</span>
+              </Link>
+            )}
+          </div>
+        ) : (
+          /* Mobile View Switcher Segmented Control */
+          <div style={{ display: 'flex', background: 'rgba(255, 255, 255, 0.1)', padding: '0.2rem', borderRadius: 'var(--radius-md)', gap: '0.25rem' }}>
+            <button
+              type="button"
+              onClick={() => setMobileMode('panel')}
+              style={{
+                flex: 1,
+                padding: '0.35rem 0.5rem',
+                borderRadius: 'var(--radius-sm)',
+                border: 'none',
+                background: mobileMode === 'panel' ? 'var(--white)' : 'transparent',
+                color: mobileMode === 'panel' ? 'var(--slate-900)' : 'var(--white)',
+                fontWeight: 700,
+                fontSize: '0.75rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              📋 Tugas & Kuesioner
+            </button>
+            <button
+              type="button"
+              onClick={() => setMobileMode('website')}
+              style={{
+                flex: 1,
+                padding: '0.35rem 0.5rem',
+                borderRadius: 'var(--radius-sm)',
+                border: 'none',
+                background: mobileMode === 'website' ? 'var(--white)' : 'transparent',
+                color: mobileMode === 'website' ? 'var(--slate-900)' : 'var(--white)',
+                fontWeight: 700,
+                fontSize: '0.75rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              🌐 Web Target
+            </button>
+            {phase.externalUrl && (
+              <a
+                href={phase.externalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  padding: '0.35rem 0.5rem',
+                  borderRadius: 'var(--radius-sm)',
+                  background: 'rgba(255,255,255,0.2)',
+                  color: 'var(--white)',
+                  fontWeight: 600,
+                  fontSize: '0.75rem',
+                  textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.2rem',
+                }}
+              >
+                <IconExternalLink size={12} /> Tab Baru
+              </a>
+            )}
+          </div>
+        )}
       </header>
 
       {/* Main Workspace */}
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative' }}>
-        {/* Sidebar */}
-        {showTasks && (
-          <div style={{ width: activeTab === 'questionnaire' ? 380 : 320, background: 'var(--white)', borderRight: '1px solid var(--slate-200)', display: 'flex', flexDirection: 'column', flexShrink: 0, zIndex: 20, transition: 'width 0.2s' }}>
+
+        {/* Panel Sidebar (Tasks / Questionnaire) */}
+        {(!isMobile ? showTasks : mobileMode === 'panel') && (
+          <div style={{
+            width: isMobile ? '100%' : (activeTab === 'questionnaire' ? 380 : 320),
+            background: 'var(--white)',
+            borderRight: isMobile ? 'none' : '1px solid var(--slate-200)',
+            display: 'flex',
+            flexDirection: 'column',
+            flexShrink: 0,
+            zIndex: 20,
+            transition: 'width 0.2s',
+            height: '100%',
+            overflow: 'hidden'
+          }}>
             {/* Sidebar Tab Header */}
             <div style={{ display: 'flex', borderBottom: '1px solid var(--slate-200)', background: 'var(--slate-50)' }}>
               <button
@@ -212,7 +316,7 @@ export default function TestingPage() {
             {activeTab === 'tasks' && (
               <div style={{ flex: 1, overflowY: 'auto', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--slate-500)' }}>Cobalah tugas berikut pada website di samping:</span>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--slate-500)' }}>Cobalah tugas berikut pada website target:</span>
                 </div>
 
                 {phase.tasks.map((task, idx) => (
@@ -235,11 +339,22 @@ export default function TestingPage() {
                   </p>
                 )}
 
+                {isMobile ? (
+                  <button
+                    type="button"
+                    onClick={() => setMobileMode('website')}
+                    className="btn btn-secondary btn-sm btn-full"
+                    style={{ marginTop: '0.5rem' }}
+                  >
+                    🌐 Buka & Uji Website Target <IconArrowRight size={14} />
+                  </button>
+                ) : null}
+
                 <button
                   type="button"
                   onClick={() => setActiveTab('questionnaire')}
                   className="btn btn-primary btn-sm btn-full"
-                  style={{ marginTop: '0.5rem' }}
+                  style={{ marginTop: '0.25rem' }}
                 >
                   Selesai Menguji & Isi Kuesioner <IconArrowRight size={14} />
                 </button>
@@ -259,7 +374,7 @@ export default function TestingPage() {
                         </Link>
                       </div>
                       <p style={{ fontSize: '0.75rem', color: 'var(--slate-500)', margin: '0.25rem 0 0 0' }}>
-                        Nilai 1 (Sangat Tidak Setuju) hingga 5 (Sangat Setuju) sambil melihat website di samping.
+                        Nilai 1 (Sangat Tidak Setuju) hingga 5 (Sangat Setuju) setelah mencoba website.
                       </p>
                     </div>
 
@@ -299,7 +414,6 @@ export default function TestingPage() {
                         </div>
                       ))}
                     </div>
-
 
                     {/* Feedback Items */}
                     <div style={{ borderTop: '1px solid var(--slate-200)', paddingTop: '1rem', marginTop: '0.5rem' }}>
@@ -383,70 +497,86 @@ export default function TestingPage() {
         )}
 
         {/* Iframe Viewport */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', background: 'var(--slate-100)', minWidth: 0 }}>
-          {phase.externalUrl ? (
-            <>
-              {/* Mobile-friendly notification banner */}
-              <div style={{ background: '#eff6ff', borderBottom: '1px solid #bfdbfe', padding: '0.4rem 0.875rem', fontSize: '0.78125rem', color: '#1e40af', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.375rem', zIndex: 15 }}>
-                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '70%' }}>
-                  🌐 Target: <strong>{phase.externalUrl}</strong>
-                </span>
-                <a
-                  href={phase.externalUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-xs"
-                  style={{ background: '#2563eb', color: '#fff', border: 'none', fontWeight: 600, padding: '0.2rem 0.5rem', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}
-                >
-                  Buka di Tab Baru <IconExternalLink size={12} />
-                </a>
-              </div>
+        {(!isMobile || mobileMode === 'website') && (
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', background: 'var(--slate-100)', minWidth: 0, width: isMobile ? '100%' : 'auto', height: '100%' }}>
+            {phase.externalUrl ? (
+              <>
+                {/* Mobile-friendly notification banner */}
+                <div style={{ background: '#eff6ff', borderBottom: '1px solid #bfdbfe', padding: '0.4rem 0.875rem', fontSize: '0.78125rem', color: '#1e40af', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.375rem', zIndex: 15 }}>
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '65%' }}>
+                    🌐 <strong>{phase.externalUrl}</strong>
+                  </span>
+                  <a
+                    href={phase.externalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-xs"
+                    style={{ background: '#2563eb', color: '#fff', border: 'none', fontWeight: 600, padding: '0.2rem 0.5rem', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}
+                  >
+                    Buka di Tab Baru <IconExternalLink size={12} />
+                  </a>
+                </div>
 
-              <div style={{ flex: 1, position: 'relative' }}>
-                {!iframeError ? (
-                  <iframe
-                    src={phase.externalUrl}
-                    style={{ width: '100%', height: '100%', border: 'none' }}
-                    title={`${phase.phaseName} Workspace`}
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-                    onLoad={() => setIframeLoaded(true)}
-                    onError={() => setIframeError(true)}
-                    id="testing-iframe"
-                  />
-                ) : (
-                  <IframeFallback url={phase.externalUrl} />
-                )}
-                {!iframeLoaded && !iframeError && (
-                  <div style={{ position: 'absolute', inset: 0, background: 'var(--slate-50)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', padding: '1.5rem', textAlign: 'center', zIndex: 10 }}>
-                    <div className="loading-spinner" style={{ width: 32, height: 32, color: 'var(--slate-700)' }}></div>
-                    <p style={{ fontSize: '0.875rem', color: 'var(--slate-800)', fontWeight: 600, margin: 0 }}>Memuat tampilan website/prototype...</p>
-                    <p style={{ fontSize: '0.75rem', color: 'var(--slate-500)', maxWidth: 360, margin: 0, lineHeight: 1.4 }}>
-                      Jika halaman di HP tidak muncul dalam beberapa detik, silakan klik tombol di bawah untuk membukanya di tab terpisah.
-                    </p>
-                    <a
-                      href={phase.externalUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn btn-sm btn-primary"
-                      style={{ marginTop: '0.25rem' }}
-                    >
-                      <IconExternalLink size={14} /> Buka Website di Tab Baru
-                    </a>
-                  </div>
-                )}
+                <div style={{ flex: 1, position: 'relative' }}>
+                  {!iframeError ? (
+                    <iframe
+                      src={phase.externalUrl}
+                      style={{ width: '100%', height: '100%', border: 'none' }}
+                      title={`${phase.phaseName} Workspace`}
+                      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+                      onLoad={() => setIframeLoaded(true)}
+                      onError={() => setIframeError(true)}
+                      id="testing-iframe"
+                    />
+                  ) : (
+                    <IframeFallback url={phase.externalUrl} />
+                  )}
+                  {!iframeLoaded && !iframeError && (
+                    <div style={{ position: 'absolute', inset: 0, background: 'var(--slate-50)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', padding: '1.5rem', textAlign: 'center', zIndex: 10 }}>
+                      <div className="loading-spinner" style={{ width: 32, height: 32, color: 'var(--slate-700)' }}></div>
+                      <p style={{ fontSize: '0.875rem', color: 'var(--slate-800)', fontWeight: 600, margin: 0 }}>Memuat tampilan website/prototype...</p>
+                      <p style={{ fontSize: '0.75rem', color: 'var(--slate-500)', maxWidth: 360, margin: 0, lineHeight: 1.4 }}>
+                        Jika halaman di HP tidak muncul dalam beberapa detik, silakan klik tombol di bawah untuk membukanya di tab terpisah.
+                      </p>
+                      <a
+                        href={phase.externalUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-sm btn-primary"
+                        style={{ marginTop: '0.25rem' }}
+                      >
+                        <IconExternalLink size={14} /> Buka Website di Tab Baru
+                      </a>
+                    </div>
+                  )}
+
+                  {/* Floating Action Button for Mobile viewing Website */}
+                  {isMobile && (
+                    <div style={{ position: 'absolute', bottom: 16, right: 16, zIndex: 25 }}>
+                      <button
+                        type="button"
+                        onClick={() => { setMobileMode('panel'); setActiveTab('questionnaire') }}
+                        className="btn btn-accent"
+                        style={{ boxShadow: '0 4px 14px rgba(0,0,0,0.25)', fontWeight: 700, fontSize: '0.8125rem', borderRadius: 'var(--radius-full)', padding: '0.625rem 1.125rem' }}
+                      >
+                        📋 Isi Kuesioner {phase.instrument}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+                <div style={{ textAlign: 'center', maxWidth: 400 }}>
+                  <h3 style={{ fontSize: '1.125rem', marginBottom: '0.5rem' }}>URL Belum Dikonfigurasi</h3>
+                  <p style={{ fontSize: '0.875rem', color: 'var(--slate-500)' }}>
+                    Peneliti belum memasukkan URL untuk tahapan ini. Silakan hubungi admin atau langsung lanjut ke kuesioner jika telah mencoba di perangkat lain.
+                  </p>
+                </div>
               </div>
-            </>
-          ) : (
-            <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-              <div style={{ textAlign: 'center', maxWidth: 400 }}>
-                <h3 style={{ fontSize: '1.125rem', marginBottom: '0.5rem' }}>URL Belum Dikonfigurasi</h3>
-                <p style={{ fontSize: '0.875rem', color: 'var(--slate-500)' }}>
-                  Peneliti belum memasukkan URL untuk tahapan ini. Silakan hubungi admin atau langsung lanjut ke kuesioner jika telah mencoba di perangkat lain.
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )
@@ -467,4 +597,3 @@ function IframeFallback({ url }: { url: string }) {
     </div>
   )
 }
-
