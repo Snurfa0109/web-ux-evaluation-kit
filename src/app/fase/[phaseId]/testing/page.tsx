@@ -46,13 +46,16 @@ export default function TestingPage() {
   }, [])
 
   useEffect(() => {
-    fetch('/api/admin/phases')
+    fetch('/api/phases')
       .then(r => r.json())
       .then(phases => {
-        const p = phases.find((ph: any) => ph.id === parseInt(phaseId))
-        setPhase(p || null)
-        setLoading(false)
+        if (Array.isArray(phases)) {
+          const p = phases.find((ph: any) => ph.id === parseInt(phaseId))
+          setPhase(p || null)
+        }
       })
+      .catch(err => console.error('Fetch phase error:', err))
+      .finally(() => setLoading(false))
   }, [phaseId])
 
   useEffect(() => {

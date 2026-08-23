@@ -25,12 +25,15 @@ export default function SusPage() {
   const [showTasks, setShowTasks] = useState(true)
 
   useEffect(() => {
-    fetch('/api/admin/phases')
+    fetch('/api/phases')
       .then(r => r.json())
-      .then((phases: any[]) => {
-        const phase = phases.find(p => p.id === parseInt(phaseId))
-        if (phase?.tasks) setTasks(phase.tasks)
+      .then((phases: any) => {
+        if (Array.isArray(phases)) {
+          const phase = phases.find((p: any) => p.id === parseInt(phaseId))
+          if (phase?.tasks) setTasks(phase.tasks)
+        }
       })
+      .catch(err => console.error('Fetch tasks error:', err))
   }, [phaseId])
 
   const answeredCount = responses.filter(r => r !== null).length

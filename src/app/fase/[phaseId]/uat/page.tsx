@@ -31,17 +31,20 @@ export default function UatPage() {
   const [taskStartTime, setTaskStartTime] = useState<number>(Date.now())
 
   useEffect(() => {
-    fetch('/api/admin/phases')
+    fetch('/api/phases')
       .then(r => r.json())
       .then(phases => {
-        const p = phases.find((ph: any) => ph.id === parseInt(phaseId))
-        if (p) {
-          setTasks(p.tasks || [])
-          setExternalUrl(p.externalUrl || '')
+        if (Array.isArray(phases)) {
+          const p = phases.find((ph: any) => ph.id === parseInt(phaseId))
+          if (p) {
+            setTasks(p.tasks || [])
+            setExternalUrl(p.externalUrl || '')
+          }
         }
-        setLoading(false)
         setTaskStartTime(Date.now())
       })
+      .catch(err => console.error('Fetch UAT phase error:', err))
+      .finally(() => setLoading(false))
   }, [phaseId])
 
   useEffect(() => {
