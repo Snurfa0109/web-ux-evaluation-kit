@@ -73,6 +73,40 @@ export async function GET() {
       },
     })
 
+    // Auto-update existing tasks to friendly scenario-based descriptions for laypeople
+    const friendlyPhase1Tasks = [
+      { taskCode: 'T1-01', title: 'Mencari Lowongan Kerja Terbaru', description: 'Bayangkan Anda sedang mencari pekerjaan di wilayah Serang. Jelajahi beranda website untuk menemukan informasi lowongan kerja yang tersedia.' },
+      { taskCode: 'T1-02', title: 'Mencari Info & Jadwal Pelatihan Kerja (BLK)', description: 'Bayangkan Anda ingin mengikuti pelatihan keterampilan gratis di Disnakertrans. Cari informasi mengenai program pelatihan atau jadwal pendaftarannya pada website.' },
+      { taskCode: 'T1-03', title: 'Mencari Syarat Pembuatan Kartu Kuning (AK-1)', description: 'Bayangkan Anda ingin membuat Kartu Kuning (AK-1) sebagai syarat melamar kerja. Cari informasi dokumen persyaratan atau langkah pengajuannya.' },
+      { taskCode: 'T1-04', title: 'Mencari Alamat Kantor & Nomor Kontak Resmi', description: 'Bayangkan Anda perlu datang langsung atau menghubungi pihak kantor Disnakertrans. Cari informasi nomor telepon, email, atau alamat kantor resminya.' },
+    ]
+
+    const friendlyPhase2Tasks = [
+      { taskCode: 'T2-01', title: 'Mengeksplorasi Tampilan Baru Beranda Redesign', description: 'Bayangkan Anda baru pertama kali membuka rancangan tampilan baru website Disnakertrans. Jelajahi halaman utama untuk melihat kerapihan tata letak, tombol navigasi cepat, dan kejelasan informasinya.' },
+      { taskCode: 'T2-02', title: 'Mencari & Memfilter Lowongan Pekerjaan', description: 'Bayangkan Anda ingin mencari lowongan pekerjaan yang pas dengan minat Anda. Cobalah fitur pencarian lowongan kerja baru ini dan rasakan kemudahan memfilter hasilnya.' },
+      { taskCode: 'T2-03', title: 'Melihat Syarat Kartu Kuning (AK-1) & Info Pelatihan', description: 'Bayangkan Anda ingin mengetahui syarat membuat Kartu Kuning (AK-1) atau mendaftar pelatihan kerja. Buka menu layanannya dan amati kejelasan poin-poin petunjuknya.' },
+    ]
+
+    const friendlyPhase3Tasks = [
+      { taskCode: 'TC-001', title: 'Mencari Lowongan Kerja Berdasarkan Lokasi / Kategori', description: 'Bayangkan Anda sedang mencari pekerjaan di area Serang. Gunakan fitur pencarian atau filter lokasi untuk menemukan lowongan yang sesuai.', expectedResult: 'Sistem menampilkan daftar lowongan pekerjaan yang sesuai dengan pencarian Anda.' },
+      { taskCode: 'TC-002', title: 'Mendaftar Akun Pencari Kerja Baru', description: 'Bayangkan Anda ingin mendaftarkan diri sebagai pencari kerja. Coba isi formulir registrasi akun baru dengan data yang diminta hingga selesai.', expectedResult: 'Sistem menyimpan akun Anda dan menampilkan konfirmasi pendaftaran berhasil.' },
+      { taskCode: 'TC-003', title: 'Pengajuan Kartu Kuning (AK-1) Secara Online', description: 'Bayangkan Anda hendak mengajukan pembuatan Kartu Kuning secara digital dari rumah. Isi formulir pengajuan AK-1 online dan periksa alurnya.', expectedResult: 'Formulir terkirim dan sistem memberikan bukti / nomor resi pengajuan Kartu Kuning.' },
+      { taskCode: 'TC-004', title: 'Mendaftar Program Pelatihan Kerja (BLK)', description: 'Bayangkan Anda berminat mengikuti salah satu kelas pelatihan kerja gratis. Pilih program pelatihan yang tersedia lalu ikuti langkah pendaftarannya.', expectedResult: 'Pendaftaran berhasil tercatat dan Anda terdaftar pada kelas pelatihan yang dipilih.' },
+    ]
+
+    const allFriendlyTasks = [...friendlyPhase1Tasks, ...friendlyPhase2Tasks, ...friendlyPhase3Tasks]
+
+    for (const t of allFriendlyTasks) {
+      await prisma.phaseTask.updateMany({
+        where: { taskCode: t.taskCode },
+        data: {
+          title: t.title,
+          description: t.description,
+          ...(('expectedResult' in t) ? { expectedResult: (t as any).expectedResult } : {}),
+        },
+      })
+    }
+
     phases = await prisma.studyPhase.findMany({
       orderBy: { phaseNumber: 'asc' },
       include: { tasks: { orderBy: { order: 'asc' } } },
