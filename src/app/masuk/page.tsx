@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { signIn } from 'next-auth/react'
-import { IconArrowRight, IconArrowLeft, IconShield, IconLock } from '@/components/icons'
+import { IconArrowRight, IconArrowLeft, IconLock } from '@/components/icons'
 
 export default function MasukPage() {
   const router = useRouter()
@@ -78,9 +78,7 @@ export default function MasukPage() {
 
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
-          <div style={{ width: 40, height: 40, borderRadius: 'var(--radius-md)', background: 'var(--slate-900)', color: 'var(--white)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
-            <IconShield size={20} />
-          </div>
+          <img src="/evalux.png" alt="EvalUX Logo" style={{ height: 42, width: 'auto', margin: '0 auto 0.875rem', display: 'block', objectFit: 'contain' }} />
           <h1 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>Masuk ke Platform</h1>
           <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--slate-500)' }}>
             Masukkan kode peserta atau akun peneliti untuk melanjutkan

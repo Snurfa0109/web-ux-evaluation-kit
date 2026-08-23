@@ -70,9 +70,12 @@ export default function RegisterPage() {
       {/* Topbar */}
       <header style={{ borderBottom: '1px solid var(--slate-200)', background: 'var(--white)', padding: '0.875rem 0' }}>
         <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--slate-600)' }}>
-            <IconArrowLeft size={16} /> Beranda
-          </Link>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <img src="/evalux.png" alt="EvalUX Logo" style={{ height: 28, width: 'auto', objectFit: 'contain' }} />
+            <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', fontSize: '0.875rem', fontWeight: 500, color: 'var(--slate-600)' }}>
+              <IconArrowLeft size={16} /> Beranda
+            </Link>
+          </div>
           <span style={{ fontSize: '0.8125rem', color: 'var(--slate-500)' }}>Peneliti: <strong>{settings.researcherName || 'Siti Nurfadiyah'}</strong></span>
         </div>
       </header>
