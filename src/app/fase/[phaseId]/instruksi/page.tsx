@@ -78,7 +78,7 @@ export default function InstruksiPage() {
           <div className="card" style={{ marginBottom: '1.5rem', background: 'linear-gradient(to right, #0f172a, #1e293b)', color: 'var(--white)' }}>
             <div className="card-body" style={{ padding: '1.5rem' }}>
               <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#60a5fa', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
-                📍 Alur Pengujian Responden
+                Alur Pengujian Responden
               </div>
               <h3 style={{ fontSize: '1.25rem', color: 'var(--white)', marginBottom: '1rem' }}>
                 Bagaimana Cara Mengikuti Pengujian Ini?
@@ -146,7 +146,7 @@ export default function InstruksiPage() {
               id="btn-mulai-testing"
               style={{ flex: 1, padding: '0.875rem 1.25rem', fontWeight: 700, fontSize: '1rem' }}
             >
-              🚀 Buka Website Target & Mulai Pengujian <IconArrowRight size={18} />
+              Buka Website Target & Mulai Pengujian <IconArrowRight size={18} />
             </Link>
           </div>
         </div>

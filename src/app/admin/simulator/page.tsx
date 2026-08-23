@@ -124,7 +124,7 @@ export default function BotSimulatorPage() {
           <div className="card-body" style={{ padding: '1rem', flex: 1, overflowY: 'auto', fontFamily: 'var(--font-mono)', fontSize: '0.8125rem', lineHeight: 1.6 }}>
             {running && (
               <div style={{ color: '#38bdf8', marginBottom: '0.5rem' }}>
-                ⚡ Sedang memproses pembuatan responden & pengisian instrumen...
+                Memproses pembuatan responden & pengisian instrumen...
               </div>
             )}
 

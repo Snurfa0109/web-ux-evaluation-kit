@@ -206,7 +206,7 @@ export default function TestingPage() {
                 cursor: 'pointer',
               }}
             >
-              📋 Tugas & Kuesioner
+              Tugas & Kuesioner
             </button>
             <button
               type="button"
@@ -223,7 +223,7 @@ export default function TestingPage() {
                 cursor: 'pointer',
               }}
             >
-              🌐 Web Target
+              Web Target
             </button>
             {phase.externalUrl && (
               <a
@@ -347,7 +347,7 @@ export default function TestingPage() {
                     className="btn btn-secondary btn-sm btn-full"
                     style={{ marginTop: '0.5rem' }}
                   >
-                    🌐 Buka & Uji Website Target <IconArrowRight size={14} />
+                    Buka & Uji Website Target <IconArrowRight size={14} />
                   </button>
                 ) : null}
 
@@ -505,7 +505,7 @@ export default function TestingPage() {
                 {/* Clean URL bar */}
                 <div style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '0.375rem 0.875rem', fontSize: '0.8125rem', color: 'var(--slate-600)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', zIndex: 15, flexShrink: 0 }}>
                   <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: 'var(--slate-700)', fontWeight: 500 }}>
-                    🌐 Target Website: <strong style={{ color: 'var(--slate-900)' }}>{phase.externalUrl}</strong>
+                    Website Target: <strong style={{ color: 'var(--slate-900)' }}>{phase.externalUrl}</strong>
                   </span>
                 </div>
 
@@ -538,7 +538,7 @@ export default function TestingPage() {
                         className="btn btn-sm btn-primary"
                         style={{ marginTop: '0.25rem' }}
                       >
-                        <IconExternalLink size={14} /> Buka Website Target di Tab Baru ↗
+                        <IconExternalLink size={14} /> Buka Website Target di Tab Baru
                       </a>
                     </div>
                   )}
@@ -552,7 +552,7 @@ export default function TestingPage() {
                         className="btn btn-accent"
                         style={{ boxShadow: '0 4px 14px rgba(0,0,0,0.25)', fontWeight: 700, fontSize: '0.8125rem', borderRadius: 'var(--radius-full)', padding: '0.625rem 1.125rem' }}
                       >
-                        📋 Isi Kuesioner {phase.instrument}
+                        Isi Kuesioner {phase.instrument}
                       </button>
                     </div>
                   )}

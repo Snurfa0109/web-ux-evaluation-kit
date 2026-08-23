@@ -137,7 +137,7 @@ export default function BotAdminDashboardPage() {
               <strong>Koneksi Database Membutuhkan Restart Server:</strong><br />
               {errorMessage}<br />
               <span style={{ fontSize: '0.8125rem', display: 'block', marginTop: '0.375rem' }}>
-                💡 <strong>Solusi:</strong> Pada terminal tempat <code>npm run dev</code> berjalan, tekan <code>Ctrl + C</code> lalu jalankan <code>npm run dev</code> kembali agar file <code>.env</code> baru terbaca.
+                <strong>Solusi:</strong> Pada terminal tempat <code>npm run dev</code> berjalan, tekan <code>Ctrl + C</code> lalu jalankan <code>npm run dev</code> kembali agar file <code>.env</code> baru terbaca.
               </span>
             </div>
           )}
@@ -289,7 +289,7 @@ export default function BotAdminDashboardPage() {
               <div className="card-body" style={{ padding: '1rem', flex: 1, overflowY: 'auto', fontFamily: 'var(--font-mono)', fontSize: '0.8125rem', lineHeight: 1.6 }}>
                 {running && (
                   <div style={{ color: '#38bdf8', marginBottom: '0.5rem' }}>
-                    ⚡ Memproses pembuatan responden bot &amp; pengisian instrumen ({selectedInstruments.join(', ')})...
+                    Memproses pembuatan responden bot &amp; pengisian instrumen ({selectedInstruments.join(', ')})...
                   </div>
                 )}
 

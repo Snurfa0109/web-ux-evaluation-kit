@@ -56,7 +56,7 @@ export default function AdminDashboard() {
   const handleShareWA = () => {
     if (typeof window !== 'undefined') {
       const url = `${window.location.origin}/daftar`
-      const text = `Halo, perkenalkan saya Siti Nurfadiyah, mahasiswa Jurusan Informatika dari Universitas Sultan Ageng Tirtayasa.\n\nMohon bantuan dan kesediaan Bapak/Ibu/Rekan-rekan sekalian untuk berpartisipasi dalam pengujian dan evaluasi pelayanan digital website Disnakertrans Kabupaten Serang melalui link resmi berikut:\n\n${url}\n\nMasukan dan jawaban dari Anda sangat berharga untuk pengembangan website ini. Terima kasih banyak atas waktu dan bantuannya! 🙏`
+      const text = `Halo, perkenalkan saya Siti Nurfadiyah, mahasiswa Jurusan Informatika dari Universitas Sultan Ageng Tirtayasa.\n\nMohon bantuan dan kesediaan Bapak/Ibu/Rekan-rekan sekalian untuk berpartisipasi dalam pengujian dan evaluasi pelayanan digital website Disnakertrans Kabupaten Serang melalui link resmi berikut:\n\n${url}\n\nMasukan dan jawaban dari Anda sangat berharga untuk pengembangan website ini. Terima kasih banyak atas waktu dan bantuannya.`
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank')
     }
   }

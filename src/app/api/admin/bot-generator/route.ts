@@ -247,7 +247,7 @@ export async function POST(request: Request) {
       }
 
       createdCount++
-      logs.push(`✅ [${code}] ${name} (${gender}, ${age}thn) — Terisi: ${filledInstruments.join(', ')} [Durasi: ~${durationSeconds}s]`)
+      logs.push(`[OK] [${code}] ${name} (${gender}, ${age}thn) — Terisi: ${filledInstruments.join(', ')} [Durasi: ~${durationSeconds}s]`)
     }
 
     return NextResponse.json({
