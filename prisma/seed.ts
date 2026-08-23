@@ -186,32 +186,50 @@ async function main() {
       },
     })
 
-    // 1. SUS Response
-    const q1 = (i % 2 === 0) ? 4 : 5
-    const q2 = (i % 2 === 0) ? 2 : 1
-    const q3 = (i % 2 === 0) ? 4 : 5
-    const q4 = (i % 2 === 0) ? 2 : 1
-    const q5 = (i % 2 === 0) ? 5 : 4
-    const q6 = (i % 2 === 0) ? 1 : 2
-    const q7 = (i % 2 === 0) ? 4 : 5
-    const q8 = (i % 2 === 0) ? 2 : 1
-    const q9 = (i % 2 === 0) ? 5 : 4
-    const q10 = (i % 2 === 0) ? 2 : 1
+    // 1. SUS Response (Phase 1 - Existing Website)
+    const SUS_PROFILES = [
+      { q1: 2, q2: 4, q3: 2, q4: 4, q5: 2, q6: 5, q7: 2, q8: 4, q9: 2, q10: 4, feedback: "Menu di web lama terlalu banyak dan beranak-pinak, bikin pusing pas nyari info Kartu Kuning (AK-1)." },
+      { q1: 1, q2: 5, q3: 2, q4: 5, q5: 1, q6: 4, q7: 2, q8: 5, q9: 1, q10: 4, feedback: "Banyak link sub-menu yang pas diklik malah muncul tulisan 404 Not Found atau halaman kosong." },
+      { q1: 3, q2: 4, q3: 2, q4: 4, q5: 3, q6: 4, q7: 2, q8: 4, q9: 2, q10: 3, feedback: "Tampilan di HP kurang rapi, gambar bannernya terpotong dan tulisannya kecil banget jadi harus di-zoom manual." },
+      { q1: 2, q2: 5, q3: 1, q4: 4, q5: 2, q6: 5, q7: 1, q8: 4, q9: 2, q10: 5, feedback: "Informasi syarat buat AK-1 tersembunyi di artikel berita lama tahun lalu, mending dibikin halaman khusus yang isinya poin-poin syarat." },
+      { q1: 3, q2: 3, q3: 3, q4: 4, q5: 2, q6: 4, q7: 3, q8: 4, q9: 2, q10: 4, feedback: "Gak ada form pengaduan online yang jelas, cuma nampilin email biasa di footer yang gak tahu dibaca atau enggak." },
+      { q1: 1, q2: 4, q3: 2, q4: 5, q5: 1, q6: 4, q7: 2, q8: 5, q9: 1, q10: 4, feedback: "Banner-banner di sebelah kanan-kiri bikin layar HP semak, penuh, dan kelihatan jadul." },
+      { q1: 2, q2: 4, q3: 3, q4: 3, q5: 2, q6: 4, q7: 2, q8: 4, q9: 3, q10: 3, feedback: "Tabel info UMK cuma gambar foto scan PDF, pas di-zoom dari HP gambarnya pecah dan burem." },
+      { q1: 2, q2: 5, q3: 2, q4: 4, q5: 1, q6: 5, q7: 2, q8: 4, q9: 2, q10: 4, feedback: "Harusnya di beranda depan ada tombol shortcut ke layanan utama kayak AK-1, Loker, dan Pengaduan biar gak ribet." },
+      { q1: 1, q2: 4, q3: 1, q4: 4, q5: 2, q6: 4, q7: 1, q8: 5, q9: 2, q10: 4, feedback: "Tidak ada fitur pencarian (search bar), jadi susah kalau mau cari berita atau pengumuman pelatihan bulan lalu." },
+      { q1: 3, q2: 4, q3: 2, q4: 3, q5: 3, q6: 4, q7: 3, q8: 3, q9: 2, q10: 4, feedback: "Susah nyari info jadwal pelatihan BLK, pengumumannya tidak ada tanggal pendaftaran yang pasti." },
+      { q1: 2, q2: 5, q3: 2, q4: 4, q5: 2, q6: 4, q7: 1, q8: 5, q9: 2, q10: 4, feedback: "Kalau bisa ada tombol bantuan cepat atau FAQ di pojok layar buat nanya-nanya syarat dasar tanpa harus datang ke kantor." },
+      { q1: 1, q2: 4, q3: 2, q4: 5, q5: 1, q6: 5, q7: 2, q8: 4, q9: 1, q10: 5, feedback: "Info lowongan kerja bentuknya cuma tulisan blog biasa, tidak ada kategori lowongan atau filter pencarian." },
+      { q1: 2, q2: 4, q3: 3, q4: 4, q5: 2, q6: 4, q7: 2, q8: 4, q9: 2, q10: 3, feedback: "Navigasi menu atas hilang pas di-scroll ke bawah, jadi harus scroll jauh lagi ke atas cuma buat pindah halaman." },
+      { q1: 3, q2: 3, q3: 2, q4: 4, q5: 3, q6: 4, q7: 2, q8: 4, q9: 3, q10: 4, feedback: "Warna tulisan di beberapa bagian kurang kontras sama background-nya, bikin mata gampang lelah." },
+      { q1: 2, q2: 4, q3: 2, q4: 4, q5: 1, q6: 5, q7: 2, q8: 4, q9: 2, q10: 4, feedback: "Tombol-tombol menu kalau dibuka di HP terlalu kecil, sering salah pencet menu lain." }
+    ]
+
+    const prof = SUS_PROFILES[i % SUS_PROFILES.length]
+    const { q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, feedback } = prof
     const susScore = ((q1 - 1) + (5 - q2) + (q3 - 1) + (5 - q4) + (q5 - 1) + (5 - q6) + (q7 - 1) + (5 - q8) + (q9 - 1) + (5 - q10)) * 2.5
 
     await prisma.susResponse.upsert({
       where: { participantId_phaseId: { participantId: participant.id, phaseId: phase1.id } },
-      update: {},
+      update: {
+        q1, q2, q3, q4, q5, q6, q7, q8, q9, q10,
+        susScore,
+        fb1: 'Mencoba melihat tampilan awal beranda.',
+        fb2: 'Navigasi menu utama yang terlalu kompleks dan tautan mati.',
+        fb3: 'Persyaratan Kartu Kuning (AK-1) dan jadwal pelatihan BLK.',
+        fb4: 'Tambahkan shortcut layanan, pencarian (search bar), dan desain mobile-friendly.',
+        fb5: feedback,
+      },
       create: {
         participantId: participant.id,
         phaseId: phase1.id,
         q1, q2, q3, q4, q5, q6, q7, q8, q9, q10,
         susScore,
-        fb1: 'Fitur info pencarian lowongan kerja dan pelatihan.',
-        fb2: 'Navigasi menu utama yang kadang membingungkan.',
-        fb3: 'Persyaratan lengkap pembuatan AK.1.',
-        fb4: 'Tampilkan filter lokasi dan bidang pekerjaan di halaman depan.',
-        fb5: 'Desain visual disesuaikan agar lebih modern dan ramah HP.',
+        fb1: 'Mencoba melihat tampilan awal beranda.',
+        fb2: 'Navigasi menu utama yang terlalu kompleks dan tautan mati.',
+        fb3: 'Persyaratan Kartu Kuning (AK-1) dan jadwal pelatihan BLK.',
+        fb4: 'Tambahkan shortcut layanan, pencarian (search bar), dan desain mobile-friendly.',
+        fb5: feedback,
         fb6: 'Ya',
         fb6Phone: pData.wa,
       },

@@ -149,17 +149,37 @@ export async function POST(request: Request) {
         const q10 = isHigh ? getRandomInt(1, 2) : isAvg ? 3 : getRandomInt(3, 4)
         const susScore = ((q1 - 1) + (5 - q2) + (q3 - 1) + (5 - q4) + (q5 - 1) + (5 - q6) + (q7 - 1) + (5 - q8) + (q9 - 1) + (5 - q10)) * 2.5
 
+        const USER_SUS_FEEDBACKS = [
+          "Menu di web lama terlalu banyak dan beranak-pinak, bikin pusing pas nyari info Kartu Kuning (AK-1).",
+          "Banyak link sub-menu yang pas diklik malah muncul tulisan 404 Not Found atau halaman kosong.",
+          "Tampilan di HP kurang rapi, gambar bannernya terpotong dan tulisannya kecil banget jadi harus di-zoom manual.",
+          "Informasi syarat buat AK-1 tersembunyi di artikel berita lama tahun lalu, mending dibikin halaman khusus yang isinya poin-poin syarat.",
+          "Gak ada form pengaduan online yang jelas, cuma nampilin email biasa di footer yang gak tahu dibaca atau enggak.",
+          "Banner-banner di sebelah kanan-kiri bikin layar HP semak, penuh, dan kelihatan jadul.",
+          "Tabel info UMK cuma gambar foto scan PDF, pas di-zoom dari HP gambarnya pecah dan burem.",
+          "Harusnya di beranda depan ada tombol shortcut ke layanan utama kayak AK-1, Loker, dan Pengaduan biar gak ribet.",
+          "Tidak ada fitur pencarian (search bar), jadi susah kalau mau cari berita atau pengumuman pelatihan bulan lalu.",
+          "Susah nyari info jadwal pelatihan BLK, pengumumannya tidak ada tanggal pendaftaran yang pasti.",
+          "Kalau bisa ada tombol bantuan cepat atau FAQ di pojok layar buat nanya-nanya syarat dasar tanpa harus datang ke kantor.",
+          "Info lowongan kerja bentuknya cuma tulisan blog biasa, tidak ada kategori lowongan atau filter pencarian.",
+          "Navigasi menu atas hilang pas di-scroll ke bawah, jadi harus scroll jauh lagi ke atas cuma buat pindah halaman.",
+          "Warna tulisan di beberapa bagian kurang kontras sama background-nya, bikin mata gampang lelah.",
+          "Tombol-tombol menu kalau dibuka di HP terlalu kecil, sering salah pencet menu lain."
+        ]
+
+        const currentFeedback = customFeedback || USER_SUS_FEEDBACKS[i % USER_SUS_FEEDBACKS.length]
+
         await prisma.susResponse.create({
           data: {
             participantId: participant.id,
             phaseId: phase1.id,
             q1, q2, q3, q4, q5, q6, q7, q8, q9, q10,
             susScore,
-            fb1: customFeedback || 'Fitur info pencarian lowongan kerja dan pelatihan.',
-            fb2: 'Navigasi menu utama yang kadang membingungkan.',
-            fb3: 'Persyaratan lengkap pembuatan AK.1.',
-            fb4: 'Tampilkan filter lokasi dan bidang pekerjaan di halaman depan.',
-            fb5: customFeedback || 'Desain visual disesuaikan agar lebih modern dan ramah HP.',
+            fb1: 'Fitur info pencarian lowongan kerja dan pelatihan.',
+            fb2: 'Navigasi menu utama yang terlalu kompleks dan tautan mati.',
+            fb3: 'Persyaratan Kartu Kuning (AK-1) dan jadwal pelatihan BLK.',
+            fb4: 'Tampilkan filter lokasi, pencarian (search bar), dan desain mobile-friendly.',
+            fb5: currentFeedback,
             fb6: 'Ya',
             fb6Phone: wa,
           },

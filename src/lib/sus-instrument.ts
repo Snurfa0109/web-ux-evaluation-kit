@@ -10,7 +10,7 @@ export const SUS_ITEMS = [
   },
   {
     id: 2,
-    text: 'Saya merasa sistem ini terlalu kompleks (rumit) tanpa perlu.',
+    text: 'Saya merasa sistem ini terlalu kompleks (rumit).',
     type: 'negative' as const, // even → 5 - score
   },
   {
