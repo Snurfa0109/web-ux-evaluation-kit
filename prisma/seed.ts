@@ -193,38 +193,52 @@ async function main() {
     createdUatTasks.push(t)
   }
 
-  // Generate 20 Real WhatsApp Number SUS Respondents (P016 - P035)
+  // Generate 20 Real WhatsApp Number SUS Respondents with Random Alphanumeric Codes
   const DUMMY_PARTICIPANTS = [
-    { code: 'P016', name: 'Rian Ardiansyah', age: 23, gender: 'Laki-laki', occupation: 'Pencari Kerja', wa: '081213790244' },
-    { code: 'P017', name: 'Siti Maulida', age: 22, gender: 'Perempuan', occupation: 'Mahasiswa', wa: '083825298793' },
-    { code: 'P018', name: 'Dhani Pratama', age: 25, gender: 'Laki-laki', occupation: 'Pencari Kerja', wa: '085214902301' },
-    { code: 'P019', name: 'Nurul Hidayah', age: 24, gender: 'Perempuan', occupation: 'Pencari Kerja', wa: '081906059902' },
-    { code: 'P020', name: 'Dimas Setiawan', age: 27, gender: 'Laki-laki', occupation: 'Pegawai Swasta', wa: '082275305721' },
-    { code: 'P021', name: 'Aulia Rahma', age: 21, gender: 'Perempuan', occupation: 'Mahasiswa', wa: '089618463584' },
-    { code: 'P022', name: 'Taufik Hidayat', age: 29, gender: 'Laki-laki', occupation: 'Wirausaha', wa: '083876977393' },
-    { code: 'P023', name: 'Mega Utami', age: 23, gender: 'Perempuan', occupation: 'Pencari Kerja', wa: '081770211407' },
-    { code: 'P024', name: 'Rangga Wijaya', age: 26, gender: 'Laki-laki', occupation: 'Pencari Kerja', wa: '089630292735' },
-    { code: 'P025', name: 'Sinta Bellia', age: 22, gender: 'Perempuan', occupation: 'Mahasiswa', wa: '081932358392' },
-    { code: 'P026', name: 'Fajar Subagja', age: 28, gender: 'Laki-laki', occupation: 'Pegawai Swasta', wa: '087782818243' },
-    { code: 'P027', name: 'Indah Permata', age: 24, gender: 'Perempuan', occupation: 'Pencari Kerja', wa: '08999833001' },
-    { code: 'P028', name: 'Bagas Kara', age: 25, gender: 'Laki-laki', occupation: 'Pencari Kerja', wa: '081319611269' },
-    { code: 'P029', name: 'Dewi Anggraini', age: 23, gender: 'Perempuan', occupation: 'Mahasiswa', wa: '087878923813' },
-    { code: 'P030', name: 'Eko Kurniawan', age: 30, gender: 'Laki-laki', occupation: 'Wirausaha', wa: '085813672717' },
-    { code: 'P031', name: 'Fitri Handayani', age: 22, gender: 'Perempuan', occupation: 'Pencari Kerja', wa: '081286880752' },
-    { code: 'P032', name: 'Hendra Kusuma', age: 27, gender: 'Laki-laki', occupation: 'Pegawai Swasta', wa: '089512894760' },
-    { code: 'P033', name: 'Intan Nuraini', age: 24, gender: 'Perempuan', occupation: 'Pencari Kerja', wa: '089647827494' },
-    { code: 'P034', name: 'Joko Susilo', age: 29, gender: 'Laki-laki', occupation: 'Pencari Kerja', wa: '085711264052' },
-    { code: 'P035', name: 'Larasati Dewi', age: 21, gender: 'Perempuan', occupation: 'Mahasiswa', wa: '088976249450' },
+    { name: 'Rian Ardiansyah', age: 23, gender: 'Laki-laki', occupation: 'Pencari Kerja', wa: '081213790244' },
+    { name: 'Siti Maulida', age: 22, gender: 'Perempuan', occupation: 'Mahasiswa', wa: '083825298793' },
+    { name: 'Dhani Pratama', age: 25, gender: 'Laki-laki', occupation: 'Pencari Kerja', wa: '085214902301' },
+    { name: 'Nurul Hidayah', age: 24, gender: 'Perempuan', occupation: 'Pencari Kerja', wa: '081906059902' },
+    { name: 'Dimas Setiawan', age: 27, gender: 'Laki-laki', occupation: 'Pegawai Swasta', wa: '082275305721' },
+    { name: 'Aulia Rahma', age: 21, gender: 'Perempuan', occupation: 'Mahasiswa', wa: '089618463584' },
+    { name: 'Taufik Hidayat', age: 29, gender: 'Laki-laki', occupation: 'Wirausaha', wa: '083876977393' },
+    { name: 'Mega Utami', age: 23, gender: 'Perempuan', occupation: 'Pencari Kerja', wa: '081770211407' },
+    { name: 'Rangga Wijaya', age: 26, gender: 'Laki-laki', occupation: 'Pencari Kerja', wa: '089630292735' },
+    { name: 'Sinta Bellia', age: 22, gender: 'Perempuan', occupation: 'Mahasiswa', wa: '081932358392' },
+    { name: 'Fajar Subagja', age: 28, gender: 'Laki-laki', occupation: 'Pegawai Swasta', wa: '087782818243' },
+    { name: 'Indah Permata', age: 24, gender: 'Perempuan', occupation: 'Pencari Kerja', wa: '08999833001' },
+    { name: 'Bagas Kara', age: 25, gender: 'Laki-laki', occupation: 'Pencari Kerja', wa: '081319611269' },
+    { name: 'Dewi Anggraini', age: 23, gender: 'Perempuan', occupation: 'Mahasiswa', wa: '087878923813' },
+    { name: 'Eko Kurniawan', age: 30, gender: 'Laki-laki', occupation: 'Wirausaha', wa: '085813672717' },
+    { name: 'Fitri Handayani', age: 22, gender: 'Perempuan', occupation: 'Pencari Kerja', wa: '081286880752' },
+    { name: 'Hendra Kusuma', age: 27, gender: 'Laki-laki', occupation: 'Pegawai Swasta', wa: '089512894760' },
+    { name: 'Intan Nuraini', age: 24, gender: 'Perempuan', occupation: 'Pencari Kerja', wa: '089647827494' },
+    { name: 'Joko Susilo', age: 29, gender: 'Laki-laki', occupation: 'Pencari Kerja', wa: '085711264052' },
+    { name: 'Larasati Dewi', age: 21, gender: 'Perempuan', occupation: 'Mahasiswa', wa: '088976249450' },
   ]
+
+  const CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
 
   for (let i = 0; i < DUMMY_PARTICIPANTS.length; i++) {
     const pData = DUMMY_PARTICIPANTS[i]
 
-    const participant = await prisma.participant.upsert({
-      where: { participantCode: pData.code },
+    let participant = await prisma.participant.findFirst({ where: { whatsappNumber: pData.wa } })
+    let code = participant?.participantCode
+
+    if (!code) {
+      let isUnique = false
+      while (!isUnique) {
+        code = 'R-' + Array.from({ length: 6 }, () => CHARS[Math.floor(Math.random() * CHARS.length)]).join('')
+        const existing = await prisma.participant.findUnique({ where: { participantCode: code } })
+        isUnique = !existing
+      }
+    }
+
+    participant = await prisma.participant.upsert({
+      where: { participantCode: code! },
       update: {},
       create: {
-        participantCode: pData.code,
+        participantCode: code!,
         name: pData.name,
         age: pData.age,
         gender: pData.gender,
