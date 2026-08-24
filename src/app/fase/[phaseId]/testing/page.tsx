@@ -12,6 +12,14 @@ interface PhaseDetail {
   status: string; externalUrl: string; tasks: Task[]
 }
 
+function getEmbeddableUrl(url: string): string {
+  if (!url) return ''
+  if (url.includes('figma.com/') && !url.includes('figma.com/embed')) {
+    return `https://www.figma.com/embed?embed_host=share&url=${encodeURIComponent(url)}`
+  }
+  return url
+}
+
 export default function TestingPage() {
   const params = useParams()
   const searchParams = useSearchParams()
@@ -512,7 +520,7 @@ export default function TestingPage() {
                 <div style={{ flex: 1, position: 'relative' }}>
                   {!iframeError ? (
                     <iframe
-                      src={phase.externalUrl}
+                      src={getEmbeddableUrl(phase.externalUrl)}
                       style={{ width: '100%', height: '100%', border: 'none' }}
                       title={`${phase.phaseName} Workspace`}
                       sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
