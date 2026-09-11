@@ -41,6 +41,7 @@ export default function UatPage() {
   const [mobileMode, setMobileMode] = useState<'panel' | 'website'>('panel')
   const [iframeLoaded, setIframeLoaded] = useState(false)
   const [iframeError, setIframeError] = useState(false)
+  const [iframeTimedOut, setIframeTimedOut] = useState(false)
 
   const [taskStartTime, setTaskStartTime] = useState<number>(Date.now())
 
@@ -73,6 +74,7 @@ export default function UatPage() {
   useEffect(() => {
     if (externalUrl) {
       const timer = setTimeout(() => {
+        setIframeTimedOut(true)
         setIframeLoaded(true)
       }, 2500)
       return () => clearTimeout(timer)
@@ -551,13 +553,13 @@ export default function UatPage() {
                 </div>
 
                 <div style={{ flex: 1, position: 'relative' }}>
-                  {!iframeError ? (
+                  {!iframeError && !iframeTimedOut ? (
                     <iframe
                       src={getEmbeddableUrl(externalUrl)}
                       style={{ width: '100%', height: '100%', border: 'none' }}
                       title="UAT Workspace"
                       sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-                      onLoad={() => setIframeLoaded(true)}
+                      onLoad={() => { setIframeLoaded(true); setIframeTimedOut(false) }}
                       onError={() => setIframeError(true)}
                       id="uat-iframe"
                     />

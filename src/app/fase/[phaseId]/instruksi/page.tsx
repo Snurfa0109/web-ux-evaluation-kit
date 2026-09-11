@@ -155,9 +155,9 @@ export default function InstruksiPage() {
               href={`/fase/${phaseId}/testing?code=${code}`}
               className="btn btn-primary btn-lg"
               id="btn-mulai-testing"
-              style={{ flex: 1, padding: '0.875rem 1.25rem', fontWeight: 700, fontSize: '1rem' }}
+              style={{ flex: 1, padding: '0.875rem 1.25rem', fontWeight: 700, fontSize: '1rem', textAlign: 'center', whiteSpace: 'normal', lineHeight: 1.4 }}
             >
-              Buka Website yang Akan Diuji & Mulai Pengujian <IconArrowRight size={18} />
+              <span>Buka Website &amp; Mulai Pengujian</span> <IconArrowRight size={18} />
             </Link>
           </div>
         </div>

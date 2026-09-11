@@ -30,12 +30,18 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [baseUrl, setBaseUrl] = useState('')
   const [copied, setCopied] = useState(false)
+  const [settings, setSettings] = useState<any>({ researcherName: 'Siti Nurfadiyah' })
 
   useEffect(() => {
     fetch('/api/admin/analytics')
       .then(r => r.json())
       .then(setData)
       .finally(() => setLoading(false))
+
+    fetch('/api/settings')
+      .then(r => r.json())
+      .then(setSettings)
+      .catch(() => {})
 
     if (typeof window !== 'undefined') {
       setBaseUrl(window.location.origin)
@@ -56,7 +62,26 @@ export default function AdminDashboard() {
   const handleShareWA = () => {
     if (typeof window !== 'undefined') {
       const url = `${window.location.origin}/daftar`
-      const text = `Halo, perkenalkan saya Siti Nurfadiyah, mahasiswa Jurusan Informatika dari Universitas Sultan Ageng Tirtayasa.\n\nMohon bantuan dan kesediaan Bapak/Ibu/Rekan-rekan sekalian untuk berpartisipasi dalam pengujian dan evaluasi pelayanan digital website Disnakertrans Kabupaten Serang melalui link resmi berikut:\n\n${url}\n\nMasukan dan jawaban dari Anda sangat berharga untuk pengembangan website ini. Terima kasih banyak atas waktu dan bantuannya.`
+      const name = settings?.researcherName || 'Peneliti'
+      const text = [
+        `*UNDANGAN PARTISIPASI PENELITIAN*`,
+        ``,
+        `Halo Bapak/Ibu/Rekan-rekan,`,
+        ``,
+        `Perkenalkan, saya *${name}*, mahasiswa Jurusan Informatika Universitas Sultan Ageng Tirtayasa. Saya sedang melakukan penelitian evaluasi pengalaman pengguna (UX) website Disnakertrans Kabupaten Serang dan membutuhkan partisipasi Anda.`,
+        ``,
+        `*Cara Ikut Pengujian (estimasi 5–10 menit):*`,
+        `1. Buka link pendaftaran di bawah`,
+        `2. Isi data diri (nama, usia, pekerjaan, dll)`,
+        `3. Masuk menggunakan kode peserta yang diberikan`,
+        `4. Buka website Disnakertrans, coba cari informasi (loker, syarat AK-1, jadwal BLK, kontak)`,
+        `5. Isi kuesioner penilaian`,
+        ``,
+        `*Link Pendaftaran:*`,
+        `${url}`,
+        ``,
+        `Tidak ada jawaban benar atau salah. Masukan Anda sangat berharga bagi pengembangan layanan digital publik. Terima kasih atas waktu dan bantuannya.`,
+      ].join('\n')
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank')
     }
   }

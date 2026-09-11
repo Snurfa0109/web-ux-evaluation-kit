@@ -33,6 +33,7 @@ export default function TestingPage() {
   const [showTasks, setShowTasks] = useState(true)
   const [activeTab, setActiveTab] = useState<'tasks' | 'questionnaire'>('tasks')
   const [iframeLoaded, setIframeLoaded] = useState(false)
+  const [iframeTimedOut, setIframeTimedOut] = useState(false)
 
   // Mobile responsiveness states
   const [isMobile, setIsMobile] = useState(false)
@@ -68,9 +69,10 @@ export default function TestingPage() {
 
   useEffect(() => {
     if (phase?.externalUrl) {
-      // Auto-dismiss loading spinner after 2.5s if browser blocks iframe due to X-Frame-Options
+      // After 2.5s, if iframe hasn't genuinely loaded (blocked by X-Frame-Options), show fallback
       const timer = setTimeout(() => {
-        setIframeLoaded(true)
+        setIframeTimedOut(true)
+        setIframeLoaded(true) // hide spinner
       }, 2500)
       return () => clearTimeout(timer)
     }
@@ -527,13 +529,13 @@ export default function TestingPage() {
                 </div>
 
                 <div style={{ flex: 1, position: 'relative' }}>
-                  {!iframeError ? (
+                  {!iframeError && !iframeTimedOut ? (
                     <iframe
                       src={getEmbeddableUrl(phase.externalUrl)}
                       style={{ width: '100%', height: '100%', border: 'none' }}
                       title={`${phase.phaseName} Workspace`}
                       sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-                      onLoad={() => setIframeLoaded(true)}
+                      onLoad={() => { setIframeLoaded(true); setIframeTimedOut(false) }}
                       onError={() => setIframeError(true)}
                       id="testing-iframe"
                     />

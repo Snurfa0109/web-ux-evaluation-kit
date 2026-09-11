@@ -32,7 +32,7 @@ const INSTRUMENT_LABELS: Record<string, string> = {
 const PHASE_DESCRIPTIONS: Record<string, string> = {
   SUS: 'Evaluasi kebergunaan website existing melalui 10 butir pertanyaan.',
   UEQ: 'Pengujian pengalaman pengguna pada prototype redesign (26 item, 6 dimensi).',
-  UAT: 'Uji penerimaan sistem berbasis skenario tugas pada website final.',
+  UAT: 'Coba temukan informasi di website Disnakertrans dan berikan penilaian kemudahan penggunaannya.',
 }
 
 export default function PesertaPage() {
