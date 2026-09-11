@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs'
 const prisma = new PrismaClient()
 
 async function main() {
-  console.log('🌱 Seeding database with initial settings, phases, tasks, and 15 dummy respondents...')
+  console.log('🌱 Initializing database with system settings, phases, tasks, and baseline dataset...')
 
   // System Settings
   await prisma.systemSetting.upsert({
@@ -143,42 +143,42 @@ async function main() {
     },
   })
 
-  // UAT Test Cases
+  // UAT Test Cases (Pencarian Informasi Layanan Publik)
   const phase3Tasks = [
     {
       taskCode: 'TC-001',
-      feature: 'Pencarian Lowongan',
-      title: 'Mencari Lowongan Kerja Berdasarkan Lokasi / Kategori',
-      description: 'Bayangkan Anda sedang mencari pekerjaan di area Serang. Gunakan fitur pencarian atau filter lokasi untuk menemukan lowongan yang sesuai.',
-      expectedResult: 'Sistem menampilkan daftar lowongan pekerjaan yang sesuai dengan pencarian Anda.',
-      acceptanceCriteria: 'User dapat memfilter dan melihat daftar lowongan pekerjaan.',
+      feature: 'Pencarian Lowongan Kerja',
+      title: 'Menemukan Informasi Lowongan Kerja Berdasarkan Kategori / Wilayah',
+      description: 'Bayangkan Anda sedang mencari pekerjaan di wilayah Serang. Buka menu informasi lowongan kerja, lalu gunakan fitur pencarian atau filter kategori/lokasi untuk menemukan informasi lowongan kerja yang masih aktif beserta detail kualifikasinya.',
+      expectedResult: 'Sistem menampilkan informasi lowongan kerja yang sesuai, lengkap dengan kualifikasi persyaratan, nama perusahaan, dan batas waktu lamaran.',
+      acceptanceCriteria: 'Pengguna dapat dengan mudah menemukan dan membaca detail informasi lowongan kerja tanpa kendala.',
       order: 1,
     },
     {
       taskCode: 'TC-002',
-      feature: 'Detail Lowongan & Pendaftaran Akun',
-      title: 'Mendaftar Akun Pencari Kerja Baru',
-      description: 'Bayangkan Anda ingin mendaftarkan diri sebagai pencari kerja. Coba isi formulir registrasi akun baru dengan data yang diminta hingga selesai.',
-      expectedResult: 'Sistem menyimpan akun Anda dan menampilkan konfirmasi pendaftaran berhasil.',
-      acceptanceCriteria: 'Informasi lowongan dapat dibaca dengan jelas tanpa membingungkan.',
+      feature: 'Layanan Kartu Kuning (AK-1)',
+      title: 'Menemukan Informasi Persyaratan & Alur Pembuatan Kartu Kuning (AK-1)',
+      description: 'Bayangkan Anda perlu membuat Kartu Kuning (AK-1) sebagai syarat melamar kerja. Jelajahi menu layanan AK-1 untuk mencari informasi dokumen persyaratan yang harus dibawa, alur pengurusan, dan jam operasional layanan.',
+      expectedResult: 'Sistem menyajikan daftar persyaratan dokumen dan alur tahapan pengurusan Kartu Kuning secara terstruktur, runtut, dan mudah dipahami.',
+      acceptanceCriteria: 'Pengguna dapat memahami persyaratan dokumen dan langkah pembuatan Kartu Kuning tanpa kebingungan.',
       order: 2,
     },
     {
       taskCode: 'TC-003',
-      feature: 'Layanan Kartu Kuning (AK-1)',
-      title: 'Pengajuan Kartu Kuning (AK-1) Secara Online',
-      description: 'Bayangkan Anda hendak mengajukan pembuatan Kartu Kuning secara digital dari rumah. Isi formulir pengajuan AK-1 online dan periksa alurnya.',
-      expectedResult: 'Formulir terkirim dan sistem memberikan bukti / nomor resi pengajuan Kartu Kuning.',
-      acceptanceCriteria: 'Syarat Kartu Kuning disajikan dalam poin-poin yang mudah dipahami.',
+      feature: 'Informasi Pelatihan Kerja (BLK)',
+      title: 'Menemukan Informasi Program & Jadwal Pelatihan Kerja (BLK)',
+      description: 'Bayangkan Anda ingin mengikuti pelatihan kejuruan gratis di Disnakertrans. Buka menu pelatihan kerja BLK untuk mencari informasi program kejuruan yang dibuka, jadwal pendaftaran, dan kriteria pesertanya.',
+      expectedResult: 'Sistem menampilkan daftar program pelatihan kerja BLK yang tersedia beserta informasi jadwal dan ketentuan pendaftarannya.',
+      acceptanceCriteria: 'Pengguna dapat melihat rincian informasi kejuruan dan jadwal pelatihan kerja secara jelas.',
       order: 3,
     },
     {
       taskCode: 'TC-004',
-      feature: 'Layanan Pengaduan & Pelatihan Kerja',
-      title: 'Mendaftar Program Pelatihan Kerja (BLK)',
-      description: 'Bayangkan Anda berminat mengikuti salah satu kelas pelatihan kerja gratis. Pilih program pelatihan yang tersedia lalu ikuti langkah pendaftarannya.',
-      expectedResult: 'Pendaftaran berhasil tercatat dan Anda terdaftar pada kelas pelatihan yang dipilih.',
-      acceptanceCriteria: 'User dapat menemukan info pelatihan dan form pengaduan tanpa kendala.',
+      feature: 'Kontak & Pengaduan Ketenagakerjaan',
+      title: 'Menemukan Informasi Kontak Resmi, Alamat Kantor, & Layanan Pengaduan',
+      description: 'Bayangkan Anda perlu datang langsung atau ingin menyampaikan aduan ketenagakerjaan. Cari informasi alamat kantor fisik Disnakertrans Kabupaten Serang, nomor kontak resmi (telepon/WhatsApp), dan prosedur pengaduan.',
+      expectedResult: 'Sistem menampilkan informasi alamat kantor, saluran kontak resmi, serta alur pengaduan masyarakat secara lengkap dan jelas.',
+      acceptanceCriteria: 'Pengguna dapat menemukan kontak resmi dan informasi layanan pengaduan Disnakertrans dengan cepat.',
       order: 4,
     },
   ]
@@ -193,8 +193,8 @@ async function main() {
     createdUatTasks.push(t)
   }
 
-  // Generate 20 Real WhatsApp Number SUS Respondents with Random Alphanumeric Codes
-  const DUMMY_PARTICIPANTS = [
+  // Initial 20 Research Participants with Valid Codes
+  const BASELINE_PARTICIPANTS = [
     { name: 'Rian Ardiansyah', age: 23, gender: 'Laki-laki', occupation: 'Pencari Kerja', wa: '081213790244' },
     { name: 'Siti Maulida', age: 22, gender: 'Perempuan', occupation: 'Mahasiswa', wa: '083825298793' },
     { name: 'Dhani Pratama', age: 25, gender: 'Laki-laki', occupation: 'Pencari Kerja', wa: '085214902301' },
@@ -219,8 +219,8 @@ async function main() {
 
   const CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
 
-  for (let i = 0; i < DUMMY_PARTICIPANTS.length; i++) {
-    const pData = DUMMY_PARTICIPANTS[i]
+  for (let i = 0; i < BASELINE_PARTICIPANTS.length; i++) {
+    const pData = BASELINE_PARTICIPANTS[i]
 
     let participant = await prisma.participant.findFirst({ where: { whatsappNumber: pData.wa } })
     let code = participant?.participantCode
@@ -354,8 +354,8 @@ async function main() {
     })
   }
 
-  console.log('✅ 15 Dummy respondents with full SUS, UEQ, and UAT data created successfully!')
-  console.log('\n🎉 Seeding complete! You can now log in to the admin panel to view full live analytics.')
+  console.log('✅ Baseline evaluation dataset with SUS, UEQ, and UAT records initialized successfully.')
+  console.log('✨ Database seeding complete. Admin analytics and dashboard ready.')
 }
 
 main()

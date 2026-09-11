@@ -7,7 +7,6 @@
     "whatsappNumber": "081234567890",
     "governmentWebsiteExperience": true,
     "disnakertransExperience": false,
-    "susScoreTendency": "HIGH",
     "feedbackText": "Tampilan informasi lowongan kerja sangat jelas dan mudah dipahami."
   },
   {
@@ -18,7 +17,6 @@
     "whatsappNumber": "081234567891",
     "governmentWebsiteExperience": true,
     "disnakertransExperience": true,
-    "susScoreTendency": "MEDIUM",
     "feedbackText": "Kecepatan muat halaman baik, navigasi mudah."
   },
   {
@@ -29,7 +27,6 @@
     "whatsappNumber": "081234567892",
     "governmentWebsiteExperience": false,
     "disnakertransExperience": false,
-    "susScoreTendency": "HIGH",
     "feedbackText": "Tampilan modern dan ramah digunakan di smartphone."
   }
 ]

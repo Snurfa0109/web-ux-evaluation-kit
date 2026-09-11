@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { computeEffectivePhaseStatus } from '@/lib/phase-helper'
 
 // POST /api/uat/overall — submit overall acceptance feedback
 export async function POST(request: Request) {
@@ -11,6 +12,16 @@ export async function POST(request: Request) {
       where: { participantCode: participantCode.toUpperCase() },
     })
     if (!participant) return NextResponse.json({ error: 'Participant tidak ditemukan' }, { status: 404 })
+
+    const phase = await prisma.studyPhase.findUnique({ where: { id: parseInt(phaseId) } })
+    if (!phase) return NextResponse.json({ error: 'Tahap pengujian tidak ditemukan' }, { status: 404 })
+
+    const schedule = computeEffectivePhaseStatus(phase)
+    if (schedule.effectiveStatus !== 'ACTIVE') {
+      return NextResponse.json({
+        error: `Tahap ini sudah ditutup atau belum dibuka (${schedule.scheduleMessage || 'Non-aktif'})`
+      }, { status: 403 })
+    }
 
     const validRatings = [rating1, rating2, rating3, rating4, rating5].filter(r => typeof r === 'number' && r > 0)
     const sum = validRatings.reduce((acc, curr) => acc + curr, 0)

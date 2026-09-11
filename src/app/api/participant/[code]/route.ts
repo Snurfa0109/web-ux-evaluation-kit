@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { computeEffectivePhaseStatus } from '@/lib/phase-helper'
 
 // GET /api/participant/[code]
 export async function GET(
@@ -31,27 +32,30 @@ export async function GET(
     })
 
     const phaseStatus = phases.map((phase) => {
+      const schedule = computeEffectivePhaseStatus(phase)
+      const effectiveStatus = schedule.effectiveStatus
+
       let status: 'completed' | 'available' | 'locked' | 'not_started' = 'locked'
       let completedAt: string | null = null
 
       if (phase.instrument === 'SUS') {
         const resp = participant.susResponses.find(r => r.phaseId === phase.id)
         if (resp) { status = 'completed'; completedAt = resp.completedAt.toISOString() }
-        else if (phase.status === 'ACTIVE') status = 'available'
-        else if (phase.status === 'CLOSED') status = 'locked'
+        else if (effectiveStatus === 'ACTIVE') status = 'available'
+        else if (effectiveStatus === 'CLOSED') status = 'locked'
         else status = 'not_started'
       } else if (phase.instrument === 'UEQ') {
         const resp = participant.ueqResponses.find(r => r.phaseId === phase.id)
         if (resp) { status = 'completed'; completedAt = resp.completedAt.toISOString() }
-        else if (phase.status === 'ACTIVE') status = 'available'
-        else if (phase.status === 'CLOSED') status = 'locked'
+        else if (effectiveStatus === 'ACTIVE') status = 'available'
+        else if (effectiveStatus === 'CLOSED') status = 'locked'
         else status = 'not_started'
       } else if (phase.instrument === 'UAT') {
         const taskResps = participant.uatTaskResponses.filter(r => r.phaseId === phase.id)
         const feedback = participant.uatOverallFeedback.find(r => r.phaseId === phase.id)
         if (feedback) { status = 'completed'; completedAt = feedback.completedAt.toISOString() }
-        else if (phase.status === 'ACTIVE') status = 'available'
-        else if (phase.status === 'CLOSED') status = 'locked'
+        else if (effectiveStatus === 'ACTIVE') status = 'available'
+        else if (effectiveStatus === 'CLOSED') status = 'locked'
         else status = 'not_started'
       }
 
@@ -60,14 +64,18 @@ export async function GET(
         phaseNumber: phase.phaseNumber,
         phaseName: phase.phaseName,
         instrument: phase.instrument,
-        phaseStatus: phase.status,
+        phaseStatus: effectiveStatus,
         participantStatus: status,
+        isExpired: schedule.isExpired,
+        isUpcoming: schedule.isUpcoming,
+        scheduleMessage: schedule.scheduleMessage,
         completedAt,
         tasks: phase.tasks,
         externalUrl: phase.externalUrl,
         instructions: phase.instructions,
       }
     })
+
 
     return NextResponse.json({
       participantCode: participant.participantCode,

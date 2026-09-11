@@ -78,32 +78,43 @@ export default function InstruksiPage() {
           <div className="card" style={{ marginBottom: '1.5rem', background: 'linear-gradient(to right, #0f172a, #1e293b)', color: 'var(--white)' }}>
             <div className="card-body" style={{ padding: '1.5rem' }}>
               <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#60a5fa', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
-                Alur Pengujian Responden
+                Panduan Praktis Responden
               </div>
               <h3 style={{ fontSize: '1.25rem', color: 'var(--white)', marginBottom: '1rem' }}>
-                Bagaimana Cara Mengikuti Pengujian Ini?
+                3 Langkah Mudah Mengikuti Pengujian
               </h3>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
                 {/* Step 1 */}
-                <div style={{ background: 'rgba(255, 255, 255, 0.08)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255, 255, 255, 0.15)' }}>
+                <div style={{ background: 'rgba(255, 255, 255, 0.08)', padding: '1.125rem', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255, 255, 255, 0.15)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                     <span style={{ background: '#2563eb', color: '#fff', width: 26, height: 26, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.8125rem' }}>1</span>
-                    <strong style={{ fontSize: '0.9375rem', color: '#93c5fd' }}>Uji Coba Website Target</strong>
+                    <strong style={{ fontSize: '0.9375rem', color: '#93c5fd' }}>Buka Website</strong>
                   </div>
                   <p style={{ fontSize: '0.8125rem', color: 'var(--slate-300)', margin: 0, lineHeight: 1.5 }}>
-                    Pertama, Anda akan membuka website target <strong>Disnakertrans</strong>. Coba lakukan 4 skenario tugas sehari-hari (Mencari Loker, Pelatihan BLK, Kartu Kuning AK-1, & Kontak).
+                    Klik tombol biru <strong>"Buka Website yang Akan Diuji & Mulai Pengujian"</strong> di bawah. Website akan terbuka di layar atau tab baru.
                   </p>
                 </div>
 
                 {/* Step 2 */}
-                <div style={{ background: 'rgba(255, 255, 255, 0.08)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255, 255, 255, 0.15)' }}>
+                <div style={{ background: 'rgba(255, 255, 255, 0.08)', padding: '1.125rem', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255, 255, 255, 0.15)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                    <span style={{ background: '#10b981', color: '#fff', width: 26, height: 26, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.8125rem' }}>2</span>
-                    <strong style={{ fontSize: '0.9375rem', color: '#a7f3d0' }}>Isi Kuesioner {phase.instrument}</strong>
+                    <span style={{ background: '#f59e0b', color: '#fff', width: 26, height: 26, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.8125rem' }}>2</span>
+                    <strong style={{ fontSize: '0.9375rem', color: '#fde68a' }}>Coba Jelajahi (2–3 Menit)</strong>
                   </div>
                   <p style={{ fontSize: '0.8125rem', color: 'var(--slate-300)', margin: 0, lineHeight: 1.5 }}>
-                    Setelah selesai mencoba website target, klik tombol <strong>"Isi Kuesioner {phase.instrument}"</strong> untuk memberikan penilaian dan masukan jujur Anda.
+                    Cobalah mencari informasi layanan sehari-hari seperti: <strong>Lowongan Kerja, Syarat Kartu Kuning (AK-1), Jadwal Pelatihan BLK</strong>, atau kontak kantor.
+                  </p>
+                </div>
+
+                {/* Step 3 */}
+                <div style={{ background: 'rgba(255, 255, 255, 0.08)', padding: '1.125rem', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255, 255, 255, 0.15)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                    <span style={{ background: '#10b981', color: '#fff', width: 26, height: 26, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.8125rem' }}>3</span>
+                    <strong style={{ fontSize: '0.9375rem', color: '#a7f3d0' }}>Beri Penilaian Anda</strong>
+                  </div>
+                  <p style={{ fontSize: '0.8125rem', color: 'var(--slate-300)', margin: 0, lineHeight: 1.5 }}>
+                    Kembali ke halaman ini, lalu klik <strong>"Isi Kuesioner {phase.instrument}"</strong> untuk memberikan penilaian jujur. Tidak ada jawaban benar atau salah!
                   </p>
                 </div>
               </div>
@@ -146,7 +157,7 @@ export default function InstruksiPage() {
               id="btn-mulai-testing"
               style={{ flex: 1, padding: '0.875rem 1.25rem', fontWeight: 700, fontSize: '1rem' }}
             >
-              Buka Website Target & Mulai Pengujian <IconArrowRight size={18} />
+              Buka Website yang Akan Diuji & Mulai Pengujian <IconArrowRight size={18} />
             </Link>
           </div>
         </div>

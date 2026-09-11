@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { computeEffectivePhaseStatus } from '@/lib/phase-helper'
 
 export async function GET() {
   try {
@@ -109,8 +110,21 @@ export async function GET() {
       include: { tasks: { orderBy: { order: 'asc' } } },
     })
 
-    return NextResponse.json(phases)
+    const mappedPhases = phases.map(phase => {
+      const schedule = computeEffectivePhaseStatus(phase)
+      return {
+        ...phase,
+        status: schedule.effectiveStatus,
+        effectiveStatus: schedule.effectiveStatus,
+        isExpired: schedule.isExpired,
+        isUpcoming: schedule.isUpcoming,
+        scheduleMessage: schedule.scheduleMessage,
+      }
+    })
+
+    return NextResponse.json(mappedPhases)
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }
+

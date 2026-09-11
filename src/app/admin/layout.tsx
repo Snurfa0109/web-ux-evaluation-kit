@@ -23,14 +23,14 @@ import {
 const NAV_ITEMS = [
   { section: 'Utama' },
   { href: '/admin/dashboard', icon: IconHome, label: 'Dashboard' },
-  { href: '/admin/fase', icon: IconLayers, label: 'Kelola Phase' },
+  { href: '/admin/fase', icon: IconLayers, label: 'Kelola Tahap & Jadwal' },
   { section: 'Responden' },
   { href: '/admin/peserta', icon: IconUsers, label: 'Data Peserta' },
-  { section: 'Instrumen' },
-  { href: '/admin/data/sus', icon: IconClipboard, label: 'Data SUS' },
-  { href: '/admin/data/ueq', icon: IconBarChart, label: 'Data UEQ' },
-  { href: '/admin/data/uat', icon: IconCheck, label: 'Data UAT' },
-  { href: '/admin/feedback', icon: IconMessageSquare, label: 'Feedback Responden' },
+  { section: 'Instrumen & Feedback' },
+  { href: '/admin/data/sus', icon: IconClipboard, label: 'Data & Feedback SUS' },
+  { href: '/admin/data/ueq', icon: IconBarChart, label: 'Data & Feedback UEQ' },
+  { href: '/admin/data/uat', icon: IconCheck, label: 'Data & Feedback UAT' },
+  { href: '/admin/feedback', icon: IconMessageSquare, label: 'Rangkuman Feedback' },
   { section: 'Analisis' },
   { href: '/admin/analitik', icon: IconBarChart, label: 'Analitik' },
   { href: '/admin/longitudinal', icon: IconRepeat, label: 'Longitudinal' },
@@ -38,6 +38,7 @@ const NAV_ITEMS = [
   { href: '/admin/ekspor', icon: IconDownload, label: 'Ekspor Excel' },
   { href: '/admin/pengaturan', icon: IconSettings, label: 'Pengaturan' },
 ]
+
 
 
 function AdminLayoutInner({ children }: { children: React.ReactNode }) {

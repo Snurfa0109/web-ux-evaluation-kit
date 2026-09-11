@@ -184,7 +184,8 @@ export default function AdminDashboard() {
           </div>
           <div className="card-body" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             {data?.phases.map(phase => {
-              const statusCfg = PHASE_STATUS_MAP[phase.status] || PHASE_STATUS_MAP.DRAFT
+              const displayStatus = phase.effectiveStatus || phase.status
+              const statusCfg = PHASE_STATUS_MAP[displayStatus] || PHASE_STATUS_MAP.DRAFT
               return (
                 <div key={phase.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1rem', background: 'var(--slate-50)', borderRadius: 'var(--radius-md)', border: '1px solid var(--slate-200)' }}>
                   <div>
@@ -192,15 +193,16 @@ export default function AdminDashboard() {
                       Tahap 0{phase.phaseNumber} — {phase.phaseName}
                     </div>
                     <div style={{ fontSize: '0.75rem', color: 'var(--slate-500)' }}>
-                      Instrumen: {phase.instrument}
+                      Instrumen: {phase.instrument} {phase.scheduleMessage ? `• ${phase.scheduleMessage}` : ''}
                     </div>
                   </div>
                   <span className={`badge ${statusCfg.badge}`}>
-                    {statusCfg.label}
+                    {phase.isExpired ? 'Selesai (Lewat Waktu)' : phase.isUpcoming ? 'Terjadwal' : statusCfg.label}
                   </span>
                 </div>
               )
             })}
+
           </div>
         </div>
 

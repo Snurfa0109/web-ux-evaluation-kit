@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { prisma } from '@/lib/prisma'
+import { computeEffectivePhaseStatus } from '@/lib/phase-helper'
 
 export async function GET() {
   const session = await getServerSession(authOptions)
@@ -65,6 +66,17 @@ export async function GET() {
     }
   }
 
+  const mappedPhases = phases.map(phase => {
+    const schedule = computeEffectivePhaseStatus(phase)
+    return {
+      ...phase,
+      effectiveStatus: schedule.effectiveStatus,
+      isExpired: schedule.isExpired,
+      isUpcoming: schedule.isUpcoming,
+      scheduleMessage: schedule.scheduleMessage,
+    }
+  })
+
   return NextResponse.json({
     totalParticipants,
     susCount,
@@ -75,8 +87,9 @@ export async function GET() {
     avgUeq,
     avgUatAcceptance: avgUatAcceptance ? parseFloat(avgUatAcceptance.toFixed(2)) : null,
     uatSuccessRate: uatSuccessRate ? parseFloat(uatSuccessRate.toFixed(2)) : null,
-    phases,
+    phases: mappedPhases,
     susDistribution: susResponses.map(r => r.susScore),
     ueqResponses,
   })
 }
+

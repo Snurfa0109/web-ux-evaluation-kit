@@ -10,10 +10,19 @@ export async function GET() {
   const participants = await prisma.participant.findMany({
     orderBy: { participantCode: 'asc' },
     include: {
-      susResponses: true,
-      ueqResponses: true,
-      uatOverallFeedback: true,
-      uatTaskResponses: { include: { phase: true } },
+      susResponses: {
+        include: { phase: true },
+      },
+      ueqResponses: {
+        include: { phase: true },
+      },
+      uatOverallFeedback: {
+        include: { phase: true },
+      },
+      uatTaskResponses: {
+        include: { phase: true, task: true },
+        orderBy: { taskId: 'asc' },
+      },
     },
   })
 
@@ -55,14 +64,34 @@ export async function GET() {
       governmentWebsiteExperience: p.governmentWebsiteExperience,
       disnakertransExperience: p.disnakertransExperience,
       whatsappNumber: p.whatsappNumber,
-      susFb6: sus?.fb6 ?? null,
-      ueqFb4: ueq?.fb4 ?? null,
       createdAt: p.createdAt,
+
+      // Flags
       hasSus,
       hasUeq,
       hasUat,
+      overallStatus,
+
+      // Complete SUS Data (Quantitative + Qualitative)
       susScore: sus?.susScore ?? null,
       susCompletedAt: sus?.completedAt ?? null,
+      susDetails: sus ? {
+        id: sus.id,
+        q1: sus.q1, q2: sus.q2, q3: sus.q3, q4: sus.q4, q5: sus.q5,
+        q6: sus.q6, q7: sus.q7, q8: sus.q8, q9: sus.q9, q10: sus.q10,
+        susScore: sus.susScore,
+        fb1: sus.fb1,
+        fb2: sus.fb2,
+        fb3: sus.fb3,
+        fb4: sus.fb4,
+        fb5: sus.fb5,
+        fb6: sus.fb6,
+        fb6Phone: sus.fb6Phone,
+        completedAt: sus.completedAt,
+      } : null,
+      susFb6: sus?.fb6 ?? null,
+
+      // Complete UEQ Data (Quantitative + Qualitative)
       ueqAttractiveness: ueq?.attractiveness ?? null,
       ueqPerspicuity: ueq?.perspicuity ?? null,
       ueqEfficiency: ueq?.efficiency ?? null,
@@ -70,12 +99,62 @@ export async function GET() {
       ueqStimulation: ueq?.stimulation ?? null,
       ueqNovelty: ueq?.novelty ?? null,
       ueqCompletedAt: ueq?.completedAt ?? null,
+      ueqDetails: ueq ? {
+        id: ueq.id,
+        item1: ueq.item1, item2: ueq.item2, item3: ueq.item3, item4: ueq.item4, item5: ueq.item5,
+        item6: ueq.item6, item7: ueq.item7, item8: ueq.item8, item9: ueq.item9, item10: ueq.item10,
+        item11: ueq.item11, item12: ueq.item12, item13: ueq.item13, item14: ueq.item14, item15: ueq.item15,
+        item16: ueq.item16, item17: ueq.item17, item18: ueq.item18, item19: ueq.item19, item20: ueq.item20,
+        item21: ueq.item21, item22: ueq.item22, item23: ueq.item23, item24: ueq.item24, item25: ueq.item25,
+        item26: ueq.item26,
+        attractiveness: ueq.attractiveness,
+        perspicuity: ueq.perspicuity,
+        efficiency: ueq.efficiency,
+        dependability: ueq.dependability,
+        stimulation: ueq.stimulation,
+        novelty: ueq.novelty,
+        fb1: ueq.fb1,
+        fb2: ueq.fb2,
+        fb3: ueq.fb3,
+        fb4: ueq.fb4,
+        fb4Phone: ueq.fb4Phone,
+        completedAt: ueq.completedAt,
+      } : null,
+      ueqFb4: ueq?.fb4 ?? null,
+
+      // Complete UAT Data (Quantitative Tasks + Acceptance + Qualitative)
       uatSuccessRate,
       uatAcceptanceMean: uatFeedback?.meanRating ?? null,
       uatCompletedAt: uatFeedback?.completedAt ?? null,
-      overallStatus,
+      uatDetails: {
+        overall: uatFeedback ? {
+          id: uatFeedback.id,
+          rating1: uatFeedback.rating1,
+          rating2: uatFeedback.rating2,
+          rating3: uatFeedback.rating3,
+          rating4: uatFeedback.rating4,
+          rating5: uatFeedback.rating5,
+          meanRating: uatFeedback.meanRating,
+          fb1: uatFeedback.fb1,
+          fb2: uatFeedback.fb2,
+          fb3: uatFeedback.fb3,
+          completedAt: uatFeedback.completedAt,
+        } : null,
+        tasks: p.uatTaskResponses.map(r => ({
+          id: r.id,
+          taskId: r.taskId,
+          taskCode: r.task.taskCode,
+          taskTitle: r.task.title,
+          feature: r.task.feature,
+          status: r.status,
+          notes: r.notes,
+          timeOnTaskSeconds: r.timeOnTaskSeconds,
+          completedAt: r.completedAt,
+        })),
+      },
     }
   })
 
   return NextResponse.json(mapped)
 }
+

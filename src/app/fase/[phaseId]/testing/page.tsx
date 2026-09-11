@@ -231,7 +231,7 @@ export default function TestingPage() {
                 cursor: 'pointer',
               }}
             >
-              Web Target
+              Website yang Diuji
             </button>
             {phase.externalUrl && (
               <a
@@ -325,7 +325,7 @@ export default function TestingPage() {
             {activeTab === 'tasks' && (
               <div style={{ flex: 1, overflowY: 'auto', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--slate-500)' }}>Cobalah tugas berikut pada website target:</span>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--slate-500)' }}>Silakan coba temukan informasi berikut di website:</span>
                 </div>
 
                 {phase.tasks.map((task, idx) => (
@@ -344,7 +344,7 @@ export default function TestingPage() {
 
                 {phase.tasks.length === 0 && (
                   <p style={{ fontSize: '0.8125rem', color: 'var(--slate-500)', textAlign: 'center', padding: '1rem' }}>
-                    Tidak ada daftar tugas khusus. Silakan eksplorasi website/prototype secara bebas.
+                    Tidak ada daftar tugas khusus. Silakan eksplorasi website secara bebas.
                   </p>
                 )}
 
@@ -355,7 +355,7 @@ export default function TestingPage() {
                     className="btn btn-secondary btn-sm btn-full"
                     style={{ marginTop: '0.5rem' }}
                   >
-                    Buka & Uji Website Target <IconArrowRight size={14} />
+                    Buka Website yang Akan Diuji ↗ <IconArrowRight size={14} />
                   </button>
                 ) : null}
 
@@ -513,8 +513,17 @@ export default function TestingPage() {
                 {/* Clean URL bar */}
                 <div style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '0.375rem 0.875rem', fontSize: '0.8125rem', color: 'var(--slate-600)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', zIndex: 15, flexShrink: 0 }}>
                   <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: 'var(--slate-700)', fontWeight: 500 }}>
-                    Website Target: <strong style={{ color: 'var(--slate-900)' }}>{phase.externalUrl}</strong>
+                    Alamat Website: <strong style={{ color: 'var(--slate-900)' }}>{phase.externalUrl}</strong>
                   </span>
+                  <a
+                    href={phase.externalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-sm btn-secondary"
+                    style={{ padding: '0.25rem 0.625rem', fontSize: '0.75rem', whiteSpace: 'nowrap' }}
+                  >
+                    <IconExternalLink size={12} /> Buka di Tab Baru
+                  </a>
                 </div>
 
                 <div style={{ flex: 1, position: 'relative' }}>
@@ -535,18 +544,18 @@ export default function TestingPage() {
                   {!iframeLoaded && !iframeError && (
                     <div style={{ position: 'absolute', inset: 0, background: 'var(--slate-50)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', padding: '1.5rem', textAlign: 'center', zIndex: 10 }}>
                       <div className="loading-spinner" style={{ width: 32, height: 32, color: 'var(--slate-700)' }}></div>
-                      <p style={{ fontSize: '0.875rem', color: 'var(--slate-800)', fontWeight: 600, margin: 0 }}>Menghubungkan ke website target...</p>
+                      <p style={{ fontSize: '0.875rem', color: 'var(--slate-800)', fontWeight: 600, margin: 0 }}>Sedang memuat tampilan website Disnakertrans...</p>
                       <p style={{ fontSize: '0.75rem', color: 'var(--slate-500)', maxWidth: 380, margin: 0, lineHeight: 1.4 }}>
-                        *Catatan: Server pemerintah (`.go.id`) terkadang membatasi tampilan di dalam frame demi keamanan browser HP.
+                        *Jika halaman website tidak muncul di kotak ini, klik tombol di bawah untuk membuka langsung di jendela/tab baru.
                       </p>
                       <a
                         href={phase.externalUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn btn-sm btn-primary"
-                        style={{ marginTop: '0.25rem' }}
+                        style={{ marginTop: '0.25rem', fontWeight: 600 }}
                       >
-                        <IconExternalLink size={14} /> Buka Website Target di Tab Baru
+                        <IconExternalLink size={14} /> Buka Website Disnakertrans di Tab Baru ↗
                       </a>
                     </div>
                   )}
@@ -586,13 +595,13 @@ export default function TestingPage() {
 function IframeFallback({ url }: { url: string }) {
   return (
     <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-      <div className="card" style={{ maxWidth: 460, textAlign: 'center', padding: '2rem' }}>
+      <div className="card" style={{ maxWidth: 480, textAlign: 'center', padding: '2rem' }}>
         <h3 style={{ fontSize: '1.125rem', marginBottom: '0.5rem' }}>Buka Website di Tab Baru</h3>
-        <p style={{ fontSize: '0.875rem', color: 'var(--slate-600)', marginBottom: '1.25rem' }}>
-          Server target (`.go.id`) membatasi tampilan langsung di dalam frame demi keamanan. Silakan buka website target di tab terpisah.
+        <p style={{ fontSize: '0.875rem', color: 'var(--slate-600)', marginBottom: '1.25rem', lineHeight: 1.5 }}>
+          Untuk kenyamanan dan keamanan tampilan, silakan klik tombol di bawah untuk membuka website resmi Disnakertrans di tab baru. Setelah selesai mencoba, Anda bisa kembali ke halaman ini untuk mengisi kuesioner.
         </p>
-        <a href={url} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ margin: '0 auto' }}>
-          <IconExternalLink size={16} /> Buka Website Target ↗
+        <a href={url} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ margin: '0 auto', fontWeight: 600 }}>
+          <IconExternalLink size={16} /> Buka Website Disnakertrans ↗
         </a>
       </div>
     </div>

@@ -65,24 +65,93 @@ export async function GET(request: Request) {
   // Sheet 2 — SUS RAW
   if (type === 'all' || type === 'sus') {
     const sh = workbook.addWorksheet('SUS RAW')
-    sh.columns = [{ key: 'code', width: 14 }, ...Array.from({ length: 10 }, (_, i) => ({ key: `q${i+1}`, width: 8 })), { key: 'date', width: 20 }]
-    applyHeaders(sh, ['Participant ID', 'Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10', 'Tanggal Selesai'])
+    sh.columns = [
+      { key: 'code', width: 14 },
+      { key: 'name', width: 22 },
+      { key: 'age', width: 8 },
+      { key: 'gender', width: 14 },
+      { key: 'occ', width: 22 },
+      ...Array.from({ length: 10 }, (_, i) => ({ key: `q${i+1}`, width: 8 })),
+      { key: 'score', width: 12 },
+      { key: 'fb1', width: 40 },
+      { key: 'fb2', width: 40 },
+      { key: 'fb3', width: 40 },
+      { key: 'fb4', width: 40 },
+      { key: 'fb5', width: 40 },
+      { key: 'fb6', width: 16 },
+      { key: 'fb6Phone', width: 18 },
+      { key: 'date', width: 20 },
+    ]
+    applyHeaders(sh, [
+      'Participant ID', 'Nama', 'Usia', 'Jenis Kelamin', 'Pekerjaan',
+      'Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10',
+      'Skor SUS',
+      'Fitur Paling Mudah (FB1)',
+      'Fitur Membingungkan (FB2)',
+      'Informasi Sulit Ditemukan (FB3)',
+      'Usulan Fitur Tambahan (FB4)',
+      'Saran & Masukan Umum (FB5)',
+      'Bersedia Kontak Lanjutan',
+      'No. WhatsApp',
+      'Tanggal Selesai'
+    ])
     for (const p of participants) {
       if (p.susResponses.length > 0) {
         const s = p.susResponses[0]
-        sh.addRow([p.participantCode, s.q1, s.q2, s.q3, s.q4, s.q5, s.q6, s.q7, s.q8, s.q9, s.q10,
-          s.completedAt.toLocaleDateString('id-ID')])
+        sh.addRow([
+          p.participantCode, p.name, p.age, p.gender, p.occupation,
+          s.q1, s.q2, s.q3, s.q4, s.q5, s.q6, s.q7, s.q8, s.q9, s.q10,
+          s.susScore,
+          s.fb1 || '', s.fb2 || '', s.fb3 || '', s.fb4 || '', s.fb5 || '',
+          s.fb6 || '', s.fb6Phone || '',
+          s.completedAt.toLocaleDateString('id-ID')
+        ])
       }
     }
 
     // Sheet 3 — SUS RESULTS
     const sh3 = workbook.addWorksheet('SUS RESULTS')
-    sh3.columns = [{ key: 'code', width: 14 }, { key: 'score', width: 12 }, { key: 'date', width: 20 }]
-    applyHeaders(sh3, ['Participant ID', 'SUS Score', 'Tanggal Selesai'])
+    sh3.columns = [
+      { key: 'code', width: 14 },
+      { key: 'name', width: 22 },
+      { key: 'occ', width: 22 },
+      { key: 'score', width: 12 },
+      { key: 'grade', width: 20 },
+      { key: 'fb1', width: 40 },
+      { key: 'fb2', width: 40 },
+      { key: 'fb3', width: 40 },
+      { key: 'fb4', width: 40 },
+      { key: 'fb5', width: 40 },
+      { key: 'fb6', width: 16 },
+      { key: 'fb6Phone', width: 18 },
+      { key: 'date', width: 20 },
+    ]
+    applyHeaders(sh3, [
+      'Participant ID', 'Nama Responden', 'Pekerjaan', 'Skor SUS', 'Kategori Grade',
+      'Fitur Paling Mudah (FB1)',
+      'Fitur Membingungkan (FB2)',
+      'Informasi Sulit Ditemukan (FB3)',
+      'Usulan Fitur Tambahan (FB4)',
+      'Saran & Masukan Umum (FB5)',
+      'Bersedia Kontak Lanjutan',
+      'No. WhatsApp',
+      'Tanggal Selesai'
+    ])
     for (const p of participants) {
       if (p.susResponses.length > 0) {
         const s = p.susResponses[0]
-        sh3.addRow([p.participantCode, s.susScore, s.completedAt.toLocaleDateString('id-ID')])
+        let grade = 'OK'
+        if (s.susScore >= 84.1) grade = 'Sangat Baik (A)'
+        else if (s.susScore >= 72.6) grade = 'Baik (B)'
+        else if (s.susScore >= 52) grade = 'Cukup (C)'
+        else grade = 'Kurang (D/F)'
+
+        sh3.addRow([
+          p.participantCode, p.name, p.occupation, s.susScore, grade,
+          s.fb1 || '', s.fb2 || '', s.fb3 || '', s.fb4 || '', s.fb5 || '',
+          s.fb6 || '', s.fb6Phone || '',
+          s.completedAt.toLocaleDateString('id-ID')
+        ])
       }
     }
   }
@@ -91,16 +160,26 @@ export async function GET(request: Request) {
   if (type === 'all' || type === 'ueq') {
     const sh = workbook.addWorksheet('UEQ RAW')
     const itemCols = Array.from({ length: 26 }, (_, i) => ({ key: `item${i+1}`, width: 8 }))
-    sh.columns = [{ key: 'code', width: 14 }, ...itemCols, { key: 'date', width: 20 }]
-    applyHeaders(sh, ['Participant ID', ...Array.from({ length: 26 }, (_, i) => `Item ${i+1}`), 'Tanggal Selesai'])
+    sh.columns = [
+      { key: 'code', width: 14 }, { key: 'name', width: 22 }, ...itemCols,
+      { key: 'fb1', width: 40 }, { key: 'fb2', width: 40 }, { key: 'fb3', width: 40 },
+      { key: 'fb4', width: 16 }, { key: 'fb4Phone', width: 18 },
+      { key: 'date', width: 20 }
+    ]
+    applyHeaders(sh, [
+      'Participant ID', 'Nama', ...Array.from({ length: 26 }, (_, i) => `Item ${i+1}`),
+      'Tampilan Visual Disukai (FB1)', 'Tampilan Kurang Nyaman (FB2)', 'Saran Perbaikan Prototype (FB3)',
+      'Bersedia UAT', 'No. WhatsApp', 'Tanggal Selesai'
+    ])
     for (const p of participants) {
       if (p.ueqResponses.length > 0) {
         const u = p.ueqResponses[0]
-        sh.addRow([p.participantCode,
+        sh.addRow([p.participantCode, p.name,
           u.item1, u.item2, u.item3, u.item4, u.item5, u.item6, u.item7,
           u.item8, u.item9, u.item10, u.item11, u.item12, u.item13,
           u.item14, u.item15, u.item16, u.item17, u.item18, u.item19,
           u.item20, u.item21, u.item22, u.item23, u.item24, u.item25, u.item26,
+          u.fb1 || '', u.fb2 || '', u.fb3 || '', u.fb4 || '', u.fb4Phone || '',
           u.completedAt.toLocaleDateString('id-ID')])
       }
     }
@@ -108,17 +187,28 @@ export async function GET(request: Request) {
     // Sheet 5 — UEQ RESULTS
     const sh5 = workbook.addWorksheet('UEQ RESULTS')
     sh5.columns = [
-      { key: 'code', width: 14 }, { key: 'att', width: 16 }, { key: 'per', width: 14 },
+      { key: 'code', width: 14 }, { key: 'name', width: 22 },
+      { key: 'att', width: 16 }, { key: 'per', width: 14 },
       { key: 'eff', width: 14 }, { key: 'dep', width: 16 }, { key: 'sti', width: 14 },
-      { key: 'nov', width: 12 }, { key: 'date', width: 20 }
+      { key: 'nov', width: 12 },
+      { key: 'fb1', width: 40 }, { key: 'fb2', width: 40 }, { key: 'fb3', width: 40 },
+      { key: 'date', width: 20 }
     ]
-    applyHeaders(sh5, ['Participant ID', 'Attractiveness', 'Perspicuity', 'Efficiency',
-      'Dependability', 'Stimulation', 'Novelty', 'Tanggal Selesai'])
+    applyHeaders(sh5, [
+      'Participant ID', 'Nama', 'Attractiveness', 'Perspicuity', 'Efficiency',
+      'Dependability', 'Stimulation', 'Novelty',
+      'Tampilan Visual Disukai (FB1)', 'Tampilan Kurang Nyaman (FB2)', 'Saran Perbaikan (FB3)',
+      'Tanggal Selesai'
+    ])
     for (const p of participants) {
       if (p.ueqResponses.length > 0) {
         const u = p.ueqResponses[0]
-        sh5.addRow([p.participantCode, u.attractiveness, u.perspicuity, u.efficiency,
-          u.dependability, u.stimulation, u.novelty, u.completedAt.toLocaleDateString('id-ID')])
+        sh5.addRow([
+          p.participantCode, p.name, u.attractiveness, u.perspicuity, u.efficiency,
+          u.dependability, u.stimulation, u.novelty,
+          u.fb1 || '', u.fb2 || '', u.fb3 || '',
+          u.completedAt.toLocaleDateString('id-ID')
+        ])
       }
     }
   }
@@ -127,31 +217,43 @@ export async function GET(request: Request) {
   if (type === 'all' || type === 'uat') {
     const sh = workbook.addWorksheet('UAT RAW')
     sh.columns = [
-      { key: 'code', width: 14 }, { key: 'tcid', width: 10 }, { key: 'feat', width: 22 },
+      { key: 'code', width: 14 }, { key: 'name', width: 22 }, { key: 'tcid', width: 10 }, { key: 'feat', width: 22 },
       { key: 'task', width: 40 }, { key: 'expected', width: 40 },
-      { key: 'status', width: 16 }, { key: 'notes', width: 30 }, { key: 'date', width: 20 },
+      { key: 'status', width: 16 }, { key: 'notes', width: 35 }, { key: 'date', width: 20 },
     ]
-    applyHeaders(sh, ['Participant ID', 'Test Case ID', 'Feature', 'Task', 'Expected Result', 'Status', 'Catatan', 'Tanggal'])
+    applyHeaders(sh, ['Participant ID', 'Nama', 'Test Case ID', 'Feature', 'Task', 'Expected Result', 'Status', 'Catatan Kendala Task', 'Tanggal'])
     for (const p of participants) {
       for (const r of p.uatTaskResponses) {
-        sh.addRow([p.participantCode, r.task.taskCode, r.task.feature || '', r.task.description,
+        sh.addRow([p.participantCode, p.name, r.task.taskCode, r.task.feature || '', r.task.description,
           r.task.expectedResult || '', r.status, r.notes || '', r.completedAt.toLocaleDateString('id-ID')])
       }
     }
 
     const sh7 = workbook.addWorksheet('UAT RESULTS')
     sh7.columns = [
-      { key: 'code', width: 14 }, { key: 'rate', width: 20 }, { key: 'acc', width: 24 }, { key: 'date', width: 20 }
+      { key: 'code', width: 14 }, { key: 'name', width: 22 },
+      { key: 'rate', width: 20 }, { key: 'acc', width: 24 },
+      { key: 'fb1', width: 40 }, { key: 'fb2', width: 40 }, { key: 'fb3', width: 40 },
+      { key: 'date', width: 20 }
     ]
-    applyHeaders(sh7, ['Participant ID', 'Task Success Rate (%)', 'Overall Acceptance Rating', 'Tanggal Selesai'])
+    applyHeaders(sh7, [
+      'Participant ID', 'Nama', 'Task Success Rate (%)', 'Overall Acceptance Rating',
+      'Kesesuaian Fungsi (FB1)', 'Kendala/Bug Ditemukan (FB2)', 'Saran & Kritik Final (FB3)',
+      'Tanggal Selesai'
+    ])
     for (const p of participants) {
       if (p.uatTaskResponses.length > 0 || p.uatOverallFeedback.length > 0) {
         const passed = p.uatTaskResponses.filter(r => r.status === 'BERHASIL').length
         const total = p.uatTaskResponses.length
         const rate = total > 0 ? parseFloat(((passed / total) * 100).toFixed(2)) : null
-        const acc = p.uatOverallFeedback[0]?.meanRating ?? null
-        const date = p.uatOverallFeedback[0]?.completedAt.toLocaleDateString('id-ID') ?? ''
-        sh7.addRow([p.participantCode, rate, acc, date])
+        const fb = p.uatOverallFeedback[0]
+        const acc = fb?.meanRating ?? null
+        const date = fb?.completedAt.toLocaleDateString('id-ID') ?? ''
+        sh7.addRow([
+          p.participantCode, p.name, rate, acc,
+          fb?.fb1 || '', fb?.fb2 || '', fb?.fb3 || '',
+          date
+        ])
       }
     }
   }

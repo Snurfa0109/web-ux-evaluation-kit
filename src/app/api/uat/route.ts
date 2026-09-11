@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { computeEffectivePhaseStatus } from '@/lib/phase-helper'
 
 // POST /api/uat — submit individual task response
 export async function POST(request: Request) {
@@ -11,6 +12,16 @@ export async function POST(request: Request) {
       where: { participantCode: participantCode.toUpperCase() },
     })
     if (!participant) return NextResponse.json({ error: 'Participant tidak ditemukan' }, { status: 404 })
+
+    const phase = await prisma.studyPhase.findUnique({ where: { id: parseInt(phaseId) } })
+    if (!phase) return NextResponse.json({ error: 'Tahap pengujian tidak ditemukan' }, { status: 404 })
+
+    const schedule = computeEffectivePhaseStatus(phase)
+    if (schedule.effectiveStatus !== 'ACTIVE') {
+      return NextResponse.json({
+        error: `Tahap ini sudah ditutup atau belum dibuka (${schedule.scheduleMessage || 'Non-aktif'})`
+      }, { status: 403 })
+    }
 
     const duration = timeOnTaskSeconds ? parseInt(timeOnTaskSeconds) : null
 

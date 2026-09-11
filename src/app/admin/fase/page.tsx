@@ -13,6 +13,7 @@ interface Task {
 interface Phase {
   id: number; phaseNumber: number; phaseName: string; instrument: string
   status: string; startDate: string | null; endDate: string | null
+  effectiveStatus?: string; isExpired?: boolean; isUpcoming?: boolean; scheduleMessage?: string | null
   participantMode: string; externalUrl: string; instructions: string
   tasks: Task[]
 }
@@ -125,8 +126,8 @@ export default function FaseManagementPage() {
   return (
     <div className="admin-content fade-in">
       <div style={{ marginBottom: '1.75rem' }}>
-        <h1 className="page-title">Manajemen Tahap Penelitian</h1>
-        <p className="page-subtitle">Atur status aktif, URL website/prototype, instruksi pengujian, dan skenario tugas</p>
+        <h1 className="page-title">Manajemen Tahap Penelitian & Jadwal Aktif</h1>
+        <p className="page-subtitle">Atur status aktif, rentang tanggal jadwal, URL website/prototype, instruksi pengujian, dan skenario tugas</p>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '1.5rem' }}>
@@ -134,7 +135,8 @@ export default function FaseManagementPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           {phases.map(phase => {
             const isSelected = selectedPhase?.id === phase.id
-            const statusCfg = STATUS_CONFIG[phase.status] || STATUS_CONFIG.DRAFT
+            const displayStatus = phase.effectiveStatus || phase.status
+            const statusCfg = STATUS_CONFIG[displayStatus] || STATUS_CONFIG.DRAFT
 
             return (
               <div
@@ -153,7 +155,7 @@ export default function FaseManagementPage() {
                       Tahap 0{phase.phaseNumber}
                     </span>
                     <span className={`badge ${statusCfg.badge}`}>
-                      {statusCfg.label}
+                      {phase.isExpired ? 'Selesai (Lewat Waktu)' : phase.isUpcoming ? 'Terjadwal' : statusCfg.label}
                     </span>
                   </div>
                   <div style={{ fontWeight: 700, fontSize: '0.9375rem', color: 'var(--slate-900)', marginBottom: '0.25rem' }}>
@@ -171,6 +173,45 @@ export default function FaseManagementPage() {
         {/* Selected Phase Detail & Configuration */}
         {selectedPhase && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            {/* Schedule Expiration / Upcoming Alert */}
+            {selectedPhase.isExpired && (
+              <div className="card" style={{ background: '#fef2f2', borderColor: '#fecaca', borderLeft: '4px solid #ef4444' }}>
+                <div className="card-body" style={{ padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
+                  <div>
+                    <strong style={{ color: '#991b1b', fontSize: '0.9rem', display: 'block', marginBottom: '0.25rem' }}>
+                      Status: Selesai / Non-aktif Otomatis
+                    </strong>
+                    <span style={{ fontSize: '0.8125rem', color: '#b91c1c' }}>
+                      {selectedPhase.scheduleMessage || 'Tahap ini telah otomatis dinon-aktifkan karena telah melewati tanggal selesai yang dijadwalkan.'}
+                    </span>
+                  </div>
+                  {!editing && (
+                    <button
+                      type="button"
+                      onClick={() => { setEditing(true); setEditForm({ ...selectedPhase }) }}
+                      className="btn btn-secondary btn-sm"
+                      style={{ fontSize: '0.75rem', background: '#ffffff' }}
+                    >
+                      Perpanjang / Ubah Tanggal
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {selectedPhase.isUpcoming && (
+              <div className="card" style={{ background: '#fffbeb', borderColor: '#fef3c7', borderLeft: '4px solid #f59e0b' }}>
+                <div className="card-body" style={{ padding: '1rem 1.25rem' }}>
+                  <strong style={{ color: '#92400e', fontSize: '0.9rem', display: 'block', marginBottom: '0.25rem' }}>
+                    Status: Terjadwal (Belum Dibuka)
+                  </strong>
+                  <span style={{ fontSize: '0.8125rem', color: '#b45309' }}>
+                    {selectedPhase.scheduleMessage}
+                  </span>
+                </div>
+              </div>
+            )}
+
             {/* Phase Info Card */}
             <div className="card">
               <div className="card-header">
@@ -197,7 +238,7 @@ export default function FaseManagementPage() {
                       onClick={() => { setEditing(true); setEditForm({ ...selectedPhase }) }}
                       className="btn btn-secondary btn-sm"
                     >
-                      Edit Konfigurasi
+                      Edit Konfigurasi & Jadwal
                     </button>
                   </div>
                 )}
@@ -207,36 +248,46 @@ export default function FaseManagementPage() {
                 <div className="card-body" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   <div className="grid-2">
                     <div>
-                      <div className="form-label" style={{ marginBottom: '0.25rem', color: 'var(--slate-500)' }}>Status Tahap</div>
-                      <span className={`badge ${STATUS_CONFIG[selectedPhase.status]?.badge}`}>
-                        {STATUS_CONFIG[selectedPhase.status]?.label}
-                      </span>
+                      <div className="form-label" style={{ marginBottom: '0.25rem', color: 'var(--slate-500)' }}>Status Efektif Tahap</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <span className={`badge ${STATUS_CONFIG[selectedPhase.effectiveStatus || selectedPhase.status]?.badge}`}>
+                          {STATUS_CONFIG[selectedPhase.effectiveStatus || selectedPhase.status]?.label}
+                        </span>
+                        {selectedPhase.isExpired && (
+                          <span style={{ fontSize: '0.75rem', color: 'var(--danger)', fontWeight: 600 }}>
+                            (Lewat Batas Waktu)
+                          </span>
+                        )}
+                        {selectedPhase.isUpcoming && (
+                          <span style={{ fontSize: '0.75rem', color: '#b45309', fontWeight: 600 }}>
+                            (Akan Datang)
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <div>
                       <div className="form-label" style={{ marginBottom: '0.25rem', color: 'var(--slate-500)' }}>Mode Partisipasi</div>
                       <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--slate-800)' }}>
-                        {selectedPhase.participantMode === 'SAME_ONLY' ? 'Responden Sama' : 'Bebas / Responden Baru'}
+                        {selectedPhase.participantMode === 'SAME_ONLY' ? 'Responden Sama (Longitudinal)' : 'Bebas / Responden Baru'}
                       </div>
                     </div>
                   </div>
 
-                  {/* Show schedule dates in view mode if SCHEDULED or ACTIVE */}
-                  {(selectedPhase.status === 'SCHEDULED' || selectedPhase.startDate || selectedPhase.endDate) && (
-                    <div className="grid-2">
-                      <div>
-                        <div className="form-label" style={{ marginBottom: '0.25rem', color: 'var(--slate-500)' }}>Tanggal Mulai</div>
-                        <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--slate-800)' }}>
-                          {selectedPhase.startDate ? new Date(selectedPhase.startDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '(belum diatur)'}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="form-label" style={{ marginBottom: '0.25rem', color: 'var(--slate-500)' }}>Tanggal Selesai</div>
-                        <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--slate-800)' }}>
-                          {selectedPhase.endDate ? new Date(selectedPhase.endDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '(belum diatur)'}
-                        </div>
+                  {/* Show schedule dates */}
+                  <div className="grid-2">
+                    <div>
+                      <div className="form-label" style={{ marginBottom: '0.25rem', color: 'var(--slate-500)' }}>Tanggal Mulai Aktif</div>
+                      <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--slate-800)' }}>
+                        {selectedPhase.startDate ? new Date(selectedPhase.startDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '(Tidak dibatasi / langsung aktif)'}
                       </div>
                     </div>
-                  )}
+                    <div>
+                      <div className="form-label" style={{ marginBottom: '0.25rem', color: 'var(--slate-500)' }}>Tanggal Batas Selesai</div>
+                      <div style={{ fontSize: '0.875rem', fontWeight: 600, color: selectedPhase.isExpired ? 'var(--danger)' : 'var(--slate-800)' }}>
+                        {selectedPhase.endDate ? new Date(selectedPhase.endDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '(Tidak dibatasi / aktif terus)'}
+                      </div>
+                    </div>
+                  </div>
 
                   <div>
                     <div className="form-label" style={{ marginBottom: '0.25rem', color: 'var(--slate-500)' }}>URL Eksternal (Website / Prototype)</div>
@@ -257,7 +308,7 @@ export default function FaseManagementPage() {
                 <div className="card-body" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   <div className="grid-2">
                     <div className="form-group">
-                      <label className="form-label">Status Tahap</label>
+                      <label className="form-label">Status Dasar Tahap</label>
                       <select
                         className="form-select"
                         value={editForm.status}
@@ -266,8 +317,11 @@ export default function FaseManagementPage() {
                         <option value="DRAFT">Draft (Belum Dibuka)</option>
                         <option value="SCHEDULED">Terjadwal</option>
                         <option value="ACTIVE">Aktif (Dapat Dikerjakan)</option>
-                        <option value="CLOSED">Selesai / Ditutup</option>
+                        <option value="CLOSED">Selesai / Ditutup Manual</option>
                       </select>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--slate-500)', marginTop: '0.25rem', display: 'block' }}>
+                        Jika status disetel Aktif atau Terjadwal, tanggal mulai dan selesai di bawah akan mengontrol kapan tahap otomatis terbuka dan tertutup.
+                      </span>
                     </div>
 
                     <div className="form-group">
@@ -283,29 +337,34 @@ export default function FaseManagementPage() {
                     </div>
                   </div>
 
-                  {/* Date fields — shown when status is SCHEDULED or ACTIVE */}
-                  {(editForm.status === 'SCHEDULED' || editForm.status === 'ACTIVE' || editForm.status === 'CLOSED') && (
-                    <div className="grid-2">
-                      <div className="form-group">
-                        <label className="form-label">Tanggal Mulai</label>
-                        <input
-                          className="form-input"
-                          type="date"
-                          value={editForm.startDate ? editForm.startDate.slice(0, 10) : ''}
-                          onChange={e => setEditForm(p => ({ ...p, startDate: e.target.value || null }))}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label className="form-label">Tanggal Selesai</label>
-                        <input
-                          className="form-input"
-                          type="date"
-                          value={editForm.endDate ? editForm.endDate.slice(0, 10) : ''}
-                          onChange={e => setEditForm(p => ({ ...p, endDate: e.target.value || null }))}
-                        />
-                      </div>
+                  {/* Date fields */}
+                  <div className="grid-2">
+                    <div className="form-group">
+                      <label className="form-label">Tanggal Mulai (Opsional)</label>
+                      <input
+                        className="form-input"
+                        type="date"
+                        value={editForm.startDate ? editForm.startDate.slice(0, 10) : ''}
+                        onChange={e => setEditForm(p => ({ ...p, startDate: e.target.value || null }))}
+                      />
+                      <span style={{ fontSize: '0.72rem', color: 'var(--slate-500)', marginTop: '0.2rem', display: 'block' }}>
+                        Sebelum tanggal ini, tahap berstatus Terjadwal (Belum Mulai).
+                      </span>
                     </div>
-                  )}
+                    <div className="form-group">
+                      <label className="form-label">Tanggal Selesai (Batas Waktu)</label>
+                      <input
+                        className="form-input"
+                        type="date"
+                        value={editForm.endDate ? editForm.endDate.slice(0, 10) : ''}
+                        onChange={e => setEditForm(p => ({ ...p, endDate: e.target.value || null }))}
+                      />
+                      <span style={{ fontSize: '0.72rem', color: 'var(--slate-500)', marginTop: '0.2rem', display: 'block' }}>
+                        Aktif hingga pukul 23:59:59 pada tanggal ini. Setelah lewat, tahap otomatis berstatus Selesai (Non-aktif).
+                      </span>
+                    </div>
+                  </div>
+
 
                   <div className="form-group">
                     <label className="form-label">URL Eksternal (Website / Prototype)</label>
