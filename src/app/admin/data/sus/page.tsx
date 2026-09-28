@@ -56,6 +56,7 @@ export default function SusDataPage() {
   const [activeTab, setActiveTab] = useState<'kuantitatif' | 'kualitatif' | 'gabungan'>('kuantitatif')
   const [search, setSearch] = useState('')
   const [selectedQuestion, setSelectedQuestion] = useState('all')
+  const [selectedPhase, setSelectedPhase] = useState<1 | 4>(4)
 
   const fetchData = () => {
     fetch('/api/admin/participants')
@@ -91,8 +92,6 @@ export default function SusDataPage() {
       <div className="loading-spinner" style={{ width: 32, height: 32, color: 'var(--slate-700)' }}></div>
     </div>
   )
-
-  const [selectedPhase, setSelectedPhase] = useState<1 | 4>(4)
 
   const activeParticipants = participants
     .map(p => {
