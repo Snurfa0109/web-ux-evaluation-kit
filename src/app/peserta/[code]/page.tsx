@@ -189,7 +189,12 @@ export default function PesertaPage() {
                       </div>
 
                       <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--slate-600)' }}>
-                        {INSTRUMENT_LABELS[phase.instrument]} — {PHASE_DESCRIPTIONS[phase.instrument]}
+                        {INSTRUMENT_LABELS[phase.instrument]} —{' '}
+                        {phase.instrument === 'SUS' && phase.phaseNumber === 1
+                          ? 'Evaluasi kebergunaan website lama Disnakertrans melalui 10 butir pertanyaan.'
+                          : phase.instrument === 'SUS' && phase.phaseNumber >= 4
+                          ? 'Evaluasi kebergunaan website baru Disnakertrans melalui 10 butir pertanyaan (Post-Test).'
+                          : PHASE_DESCRIPTIONS[phase.instrument]}
                       </p>
 
                       {phase.completedAt && (

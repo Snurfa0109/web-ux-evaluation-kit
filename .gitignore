@@ -39,3 +39,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local docs (skripsi, lampiran) — tetap di lokal, tidak di-push ke repo
+/docs/
+
+# local utility & audit scripts
+audit_pedoman_untirta.py
+audit_redaksi.py
+prisma/full-evalux-report.js
+prisma/utils/*.mjs
+prisma/utils/*.json

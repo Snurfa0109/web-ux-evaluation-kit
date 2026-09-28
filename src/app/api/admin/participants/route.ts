@@ -12,9 +12,11 @@ export async function GET() {
     include: {
       susResponses: {
         include: { phase: true },
+        orderBy: { completedAt: 'desc' },
       },
       ueqResponses: {
         include: { phase: true },
+        orderBy: { completedAt: 'desc' },
       },
       uatOverallFeedback: {
         include: { phase: true },
@@ -29,7 +31,9 @@ export async function GET() {
   const phases = await prisma.studyPhase.findMany({ orderBy: { phaseNumber: 'asc' } })
 
   const mapped = participants.map(p => {
-    const sus = p.susResponses[0] || null
+    const susFase1 = p.susResponses.find(r => r.phase?.phaseNumber === 1 || r.phaseId === 1) || null
+    const susFase4 = p.susResponses.find(r => r.phase?.phaseNumber === 4 || r.phaseId === 30001) || null
+    const sus = susFase4 || susFase1 || p.susResponses[0] || null
     const ueq = p.ueqResponses[0] || null
     const uatFeedback = p.uatOverallFeedback[0] || null
 
@@ -46,13 +50,30 @@ export async function GET() {
       }
     }
 
-    const hasSus = !!sus
+    const hasSus = p.susResponses.length > 0
     const hasUeq = !!ueq
     const hasUat = !!uatFeedback
 
     let overallStatus = 'Belum Mulai'
     if (hasSus && hasUeq && hasUat) overallStatus = 'Selesai'
     else if (hasSus || hasUeq || hasUat) overallStatus = 'Sebagian'
+
+    const formatSusDetails = (item: any) => item ? {
+      id: item.id,
+      phaseId: item.phaseId,
+      phaseNumber: item.phase?.phaseNumber ?? (item.phaseId === 1 ? 1 : 4),
+      q1: item.q1, q2: item.q2, q3: item.q3, q4: item.q4, q5: item.q5,
+      q6: item.q6, q7: item.q7, q8: item.q8, q9: item.q9, q10: item.q10,
+      susScore: item.susScore,
+      fb1: item.fb1,
+      fb2: item.fb2,
+      fb3: item.fb3,
+      fb4: item.fb4,
+      fb5: item.fb5,
+      fb6: item.fb6,
+      fb6Phone: item.fb6Phone,
+      completedAt: item.completedAt,
+    } : null
 
     return {
       id: p.id,
@@ -70,25 +91,18 @@ export async function GET() {
       hasSus,
       hasUeq,
       hasUat,
+      hasSusFase1: !!susFase1,
+      hasSusFase4: !!susFase4,
       overallStatus,
 
-      // Complete SUS Data (Quantitative + Qualitative)
+      // SUS Data per fase
+      susFase1: formatSusDetails(susFase1),
+      susFase4: formatSusDetails(susFase4),
+
+      // Latest SUS fallback
       susScore: sus?.susScore ?? null,
       susCompletedAt: sus?.completedAt ?? null,
-      susDetails: sus ? {
-        id: sus.id,
-        q1: sus.q1, q2: sus.q2, q3: sus.q3, q4: sus.q4, q5: sus.q5,
-        q6: sus.q6, q7: sus.q7, q8: sus.q8, q9: sus.q9, q10: sus.q10,
-        susScore: sus.susScore,
-        fb1: sus.fb1,
-        fb2: sus.fb2,
-        fb3: sus.fb3,
-        fb4: sus.fb4,
-        fb5: sus.fb5,
-        fb6: sus.fb6,
-        fb6Phone: sus.fb6Phone,
-        completedAt: sus.completedAt,
-      } : null,
+      susDetails: formatSusDetails(sus),
       susFb6: sus?.fb6 ?? null,
 
       // Complete UEQ Data (Quantitative + Qualitative)

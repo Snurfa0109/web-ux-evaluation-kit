@@ -16,6 +16,8 @@ import { SUS_ITEMS, SUS_FEEDBACK_ITEMS } from '@/lib/sus-instrument'
 
 interface SusDetails {
   id: number
+  phaseId?: number
+  phaseNumber?: number
   q1: number; q2: number; q3: number; q4: number; q5: number
   q6: number; q7: number; q8: number; q9: number; q10: number
   susScore: number
@@ -37,9 +39,13 @@ interface ParticipantWithSus {
   gender: string
   occupation: string
   hasSus: boolean
+  hasSusFase1?: boolean
+  hasSusFase4?: boolean
   susScore: number | null
   susCompletedAt?: string | null
   susDetails?: SusDetails | null
+  susFase1?: SusDetails | null
+  susFase4?: SusDetails | null
   susFb6?: string | null
   whatsappNumber?: string | null
 }
@@ -86,13 +92,29 @@ export default function SusDataPage() {
     </div>
   )
 
-  const scores = participants.map(p => p.susScore || 0)
-  const avgSus = participants.length > 0
-    ? scores.reduce((a, b) => a + b, 0) / participants.length
+  const [selectedPhase, setSelectedPhase] = useState<1 | 4>(4)
+
+  const activeParticipants = participants
+    .map(p => {
+      const susData = selectedPhase === 4 ? (p.susFase4 || (p.susDetails?.phaseNumber === 4 ? p.susDetails : null)) : (p.susFase1 || (p.susDetails?.phaseNumber === 1 ? p.susDetails : null))
+      if (!susData) return null
+      return {
+        ...p,
+        susScore: susData.susScore,
+        susCompletedAt: susData.completedAt,
+        susDetails: susData,
+        susFb6: susData.fb6,
+      }
+    })
+    .filter(Boolean) as ParticipantWithSus[]
+
+  const scores = activeParticipants.map(p => p.susScore || 0)
+  const avgSus = activeParticipants.length > 0
+    ? scores.reduce((a, b) => a + b, 0) / activeParticipants.length
     : null
 
   // Filtered participants by search
-  const filteredParticipants = participants.filter(p => {
+  const filteredParticipants = activeParticipants.filter(p => {
     const s = search.toLowerCase()
     const matchBasic = (
       p.name.toLowerCase().includes(s) ||
@@ -115,14 +137,46 @@ export default function SusDataPage() {
 
   return (
     <div className="admin-content fade-in">
+      {/* Phase Switcher Tabs */}
+      <div style={{ display: 'flex', gap: '0.625rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+        <button
+          type="button"
+          onClick={() => setSelectedPhase(4)}
+          className={`btn ${selectedPhase === 4 ? 'btn-primary' : 'btn-secondary'}`}
+          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}
+        >
+          <span style={{ width: 8, height: 8, borderRadius: '50%', background: selectedPhase === 4 ? '#22c55e' : '#94a3b8' }}></span>
+          Fase 4: Website Baru (25–27 Sep 2026)
+          <span className="badge badge-neutral" style={{ marginLeft: 4 }}>33 Responden</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setSelectedPhase(1)}
+          className={`btn ${selectedPhase === 1 ? 'btn-primary' : 'btn-secondary'}`}
+          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}
+        >
+          <span style={{ width: 8, height: 8, borderRadius: '50%', background: selectedPhase === 1 ? '#22c55e' : '#94a3b8' }}></span>
+          Fase 1: Website Existing (22–25 Ags 2026)
+          <span className="badge badge-neutral" style={{ marginLeft: 4 }}>33 Responden</span>
+        </button>
+      </div>
+
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.75rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-            <span className="badge badge-accent">Tahap 01</span>
-            <h1 className="page-title" style={{ margin: 0 }}>Data & Feedback Evaluasi SUS</h1>
+            <span className="badge badge-accent">
+              {selectedPhase === 4 ? 'Tahap 04' : 'Tahap 01'}
+            </span>
+            <h1 className="page-title" style={{ margin: 0 }}>
+              {selectedPhase === 4 ? 'Data & Feedback SUS — Website Baru' : 'Data & Feedback SUS — Website Existing'}
+            </h1>
           </div>
-          <p className="page-subtitle">Dataset kuantitatif System Usability Scale digabung dengan masukan kualitatif responden pada Website Existing</p>
+          <p className="page-subtitle">
+            {selectedPhase === 4
+              ? 'Dataset kuantitatif System Usability Scale (SUS) hasil rancangan baru dengan 33 responden (timeframe: 25–27 September 2026).'
+              : 'Dataset kuantitatif System Usability Scale (SUS) evaluasi awal kebergunaan pada Website Existing sebelum perancangan ulang.'}
+          </p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <a href="/api/admin/export?type=sus" download className="btn btn-secondary btn-sm" id="btn-export-sus">

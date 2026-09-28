@@ -86,27 +86,42 @@ export default function UatPage() {
   }, [currentTaskIdx])
 
   const submitTask = async (taskId: number, status: string, notes: string) => {
+    if (!code) {
+      throw new Error('Kode partisipan tidak terdeteksi. Pastikan Anda membuka halaman melalui tautan resmi dengan kode partisipan.')
+    }
     const timeOnTaskSeconds = Math.max(1, Math.round((Date.now() - taskStartTime) / 1000))
     const res = await fetch('/api/uat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ participantCode: code, phaseId: parseInt(phaseId), taskId, status, notes, timeOnTaskSeconds }),
     })
-    if (!res.ok) throw new Error('Gagal menyimpan hasil task')
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) {
+      throw new Error(data.error || 'Gagal menyimpan hasil task. Silakan periksa koneksi internet Anda.')
+    }
   }
 
   const handleTaskSubmit = async () => {
     const current = tasks[currentTaskIdx]
+    if (!current) return
     const result = taskResults[current.id]
-    if (!result?.status) { setError('Mohon tentukan apakah tugas berhasil dilakukan.'); return }
+    if (!result?.status) {
+      setError('⚠️ Silakan tentukan status tugas terlebih dahulu: klik tombol "Berhasil" atau "Ada Kendala" di atas.')
+      // Scroll to decision area if on mobile
+      const el = document.getElementById(`decision-section-${current.id}`)
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      return
+    }
     setError('')
     setSubmitting(true)
     try {
       await submitTask(current.id, result.status, result.notes || '')
       if (currentTaskIdx < tasks.length - 1) {
         setCurrentTaskIdx(prev => prev + 1)
+        setError('')
       } else {
         setShowOverall(true)
+        setError('')
       }
     } catch (err: any) {
       setError(err.message)
@@ -161,7 +176,12 @@ export default function UatPage() {
   const RATING_LABELS = ['Sangat Tidak Setuju', 'Tidak Setuju', 'Netral', 'Setuju', 'Sangat Setuju']
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden', background: 'var(--slate-50)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100dvh', minHeight: '100dvh', overflow: 'hidden', background: 'var(--slate-50)' }}>
+      {!code && (
+        <div style={{ background: '#fef3c7', borderBottom: '1px solid #fde68a', color: '#92400e', padding: '0.4rem 1rem', fontSize: '0.75rem', textAlign: 'center', zIndex: 40 }}>
+          ⚠️ <strong>Kode Partisipan tidak terdeteksi:</strong> Buka kembali melalui tautan resmi atau masukkan kode di halaman awal agar hasil evaluasi Anda dapat tersimpan.
+        </div>
+      )}
       {/* Top Bar Header */}
       <header style={{ borderBottom: '1px solid var(--slate-200)', background: 'var(--white)', padding: '0.625rem 1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 30, flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -299,15 +319,35 @@ export default function UatPage() {
                     <hr style={{ border: 'none', borderTop: '1px solid var(--slate-100)', margin: '0.25rem 0' }} />
 
                     {/* Result Decision */}
-                    <div>
-                      <label className="form-label" style={{ marginBottom: '0.5rem', display: 'block', fontSize: '0.8125rem' }}>
-                        Apakah Anda berhasil menyelesaikan tugas ini pada sistem? <span className="required">*</span>
-                      </label>
+                    <div
+                      id={`decision-section-${currentTask.id}`}
+                      style={{
+                        padding: '0.875rem',
+                        borderRadius: 'var(--radius-md)',
+                        background: !taskResults[currentTask.id]?.status ? '#fffbeb' : '#f8fafc',
+                        border: `1.5px solid ${!taskResults[currentTask.id]?.status ? '#fde68a' : '#e2e8f0'}`,
+                        transition: 'all 0.2s',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                        <label className="form-label" style={{ margin: 0, fontWeight: 700, fontSize: '0.8125rem', color: '#1e293b' }}>
+                          Hasil Pelaksanaan Tugas: <span className="required">*</span>
+                        </label>
+                        {!taskResults[currentTask.id]?.status && (
+                          <span style={{ fontSize: '0.6875rem', fontWeight: 700, color: '#b45309', background: '#fef3c7', padding: '0.15rem 0.4rem', borderRadius: '4px' }}>
+                            Wajib Dipilih
+                          </span>
+                        )}
+                      </div>
+
+                      <p style={{ fontSize: '0.75rem', color: 'var(--slate-600)', margin: '0 0 0.625rem 0' }}>
+                        Apakah Anda berhasil menyelesaikan tugas ini pada sistem website?
+                      </p>
 
                       <div style={{ display: 'flex', gap: '0.5rem' }}>
                         {[
-                          { val: 'BERHASIL', label: 'Berhasil', icon: IconCheck, activeClass: 'btn-primary' },
-                          { val: 'TIDAK_BERHASIL', label: 'Ada Kendala', icon: IconX, activeClass: 'btn-danger' },
+                          { val: 'BERHASIL', label: 'Berhasil Diselesaikan', icon: IconCheck, activeClass: 'btn-primary' },
+                          { val: 'TIDAK_BERHASIL', label: 'Ada Kendala / Bingung', icon: IconX, activeClass: 'btn-danger' },
                         ].map(opt => {
                           const isSelected = taskResults[currentTask.id]?.status === opt.val
                           const Icon = opt.icon
@@ -315,16 +355,26 @@ export default function UatPage() {
                             <button
                               key={opt.val}
                               type="button"
-                              onClick={() => setTaskResults(prev => ({
-                                ...prev,
-                                [currentTask.id]: {
-                                  ...prev[currentTask.id],
-                                  status: opt.val,
-                                  notes: prev[currentTask.id]?.notes || '',
-                                }
-                              }))}
+                              onClick={() => {
+                                setError('')
+                                setTaskResults(prev => ({
+                                  ...prev,
+                                  [currentTask.id]: {
+                                    ...prev[currentTask.id],
+                                    status: opt.val,
+                                    notes: prev[currentTask.id]?.notes || '',
+                                  }
+                                }))
+                              }}
                               className={`btn ${isSelected ? opt.activeClass : 'btn-secondary'} btn-sm`}
-                              style={{ flex: 1, padding: '0.625rem 0.5rem', justifyContent: 'center' }}
+                              style={{
+                                flex: 1,
+                                padding: '0.625rem 0.5rem',
+                                justifyContent: 'center',
+                                fontWeight: isSelected ? 700 : 600,
+                                transform: isSelected ? 'scale(1.02)' : 'none',
+                                transition: 'all 0.15s ease',
+                              }}
                               id={`uat-task-${currentTask.id}-${opt.val.toLowerCase()}`}
                             >
                               <Icon size={14} />
@@ -363,11 +413,23 @@ export default function UatPage() {
                     )}
 
                     {/* Actions */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--slate-100)' }}>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginTop: 'auto',
+                      paddingTop: '1rem',
+                      paddingBottom: isMobile ? '2.5rem' : '0.5rem',
+                      borderTop: '1px solid var(--slate-100)',
+                      gap: '0.5rem'
+                    }}>
                       {currentTaskIdx > 0 ? (
                         <button
                           type="button"
-                          onClick={() => setCurrentTaskIdx(p => p - 1)}
+                          onClick={() => {
+                            setError('')
+                            setCurrentTaskIdx(p => p - 1)
+                          }}
                           className="btn btn-secondary btn-sm"
                         >
                           <IconArrowLeft size={14} /> Sebelumnya
@@ -377,9 +439,13 @@ export default function UatPage() {
                       <button
                         type="button"
                         onClick={handleTaskSubmit}
-                        disabled={!taskResults[currentTask.id]?.status || submitting}
+                        disabled={submitting}
                         className="btn btn-primary btn-sm"
                         id="btn-uat-next"
+                        style={{
+                          minWidth: 160,
+                          boxShadow: !taskResults[currentTask.id]?.status ? 'none' : '0 2px 6px rgba(37,99,235,0.25)',
+                        }}
                       >
                         {submitting
                           ? <span className="loading-spinner"></span>

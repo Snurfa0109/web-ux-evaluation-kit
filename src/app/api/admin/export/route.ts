@@ -35,10 +35,10 @@ export async function GET(request: Request) {
   const participants = await prisma.participant.findMany({
     orderBy: { participantCode: 'asc' },
     include: {
-      susResponses: true,
-      ueqResponses: true,
-      uatTaskResponses: { include: { task: true } },
-      uatOverallFeedback: true,
+      susResponses: { include: { phase: true }, orderBy: { completedAt: 'asc' } },
+      ueqResponses: { include: { phase: true }, orderBy: { completedAt: 'asc' } },
+      uatTaskResponses: { include: { task: true, phase: true } },
+      uatOverallFeedback: { include: { phase: true } },
     },
   })
 
@@ -62,10 +62,10 @@ export async function GET(request: Request) {
     }
   }
 
-  // Sheet 2 — SUS RAW
+  // Sheet 2 — SUS EXISTING RAW (Fase 1)
   if (type === 'all' || type === 'sus') {
-    const sh = workbook.addWorksheet('SUS RAW')
-    sh.columns = [
+    const sh1 = workbook.addWorksheet('SUS EXISTING RAW (F1)')
+    sh1.columns = [
       { key: 'code', width: 14 },
       { key: 'name', width: 22 },
       { key: 'age', width: 8 },
@@ -82,7 +82,7 @@ export async function GET(request: Request) {
       { key: 'fb6Phone', width: 18 },
       { key: 'date', width: 20 },
     ]
-    applyHeaders(sh, [
+    applyHeaders(sh1, [
       'Participant ID', 'Nama', 'Usia', 'Jenis Kelamin', 'Pekerjaan',
       'Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10',
       'Skor SUS',
@@ -96,9 +96,9 @@ export async function GET(request: Request) {
       'Tanggal Selesai'
     ])
     for (const p of participants) {
-      if (p.susResponses.length > 0) {
-        const s = p.susResponses[0]
-        sh.addRow([
+      const s = p.susResponses.find(r => r.phase?.phaseNumber === 1 || r.phaseId === 1)
+      if (s) {
+        sh1.addRow([
           p.participantCode, p.name, p.age, p.gender, p.occupation,
           s.q1, s.q2, s.q3, s.q4, s.q5, s.q6, s.q7, s.q8, s.q9, s.q10,
           s.susScore,
@@ -109,9 +109,55 @@ export async function GET(request: Request) {
       }
     }
 
-    // Sheet 3 — SUS RESULTS
-    const sh3 = workbook.addWorksheet('SUS RESULTS')
-    sh3.columns = [
+    // Sheet 3 — SUS BARU RAW (Fase 4)
+    const sh4 = workbook.addWorksheet('SUS BARU RAW (F4)')
+    sh4.columns = [
+      { key: 'code', width: 14 },
+      { key: 'name', width: 22 },
+      { key: 'age', width: 8 },
+      { key: 'gender', width: 14 },
+      { key: 'occ', width: 22 },
+      ...Array.from({ length: 10 }, (_, i) => ({ key: `q${i+1}`, width: 8 })),
+      { key: 'score', width: 12 },
+      { key: 'fb1', width: 40 },
+      { key: 'fb2', width: 40 },
+      { key: 'fb3', width: 40 },
+      { key: 'fb4', width: 40 },
+      { key: 'fb5', width: 40 },
+      { key: 'fb6', width: 16 },
+      { key: 'fb6Phone', width: 18 },
+      { key: 'date', width: 20 },
+    ]
+    applyHeaders(sh4, [
+      'Participant ID', 'Nama', 'Usia', 'Jenis Kelamin', 'Pekerjaan',
+      'Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10',
+      'Skor SUS',
+      'Fitur Paling Disukai (FB1)',
+      'Fitur Membingungkan (FB2)',
+      'Informasi Sulit Ditemukan (FB3)',
+      'Usulan Fitur Tambahan (FB4)',
+      'Saran & Masukan Umum (FB5)',
+      'Bersedia Kontak Lanjutan',
+      'No. WhatsApp',
+      'Tanggal Selesai'
+    ])
+    for (const p of participants) {
+      const s = p.susResponses.find(r => r.phase?.phaseNumber === 4 || r.phaseId === 30001)
+      if (s) {
+        sh4.addRow([
+          p.participantCode, p.name, p.age, p.gender, p.occupation,
+          s.q1, s.q2, s.q3, s.q4, s.q5, s.q6, s.q7, s.q8, s.q9, s.q10,
+          s.susScore,
+          s.fb1 || '', s.fb2 || '', s.fb3 || '', s.fb4 || '', s.fb5 || '',
+          s.fb6 || '', s.fb6Phone || '',
+          s.completedAt.toLocaleDateString('id-ID')
+        ])
+      }
+    }
+
+    // Sheet 4 — SUS BARU RESULTS (Fase 4)
+    const shRes4 = workbook.addWorksheet('SUS BARU RESULTS (F4)')
+    shRes4.columns = [
       { key: 'code', width: 14 },
       { key: 'name', width: 22 },
       { key: 'occ', width: 22 },
@@ -122,34 +168,27 @@ export async function GET(request: Request) {
       { key: 'fb3', width: 40 },
       { key: 'fb4', width: 40 },
       { key: 'fb5', width: 40 },
-      { key: 'fb6', width: 16 },
-      { key: 'fb6Phone', width: 18 },
       { key: 'date', width: 20 },
     ]
-    applyHeaders(sh3, [
+    applyHeaders(shRes4, [
       'Participant ID', 'Nama Responden', 'Pekerjaan', 'Skor SUS', 'Kategori Grade',
-      'Fitur Paling Mudah (FB1)',
+      'Fitur Paling Disukai (FB1)',
       'Fitur Membingungkan (FB2)',
       'Informasi Sulit Ditemukan (FB3)',
       'Usulan Fitur Tambahan (FB4)',
       'Saran & Masukan Umum (FB5)',
-      'Bersedia Kontak Lanjutan',
-      'No. WhatsApp',
       'Tanggal Selesai'
     ])
     for (const p of participants) {
-      if (p.susResponses.length > 0) {
-        const s = p.susResponses[0]
-        let grade = 'OK'
-        if (s.susScore >= 84.1) grade = 'Sangat Baik (A)'
-        else if (s.susScore >= 72.6) grade = 'Baik (B)'
-        else if (s.susScore >= 52) grade = 'Cukup (C)'
-        else grade = 'Kurang (D/F)'
+      const s = p.susResponses.find(r => r.phase?.phaseNumber === 4 || r.phaseId === 30001)
+      if (s) {
+        let grade = 'Sangat Baik (A)'
+        if (s.susScore < 72.6) grade = 'Cukup (C)'
+        else if (s.susScore < 84.1) grade = 'Baik (B)'
 
-        sh3.addRow([
+        shRes4.addRow([
           p.participantCode, p.name, p.occupation, s.susScore, grade,
           s.fb1 || '', s.fb2 || '', s.fb3 || '', s.fb4 || '', s.fb5 || '',
-          s.fb6 || '', s.fb6Phone || '',
           s.completedAt.toLocaleDateString('id-ID')
         ])
       }

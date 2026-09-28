@@ -23,6 +23,7 @@ export default function SusPage() {
   const [error, setError] = useState('')
   const [tasks, setTasks] = useState<Task[]>([])
   const [showTasks, setShowTasks] = useState(true)
+  const [phaseNumber, setPhaseNumber] = useState<number | null>(null)
 
   useEffect(() => {
     fetch('/api/phases')
@@ -31,6 +32,7 @@ export default function SusPage() {
         if (Array.isArray(phases)) {
           const phase = phases.find((p: any) => p.id === parseInt(phaseId))
           if (phase?.tasks) setTasks(phase.tasks)
+          if (phase?.phaseNumber) setPhaseNumber(phase.phaseNumber)
         }
       })
       .catch(err => console.error('Fetch tasks error:', err))
@@ -39,14 +41,20 @@ export default function SusPage() {
   const answeredCount = responses.filter(r => r !== null).length
   const allSusAnswered = answeredCount === 10
 
+  // Phase 4 is the final phase — hide the "bersedia lanjutan" (fb6) question
+  const isFinalPhase = phaseNumber !== null && phaseNumber >= 4
+  const activeFeedbackItems = isFinalPhase
+    ? SUS_FEEDBACK_ITEMS.filter(item => item.id !== 'fb6')
+    : SUS_FEEDBACK_ITEMS
+
   // Check all required feedback answered
-  const standardFeedbackAnswered = SUS_FEEDBACK_ITEMS.every(item =>
+  const standardFeedbackAnswered = activeFeedbackItems.every(item =>
     !item.required || (feedback[item.id] && feedback[item.id].trim() !== '')
   )
   const phoneAnswered = feedback['fb6'] !== 'Ya' || Boolean(feedback['fb6_phone'] && feedback['fb6_phone'].trim() !== '')
-  const allFeedbackAnswered = standardFeedbackAnswered && phoneAnswered
+  const allFeedbackAnswered = standardFeedbackAnswered && (!isFinalPhase ? phoneAnswered : true)
   const allAnswered = allSusAnswered && allFeedbackAnswered
-  const totalItems = 10 + SUS_FEEDBACK_ITEMS.length + (feedback['fb6'] === 'Ya' ? 1 : 0)
+  const totalItems = 10 + activeFeedbackItems.length + (!isFinalPhase && feedback['fb6'] === 'Ya' ? 1 : 0)
 
   const handleSubmit = async () => {
     if (!allSusAnswered) { setError('Mohon jawab seluruh 10 pernyataan SUS sebelum submit.'); return }
@@ -74,7 +82,7 @@ export default function SusPage() {
     }
   }
 
-  const answeredFeedbackCount = SUS_FEEDBACK_ITEMS.filter(
+  const answeredFeedbackCount = activeFeedbackItems.filter(
     item => feedback[item.id] && feedback[item.id].trim() !== ''
   ).length
 
@@ -213,7 +221,7 @@ export default function SusPage() {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              {SUS_FEEDBACK_ITEMS.map((item, idx) => (
+              {activeFeedbackItems.map((item, idx) => (
                 <div
                   key={item.id}
                   className={`sus-item ${feedback[item.id] && feedback[item.id].trim() ? 'answered' : ''}`}

@@ -42,7 +42,7 @@ export async function GET() {
         instrument: 'UEQ',
         status: 'ACTIVE',
         participantMode: 'SAME_ONLY',
-        externalUrl: 'https://disnakertrans.serangkab.go.id/',
+        externalUrl: 'https://disnakertrans-prototype.vercel.app/',
         instructions: 'Silakan gunakan prototype redesign website Disnakertrans. Selesaikan seluruh tugas yang diberikan sebelum mengisi kuesioner UEQ.',
         tasks: {
           create: [
@@ -61,7 +61,7 @@ export async function GET() {
         instrument: 'UAT',
         status: 'ACTIVE',
         participantMode: 'SAME_ONLY',
-        externalUrl: 'https://disnakertrans.serangkab.go.id/',
+        externalUrl: 'https://www.disnakertranskabserang.web.id/',
         instructions: 'Silakan lakukan setiap tugas berikut pada website final Disnakertrans Kabupaten Serang yang telah diimplementasikan.',
         tasks: {
           create: [
