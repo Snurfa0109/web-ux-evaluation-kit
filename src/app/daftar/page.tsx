@@ -37,6 +37,12 @@ export default function RegisterPage() {
       return
     }
 
+    const ageNum = parseInt(form.age)
+    if (isNaN(ageNum) || ageNum < 20 || ageNum > 30) {
+      setError('Usia responden harus berada dalam rentang 20–30 tahun.')
+      return
+    }
+
     setLoading(true)
     try {
       const res = await fetch('/api/participant/register', {
@@ -116,19 +122,22 @@ export default function RegisterPage() {
               <div className="grid-2">
                 <div className="form-group">
                   <label className="form-label" htmlFor="reg-age">
-                    Usia <span className="required">*</span>
+                    Usia (20–30 Tahun) <span className="required">*</span>
                   </label>
                   <input
                     id="reg-age"
                     className="form-input"
                     type="number"
                     placeholder="Contoh: 24"
-                    min={15}
-                    max={80}
+                    min={20}
+                    max={30}
                     value={form.age}
                     onChange={e => setField('age', e.target.value)}
                     required
                   />
+                  <span style={{ fontSize: '0.75rem', color: 'var(--slate-500)', marginTop: '0.25rem', display: 'block' }}>
+                    Kriteria responden penelitian: usia 20 s.d. 30 tahun.
+                  </span>
                 </div>
 
                 <div className="form-group">

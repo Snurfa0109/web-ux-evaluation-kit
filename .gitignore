@@ -47,5 +47,11 @@ next-env.d.ts
 audit_pedoman_untirta.py
 audit_redaksi.py
 prisma/full-evalux-report.js
-prisma/utils/*.mjs
+prisma/utils/
+scratch/
+belajar-skripsi/
+*.py
+*.ps1
+*.bat
+*.pdf
 prisma/utils/*.json

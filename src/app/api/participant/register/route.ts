@@ -11,6 +11,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Data tidak lengkap' }, { status: 400 })
     }
 
+    const ageNum = parseInt(age)
+    if (isNaN(ageNum) || ageNum < 20 || ageNum > 30) {
+      return NextResponse.json({ error: 'Usia partisipan harus berada dalam rentang 20-30 tahun.' }, { status: 400 })
+    }
+
     // Generate unique random participant code (e.g. R-X7K2M9)
     const CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789' // no ambiguous chars (0,O,1,I)
     let code = ''

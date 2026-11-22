@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Gambar 3.5 Arsitektur Sistem Berbasis FRED – Disnakertrans Kabupaten Serang</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 30px 20px 40px;
+    font-family: 'Times New Roman', Times, serif;
+  }
+  .diagram-wrapper {
+    width: 960px;
+    background: #ffffff;
+  }
+  svg { width: 100%; height: auto; display: block; }
+</style>
+</head>
+<body>
+<div class="diagram-wrapper">
+<svg viewBox="0 0 960 530" xmlns="http://www.w3.org/2000/svg"
+     font-family="'Times New Roman', Times, serif">
+
+  <!-- ═══ ACTOR ═══ -->
+  <circle cx="480" cy="28" r="14" fill="none" stroke="#222" stroke-width="1.8"/>
+  <line x1="480" y1="42" x2="480" y2="76" stroke="#222" stroke-width="1.8"/>
+  <line x1="455" y1="55" x2="505" y2="55" stroke="#222" stroke-width="1.8"/>
+  <line x1="480" y1="76" x2="460" y2="96" stroke="#222" stroke-width="1.8"/>
+  <line x1="480" y1="76" x2="500" y2="96" stroke="#222" stroke-width="1.8"/>
+  <text x="480" y="112" text-anchor="middle" font-size="13" font-weight="bold" fill="#111">Pengguna</text>
+  <text x="480" y="127" text-anchor="middle" font-size="10" fill="#444">(Masyarakat &amp; Administrator)</text>
+
+  <!-- dashed arrow down actor → Presentation -->
+  <line x1="480" y1="132" x2="480" y2="156" stroke="#222" stroke-width="1.6" stroke-dasharray="5,4"/>
+  <polygon points="480,161 475,151 485,151" fill="#222"/>
+
+  <!-- ═══════════════════════════════════════════════════
+       LEFT: FRED SUPPORT BOX  (x=16, y=168, w=216, h=306)
+  ══════════════════════════════════════════════════════ -->
+  <rect x="16" y="168" width="216" height="306" rx="8"
+        fill="#ffffff" stroke="#c87a00" stroke-width="2"/>
+  <!-- header band -->
+  <rect x="16" y="168" width="216" height="44" rx="8"
+        fill="#fff3dc" stroke="#c87a00" stroke-width="2"/>
+  <rect x="16" y="194" width="216" height="18" fill="#fff3dc"/><!-- square bottom of header -->
+  <text x="124" y="188" text-anchor="middle" font-size="12" font-weight="bold" fill="#7a4400">FRED Support Layer</text>
+  <text x="124" y="203" text-anchor="middle" font-size="9.5" fill="#8a5500" font-style="italic">Frontend-Ready Enterprise Dev.</text>
+
+  <!-- item 1 -->
+  <rect x="34" y="224" width="180" height="46" rx="6"
+        fill="#ffffff" stroke="#c87a00" stroke-width="1.4"/>
+  <text x="124" y="246" text-anchor="middle" font-size="12" font-weight="bold" fill="#111">Rapid Development</text>
+  <text x="124" y="261" text-anchor="middle" font-size="9.5" fill="#555">Pengembangan cepat &amp; efisien</text>
+
+  <!-- item 2 -->
+  <rect x="34" y="278" width="180" height="46" rx="6"
+        fill="#ffffff" stroke="#c87a00" stroke-width="1.4"/>
+  <text x="124" y="300" text-anchor="middle" font-size="12" font-weight="bold" fill="#111">Reusable Components</text>
+  <text x="124" y="315" text-anchor="middle" font-size="9.5" fill="#555">Komponen modular dapat dipakai ulang</text>
+
+  <!-- item 3 -->
+  <rect x="34" y="332" width="180" height="46" rx="6"
+        fill="#ffffff" stroke="#c87a00" stroke-width="1.4"/>
+  <text x="124" y="354" text-anchor="middle" font-size="12" font-weight="bold" fill="#111">Easy Maintenance</text>
+  <text x="124" y="369" text-anchor="middle" font-size="9.5" fill="#555">Pemeliharaan mudah &amp; terstruktur</text>
+
+  <!-- item 4 -->
+  <rect x="34" y="386" width="180" height="46" rx="6"
+        fill="#ffffff" stroke="#c87a00" stroke-width="1.4"/>
+  <text x="124" y="408" text-anchor="middle" font-size="12" font-weight="bold" fill="#111">Modular Codebase</text>
+  <text x="124" y="423" text-anchor="middle" font-size="9.5" fill="#555">Kode terpisah per modul fungsional</text>
+
+  <!-- horizontal arrow FRED → Presentation -->
+  <line x1="234" y1="321" x2="284" y2="321" stroke="#c87a00" stroke-width="1.6"/>
+  <polygon points="285,321 275,316 275,326" fill="#c87a00"/>
+
+  <!-- ═══════════════════════════════════════════════════
+       RIGHT: 3 LAYERS  (x=292 … w=650)
+  ══════════════════════════════════════════════════════ -->
+
+  <!-- ── PRESENTATION LAYER ── (y=165 h=126) -->
+  <rect x="292" y="165" width="650" height="128" rx="8"
+        fill="#ffffff" stroke="#1a5276" stroke-width="2"/>
+  <!-- header band -->
+  <rect x="292" y="165" width="650" height="40" rx="8"
+        fill="#eaf4fb" stroke="#1a5276" stroke-width="2"/>
+  <rect x="292" y="187" width="650" height="18" fill="#eaf4fb"/>
+  <text x="617" y="185" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a3a5c">1. Presentation Layer</text>
+  <text x="617" y="200" text-anchor="middle" font-size="9.5" fill="#2874a6" font-style="italic">Antarmuka Pengguna (Front-End)</text>
+
+  <!-- sub-boxes presentation -->
+  <rect x="308" y="212" width="190" height="66" rx="6" fill="#ffffff" stroke="#1a5276" stroke-width="1.4"/>
+  <text x="403" y="240" text-anchor="middle" font-size="12" font-weight="bold" fill="#111">Next.js App Router</text>
+  <text x="403" y="256" text-anchor="middle" font-size="9.5" fill="#555">Routing &amp; Server-Side</text>
+  <text x="403" y="269" text-anchor="middle" font-size="9.5" fill="#555">Rendering (SSR)</text>
+
+  <rect x="512" y="212" width="190" height="66" rx="6" fill="#ffffff" stroke="#1a5276" stroke-width="1.4"/>
+  <text x="607" y="240" text-anchor="middle" font-size="12" font-weight="bold" fill="#111">React Components</text>
+  <text x="607" y="256" text-anchor="middle" font-size="9.5" fill="#555">UI interaktif berbasis</text>
+  <text x="607" y="269" text-anchor="middle" font-size="9.5" fill="#555">komponen</text>
+
+  <rect x="716" y="212" width="210" height="66" rx="6" fill="#ffffff" stroke="#1a5276" stroke-width="1.4"/>
+  <text x="821" y="240" text-anchor="middle" font-size="12" font-weight="bold" fill="#111">Tailwind CSS UI</text>
+  <text x="821" y="256" text-anchor="middle" font-size="9.5" fill="#555">Desain responsif</text>
+  <text x="821" y="269" text-anchor="middle" font-size="9.5" fill="#555">&amp; konsisten</text>
+
+  <!-- arrow down Presentation → Application -->
+  <line x1="617" y1="295" x2="617" y2="320" stroke="#444" stroke-width="1.6"/>
+  <polygon points="617,325 612,315 622,315" fill="#444"/>
+
+  <!-- ── APPLICATION LAYER ── (y=327 h=118) -->
+  <rect x="292" y="327" width="650" height="118" rx="8"
+        fill="#ffffff" stroke="#1e8449" stroke-width="2"/>
+  <rect x="292" y="327" width="650" height="40" rx="8"
+        fill="#eafbea" stroke="#1e8449" stroke-width="2"/>
+  <rect x="292" y="349" width="650" height="18" fill="#eafbea"/>
+  <text x="617" y="347" text-anchor="middle" font-size="12" font-weight="bold" fill="#145a32">2. Application Layer</text>
+  <text x="617" y="362" text-anchor="middle" font-size="9.5" fill="#1e8449" font-style="italic">Logika Bisnis &amp; Peladen (Back-End)</text>
+
+  <!-- sub-boxes application -->
+  <rect x="308" y="374" width="190" height="56" rx="6" fill="#ffffff" stroke="#1e8449" stroke-width="1.4"/>
+  <text x="403" y="398" text-anchor="middle" font-size="12" font-weight="bold" fill="#111">Business Logic</text>
+  <text x="403" y="414" text-anchor="middle" font-size="9.5" fill="#555">Aturan bisnis sistem</text>
+
+  <rect x="512" y="374" width="190" height="56" rx="6" fill="#ffffff" stroke="#1e8449" stroke-width="1.4"/>
+  <text x="607" y="398" text-anchor="middle" font-size="12" font-weight="bold" fill="#111">RESTful API Routes</text>
+  <text x="607" y="414" text-anchor="middle" font-size="9.5" fill="#555">Handler permintaan HTTP</text>
+
+  <rect x="716" y="374" width="210" height="56" rx="6" fill="#ffffff" stroke="#1e8449" stroke-width="1.4"/>
+  <text x="821" y="398" text-anchor="middle" font-size="12" font-weight="bold" fill="#111">Auth &amp; RBAC</text>
+  <text x="821" y="414" text-anchor="middle" font-size="9.5" fill="#555">Otentikasi &amp; hak akses</text>
+
+  <!-- arrow down Application → Data -->
+  <line x1="617" y1="447" x2="617" y2="468" stroke="#444" stroke-width="1.6"/>
+  <polygon points="617,473 612,463 622,463" fill="#444"/>
+
+  <!-- ── DATA LAYER ── (y=475 h=88) -->
+  <rect x="292" y="475" width="650" height="90" rx="8"
+        fill="#ffffff" stroke="#6c3483" stroke-width="2"/>
+  <rect x="292" y="475" width="650" height="40" rx="8"
+        fill="#f4ecf7" stroke="#6c3483" stroke-width="2"/>
+  <rect x="292" y="497" width="650" height="18" fill="#f4ecf7"/>
+  <text x="617" y="495" text-anchor="middle" font-size="12" font-weight="bold" fill="#4a235a">3. Data Layer</text>
+  <text x="617" y="510" text-anchor="middle" font-size="9.5" fill="#6c3483" font-style="italic">Persistensi Basis Data (Database)</text>
+
+  <!-- sub-boxes data -->
+  <rect x="360" y="521" width="220" height="36" rx="6" fill="#ffffff" stroke="#6c3483" stroke-width="1.4"/>
+  <text x="470" y="544" text-anchor="middle" font-size="12" font-weight="bold" fill="#111">MySQL Database (RDBMS)</text>
+
+  <rect x="600" y="521" width="220" height="36" rx="6" fill="#ffffff" stroke="#6c3483" stroke-width="1.4"/>
+  <text x="710" y="544" text-anchor="middle" font-size="12" font-weight="bold" fill="#111">mysql2/promise Pool</text>
+
+</svg>
+</div>
+</body>
+</html>

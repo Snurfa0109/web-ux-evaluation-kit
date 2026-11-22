@@ -72,7 +72,7 @@ export default function AdminDashboard() {
         ``,
         `*Cara Ikut Pengujian (estimasi 5–10 menit):*`,
         `1. Buka link pendaftaran di bawah`,
-        `2. Isi data diri (nama, usia, pekerjaan, dll)`,
+        `2. Isi data diri (nama, usia 20–30 thn, pekerjaan, dll)`,
         `3. Masuk menggunakan kode peserta yang diberikan`,
         `4. Buka website Disnakertrans, coba cari informasi (loker, syarat AK-1, jadwal BLK, kontak)`,
         `5. Isi kuesioner penilaian`,

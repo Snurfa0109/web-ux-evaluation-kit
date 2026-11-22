@@ -1,6 +1,6 @@
 'use client'
 
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useParams } from 'next/navigation'
 import { Suspense } from 'react'
 import Link from 'next/link'
 import { IconCheck, IconArrowRight, IconLock } from '@/components/icons'
@@ -9,6 +9,10 @@ const COMPLETION_TEXTS: Record<string, { title: string; desc: string }> = {
   SUS: {
     title: 'Evaluasi Tahap 1 Selesai',
     desc: 'Terima kasih atas penilaian System Usability Scale (SUS) yang Anda berikan. Tahapan berikutnya akan dibuka ketika pengujian prototype siap dilaksanakan.',
+  },
+  SUS_FINAL: {
+    title: 'Evaluasi Website Baru (SUS Akhir) Selesai',
+    desc: 'Terima kasih atas penilaian System Usability Scale (SUS) pada website baru Disnakertrans Kabupaten Serang yang Anda berikan. Kontribusi Anda sangat berarti bagi pengembangan layanan digital publik ini.',
   },
   UEQ: {
     title: 'Evaluasi Tahap 2 Selesai',
@@ -22,10 +26,15 @@ const COMPLETION_TEXTS: Record<string, { title: string; desc: string }> = {
 
 function SelesaiContent() {
   const searchParams = useSearchParams()
+  const params = useParams()
+  const phaseId = String(params?.phaseId || '')
   const code = searchParams.get('code') || ''
   const instrument = searchParams.get('instrument') || 'SUS'
 
-  const content = COMPLETION_TEXTS[instrument] || COMPLETION_TEXTS.SUS
+  const isFinalSus = instrument === 'SUS' && (phaseId === '30001' || phaseId === '4')
+  const content = isFinalSus
+    ? COMPLETION_TEXTS.SUS_FINAL
+    : (COMPLETION_TEXTS[instrument] || COMPLETION_TEXTS.SUS)
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--slate-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem' }}>
