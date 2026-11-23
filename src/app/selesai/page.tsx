@@ -24,17 +24,21 @@ function SelesaiContent() {
   const code = params.get('code') || ''
 
   const [phases, setPhases] = useState<PhaseData[]>([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(Boolean(code))
 
   useEffect(() => {
-    if (!code) { setLoading(false); return }
+    if (!code) return
+    let isMounted = true
     fetch(`/api/participant/${code}`)
       .then(r => r.json())
       .then(data => {
-        if (data?.phases) setPhases(data.phases)
+        if (isMounted && data?.phases) setPhases(data.phases)
       })
       .catch(() => {})
-      .finally(() => setLoading(false))
+      .finally(() => {
+        if (isMounted) setLoading(false)
+      })
+    return () => { isMounted = false }
   }, [code])
 
   const completedPhases = phases.filter(p => p.participantStatus === 'completed')
