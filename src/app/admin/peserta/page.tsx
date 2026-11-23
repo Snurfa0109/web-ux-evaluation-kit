@@ -9,13 +9,16 @@ interface Participant {
   occupation: string; governmentWebsiteExperience: boolean; disnakertransExperience: boolean
   whatsappNumber?: string | null; susFb6?: string | null; ueqFb4?: string | null
   createdAt: string; hasSus: boolean; hasUeq: boolean; hasUat: boolean
+  hasSusFase1?: boolean; hasSusFase4?: boolean
+  susFase1?: { susScore: number } | null
+  susFase4?: { susScore: number } | null
   susScore: number | null; ueqAttractiveness: number | null; uatSuccessRate: number | null
   uatAcceptanceMean: number | null; overallStatus: string
 }
 
 const FILTERS = [
   { key: 'all', label: 'Semua' },
-  { key: 'complete', label: 'Selesai 3 Tahap' },
+  { key: 'complete', label: 'Selesai 4 Tahap' },
   { key: 'partial', label: 'Sebagian' },
   { key: 'wa_optin', label: 'Bersedia Lanjutan (WA)' },
   { key: 'sus_only', label: 'SUS Saja' },
@@ -60,13 +63,14 @@ export default function PesertaAdminPage() {
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) ||
                         p.participantCode.toLowerCase().includes(search.toLowerCase())
     if (!matchSearch) return false
+    const isComplete = (p.hasSusFase1 || p.hasSus) && p.hasUeq && p.hasUat && (p.hasSusFase4 || p.hasSus)
     switch (filter) {
-      case 'complete': return p.hasSus && p.hasUeq && p.hasUat
-      case 'partial': return (p.hasSus || p.hasUeq || p.hasUat) && !(p.hasSus && p.hasUeq && p.hasUat)
+      case 'complete': return isComplete
+      case 'partial': return !isComplete
       case 'wa_optin': return Boolean(p.whatsappNumber) || p.susFb6 === 'Ya' || p.ueqFb4 === 'Ya'
-      case 'sus_only': return p.hasSus && !p.hasUeq && !p.hasUat
-      case 'ueq_only': return !p.hasSus && p.hasUeq && !p.hasUat
-      case 'uat_only': return !p.hasSus && !p.hasUeq && p.hasUat
+      case 'sus_only': return (p.hasSusFase1 || p.hasSusFase4 || p.hasSus) && !p.hasUeq && !p.hasUat
+      case 'ueq_only': return !(p.hasSusFase1 || p.hasSusFase4 || p.hasSus) && p.hasUeq && !p.hasUat
+      case 'uat_only': return !(p.hasSusFase1 || p.hasSusFase4 || p.hasSus) && !p.hasUeq && p.hasUat
       default: return true
     }
   })
@@ -77,12 +81,14 @@ export default function PesertaAdminPage() {
     </div>
   )
 
+  const completeCount = participants.filter(p => (p.hasSusFase1 || p.hasSus) && p.hasUeq && p.hasUat && (p.hasSusFase4 || p.hasSus)).length
+
   return (
     <div className="admin-content fade-in">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.75rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 className="page-title">Data Responden</h1>
-          <p className="page-subtitle">{participants.length} responden terdaftar · {participants.filter(p => p.hasSus && p.hasUeq && p.hasUat).length} selesai seluruh tahap</p>
+          <p className="page-subtitle">{participants.length} responden terdaftar · {completeCount} selesai seluruh 4 tahap</p>
         </div>
         <Link href="/admin/ekspor" className="btn btn-secondary btn-sm">
           <IconDownload size={14} /> Ekspor Excel
@@ -125,7 +131,9 @@ export default function PesertaAdminPage() {
                 <th style={{ textAlign: 'center' }}>P1 (SUS)</th>
                 <th style={{ textAlign: 'center' }}>P2 (UEQ)</th>
                 <th style={{ textAlign: 'center' }}>P3 (UAT)</th>
-                <th style={{ textAlign: 'center' }}>Skor SUS</th>
+                <th style={{ textAlign: 'center' }}>P4 (SUS Akhir)</th>
+                <th style={{ textAlign: 'center' }}>SUS Awal</th>
+                <th style={{ textAlign: 'center' }}>SUS Akhir</th>
                 <th style={{ textAlign: 'center' }}>UAT Rate</th>
                 <th>Status</th>
                 <th style={{ textAlign: 'right' }}>Aksi</th>
@@ -150,7 +158,7 @@ export default function PesertaAdminPage() {
                     )}
                   </td>
                   <td style={{ textAlign: 'center' }}>
-                    {p.hasSus ? <span style={{ color: 'var(--success)' }}><IconCheck size={16} /></span> : <span style={{ color: 'var(--slate-300)' }}>—</span>}
+                    {(p.hasSusFase1 || p.hasSus) ? <span style={{ color: 'var(--success)' }}><IconCheck size={16} /></span> : <span style={{ color: 'var(--slate-300)' }}>—</span>}
                   </td>
                   <td style={{ textAlign: 'center' }}>
                     {p.hasUeq ? <span style={{ color: 'var(--success)' }}><IconCheck size={16} /></span> : <span style={{ color: 'var(--slate-300)' }}>—</span>}
@@ -158,8 +166,18 @@ export default function PesertaAdminPage() {
                   <td style={{ textAlign: 'center' }}>
                     {p.hasUat ? <span style={{ color: 'var(--success)' }}><IconCheck size={16} /></span> : <span style={{ color: 'var(--slate-300)' }}>—</span>}
                   </td>
-                  <td style={{ textAlign: 'center', fontWeight: 700 }}>
-                    {p.susScore !== null ? p.susScore.toFixed(1) : <span style={{ color: 'var(--slate-300)', fontWeight: 400 }}>—</span>}
+                  <td style={{ textAlign: 'center' }}>
+                    {(p.hasSusFase4 || p.hasSus) ? <span style={{ color: 'var(--success)' }}><IconCheck size={16} /></span> : <span style={{ color: 'var(--slate-300)' }}>—</span>}
+                  </td>
+                  <td style={{ textAlign: 'center', fontWeight: 600, color: 'var(--slate-600)' }}>
+                    {p.susFase1?.susScore !== undefined && p.susFase1?.susScore !== null
+                      ? p.susFase1.susScore.toFixed(1)
+                      : <span style={{ color: 'var(--slate-300)', fontWeight: 400 }}>—</span>}
+                  </td>
+                  <td style={{ textAlign: 'center', fontWeight: 700, color: '#166534' }}>
+                    {p.susFase4?.susScore !== undefined && p.susFase4?.susScore !== null
+                      ? p.susFase4.susScore.toFixed(1)
+                      : (p.susScore !== null ? p.susScore.toFixed(1) : <span style={{ color: 'var(--slate-300)', fontWeight: 400 }}>—</span>)}
                   </td>
                   <td style={{ textAlign: 'center', fontWeight: 700, color: p.uatSuccessRate !== null ? 'var(--success)' : 'inherit' }}>
                     {p.uatSuccessRate !== null ? `${p.uatSuccessRate.toFixed(0)}%` : <span style={{ color: 'var(--slate-300)', fontWeight: 400 }}>—</span>}

@@ -87,7 +87,9 @@ export default function ParticipantDetailPage() {
     </div>
   )
 
-  const sus = data.susResponses?.[0]
+  const susFase1 = data.susResponses?.find((r: any) => r.phase?.phaseNumber === 1 || r.phaseId === 1) || null
+  const susFase4 = data.susResponses?.find((r: any) => r.phase?.phaseNumber === 4 || r.phaseId === 30001) || null
+  const sus = susFase4 || susFase1 || data.susResponses?.[0]
   const ueq = data.ueqResponses?.[0]
   const uatTasks = data.uatTaskResponses || []
   const uatFeedback = data.uatOverallFeedback?.[0]
@@ -157,13 +159,14 @@ export default function ParticipantDetailPage() {
         {/* Phase Summary Card */}
         <div className="card">
           <div className="card-header">
-            <h3 style={{ fontSize: '1rem' }}>Status Partisipasi</h3>
+            <h3 style={{ fontSize: '1rem' }}>Status Partisipasi (4 Tahap)</h3>
           </div>
           <div className="card-body" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             {[
-              { label: 'Tahap 1 (SUS)', has: !!sus, score: sus ? `Skor: ${sus.susScore.toFixed(1)} / 100` : 'Belum mengisi', date: sus?.completedAt },
-              { label: 'Tahap 2 (UEQ)', has: !!ueq, score: ueq ? `Attractiveness: ${ueq.attractiveness.toFixed(2)}` : 'Belum mengisi', date: ueq?.completedAt },
-              { label: 'Tahap 3 (UAT)', has: !!uatFeedback, score: uatRate ? `${uatRate}% task berhasil (${uatPassed}/${uatTotal})` : 'Belum mengisi', date: uatFeedback?.completedAt },
+              { label: 'Tahap 1: Existing Website (SUS Lama)', has: !!susFase1, score: susFase1 ? `Skor: ${susFase1.susScore.toFixed(1)} / 100` : 'Belum mengisi', date: susFase1?.completedAt },
+              { label: 'Tahap 2: Prototype Redesign (UEQ)', has: !!ueq, score: ueq ? `Attractiveness: ${ueq.attractiveness.toFixed(2)}` : 'Belum mengisi', date: ueq?.completedAt },
+              { label: 'Tahap 3: Final Website (UAT)', has: !!uatFeedback, score: uatRate ? `${uatRate}% task berhasil (${uatPassed}/${uatTotal})` : 'Belum mengisi', date: uatFeedback?.completedAt },
+              { label: 'Tahap 4: Final Website (SUS Akhir)', has: !!susFase4, score: susFase4 ? `Skor: ${susFase4.susScore.toFixed(1)} / 100` : 'Belum mengisi', date: susFase4?.completedAt },
             ].map(p => (
               <div key={p.label} style={{ padding: '0.875rem 1rem', background: 'var(--slate-50)', borderRadius: 'var(--radius-md)', border: '1px solid var(--slate-200)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
@@ -186,18 +189,21 @@ export default function ParticipantDetailPage() {
         </div>
       </div>
 
-      {/* SUS Detail */}
-      {sus && (
-        <div className="card" style={{ marginBottom: '1.5rem' }}>
+      {/* SUS Fase 4 (Akhir) Detail */}
+      {susFase4 && (
+        <div className="card" style={{ marginBottom: '1.5rem', borderLeft: '4px solid #166534' }}>
           <div className="card-header">
             <div>
-              <h3 style={{ fontSize: '1rem' }}>Hasil Kuesioner SUS</h3>
-              <div style={{ fontSize: '0.75rem', color: 'var(--slate-500)' }}>10 Item Pernyataan Likert (1–5)</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                <span className="badge badge-success">Tahap 4</span>
+                <h3 style={{ fontSize: '1rem', margin: 0 }}>Hasil Kuesioner SUS Akhir (Final Website)</h3>
+              </div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--slate-500)' }}>10 Item Pernyataan Likert (1–5) · Pasca Implementasi Website Baru</div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--slate-900)' }}>{sus.susScore.toFixed(1)}</div>
-                <div style={{ fontSize: '0.6875rem', color: 'var(--slate-500)' }}>Skor SUS (0–100)</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#166534' }}>{susFase4.susScore.toFixed(1)}</div>
+                <div style={{ fontSize: '0.6875rem', color: 'var(--slate-500)' }}>Skor SUS Akhir</div>
               </div>
               <button
                 type="button"
@@ -206,15 +212,50 @@ export default function ParticipantDetailPage() {
                 style={{ padding: '0.25rem 0.5rem' }}
                 title="Hapus Data Kuesioner SUS Responden Ini"
               >
-                <IconTrash size={14} /> Hapus SUS
+                <IconTrash size={14} /> Hapus
               </button>
             </div>
           </div>
           <div className="card-body">
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(64px, 1fr))', gap: '0.5rem' }}>
               {SUS_ITEMS.map(item => {
-                const qKey = `q${item.id}` as keyof typeof sus
-                const val = sus[qKey]
+                const qKey = `q${item.id}` as keyof typeof susFase4
+                const val = susFase4[qKey]
+                return (
+                  <div key={item.id} style={{ textAlign: 'center', padding: '0.625rem 0.25rem', background: '#f0fdf4', borderRadius: 'var(--radius-md)', border: '1px solid #bbf7d0' }}>
+                    <div style={{ fontSize: '0.6875rem', color: '#166534', fontWeight: 600 }}>Q{item.id}</div>
+                    <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#14532d' }}>{val}</div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SUS Fase 1 (Lama) Detail */}
+      {susFase1 && (
+        <div className="card" style={{ marginBottom: '1.5rem' }}>
+          <div className="card-header">
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                <span className="badge badge-neutral">Tahap 1</span>
+                <h3 style={{ fontSize: '1rem', margin: 0 }}>Hasil Kuesioner SUS Lama (Existing Website)</h3>
+              </div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--slate-500)' }}>10 Item Pernyataan Likert (1–5) · Evaluasi Awal Website Lama</div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--slate-900)' }}>{susFase1.susScore.toFixed(1)}</div>
+                <div style={{ fontSize: '0.6875rem', color: 'var(--slate-500)' }}>Skor SUS Lama</div>
+              </div>
+            </div>
+          </div>
+          <div className="card-body">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(64px, 1fr))', gap: '0.5rem' }}>
+              {SUS_ITEMS.map(item => {
+                const qKey = `q${item.id}` as keyof typeof susFase1
+                const val = susFase1[qKey]
                 return (
                   <div key={item.id} style={{ textAlign: 'center', padding: '0.625rem 0.25rem', background: 'var(--slate-50)', borderRadius: 'var(--radius-md)', border: '1px solid var(--slate-200)' }}>
                     <div style={{ fontSize: '0.6875rem', color: 'var(--slate-400)' }}>Q{item.id}</div>
