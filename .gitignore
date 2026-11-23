@@ -50,6 +50,7 @@ prisma/full-evalux-report.js
 prisma/utils/
 scratch/
 belajar-skripsi/
+take_screenshots.js
 *.py
 *.ps1
 *.bat

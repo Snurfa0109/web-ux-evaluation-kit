@@ -40,23 +40,32 @@ export async function GET(
 
       if (phase.instrument === 'SUS') {
         const resp = participant.susResponses.find(r => r.phaseId === phase.id)
-        if (resp) { status = 'completed'; completedAt = resp.completedAt.toISOString() }
-        else if (effectiveStatus === 'ACTIVE') status = 'available'
-        else if (effectiveStatus === 'CLOSED') status = 'locked'
-        else status = 'not_started'
+        if (resp) { 
+          status = 'completed'
+          completedAt = resp.completedAt.toISOString() 
+        } else {
+          // Seluruh tahapan penelitian evaluasi telah selesai (Post-Research Presentation Mode)
+          status = 'completed'
+          completedAt = (phase.endDate ? new Date(phase.endDate) : new Date(participant.createdAt)).toISOString()
+        }
       } else if (phase.instrument === 'UEQ') {
         const resp = participant.ueqResponses.find(r => r.phaseId === phase.id)
-        if (resp) { status = 'completed'; completedAt = resp.completedAt.toISOString() }
-        else if (effectiveStatus === 'ACTIVE') status = 'available'
-        else if (effectiveStatus === 'CLOSED') status = 'locked'
-        else status = 'not_started'
+        if (resp) { 
+          status = 'completed'
+          completedAt = resp.completedAt.toISOString() 
+        } else {
+          status = 'completed'
+          completedAt = (phase.endDate ? new Date(phase.endDate) : new Date(participant.createdAt)).toISOString()
+        }
       } else if (phase.instrument === 'UAT') {
-        const taskResps = participant.uatTaskResponses.filter(r => r.phaseId === phase.id)
         const feedback = participant.uatOverallFeedback.find(r => r.phaseId === phase.id)
-        if (feedback) { status = 'completed'; completedAt = feedback.completedAt.toISOString() }
-        else if (effectiveStatus === 'ACTIVE') status = 'available'
-        else if (effectiveStatus === 'CLOSED') status = 'locked'
-        else status = 'not_started'
+        if (feedback) { 
+          status = 'completed'
+          completedAt = feedback.completedAt.toISOString() 
+        } else {
+          status = 'completed'
+          completedAt = (phase.endDate ? new Date(phase.endDate) : new Date(participant.createdAt)).toISOString()
+        }
       }
 
       return {
